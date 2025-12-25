@@ -1,0 +1,39 @@
+{
+  "name": "PatPat",
+  "description": "Pat Images on the websites!",
+  "version": "1.0",
+  "author": "savelijln0@gmail.com",
+  "manifest_version": 3,
+  "permissions": [],
+  "icons": {
+	"128": "/etc/icon.png"
+  },
+  "content_scripts": [
+    {
+		"js": ["contentjs/LightCore.js", "contentjs/main.js"],
+        "matches": ["https://*/*"]
+    }
+  ], 
+  "web_accessible_resources": [
+	  {
+		"resources": [
+			"etc/hand/pat0.png",
+			"etc/hand/pat1.png",
+			"etc/hand/pat2.png",
+			"etc/hand/pat3.png",
+			"etc/hand/pat4.png",
+			"etc/sound.mp3"
+		],
+		"matches": ["<all_urls>"]
+	  }
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+	    "id": "patpat.savelijln0@gmail.com",
+        "strict_min_version": "140.0",
+	    "data_collection_permissions": {
+		    "required": ["websiteActivity"]
+	    }
+    }
+  }
+}
