@@ -94,23 +94,30 @@ function getVolume() {
 		});
 		
 		
-		function ClearAllSettingTypes() {
-			findAll('div.SettingsDiv div.leftPane > div').forEach(settingType => { settingType.classList.remove('active'); })
-		}
-		findAll('div.SettingsDiv div.leftPane > div').forEach(settingType => {
-			
-			settingType.onclick = () => {
-				ClearAllSettingTypes();
-				findAll('div.SettingSection').forEach(SettingDisplayingType => {
-					SettingDisplayingType.style.display = 'none';
-				});
-				let CurrentSetting = find(`div.SettingSection.${settingType.getAttribute('SettingLinkedTo')}`);
-				if (!CurrentSetting) {warn('Setting Div is not found :('); return}
-				CurrentSetting.style.display='';
-				CurrentSetting.classList.add('Chosen');
-				settingType.classList.add('active');
+		
+		// Divides Switcher
+			function ClearAllSettingTypes() {
+				findAll('div.SettingsDiv div.leftPane > div').forEach(settingType => { settingType.classList.remove('active'); })
 			}
-		})
+			findAll('div.SettingsDiv div.leftPane > div').forEach(settingType => {
+				
+				settingType.onclick = () => {
+					let newDivide = settingType.getAttribute('SettingLinkedTo')
+					ClearAllSettingTypes();
+					findAll('div.SettingSection').forEach(SettingDisplayingType => {
+						SettingDisplayingType.style.display = 'none';
+					});
+					LocalStorage.save('LastSection', newDivide);
+					let CurrentSetting = find(`div.SettingSection.${newDivide}`);
+					if (!CurrentSetting) {warn('Setting Div is not found :('); return}
+					CurrentSetting.style.display='';
+					CurrentSetting.classList.add('Chosen');
+					settingType.classList.add('active');
+				}
+			});
+			const LastSectionOpened = LocalStorage.get('LastSection');
+			if (LastSectionOpened) {find(`div[settinglinkedto="${LastSectionOpened}"]`).click()}
+		
 		
 		
 		
@@ -121,7 +128,6 @@ function getVolume() {
 		DataPackFileInput.addEventListener("change", async e => {
 			clearTimeout(lastTimeout)
 			if (!e.target.files[0]) {return}
-			DataPackFileInput.disabled = true;
 			
 		    DataPackFileText.textContent = TranslateAssistant.translate.get('DataPackProcessing');
 		    let result = await unpackData(e.target.files[0]);
@@ -129,15 +135,36 @@ function getVolume() {
 				DataPackFileText.classList.add('failed');
 			} else {
 				DataPackFileText.classList.remove('failed');
+				window.location.reload();
 			}
 			DataPackFileText.textContent = TranslateAssistant.translate.get(result.reason);
 			
 			lastTimeout = setTimeout(() => {
 				DataPackFileText.textContent = TranslateAssistant.translate.get('UploadDatapack');
 				DataPackFileText.classList.remove('failed');
-				DataPackFileInput.disabled = false;
 			}, 5000)
 		});
+		
+		
+		findAll('.AvailableDataPack').forEach(pack => {
+			pack.onclick = async () => {
+				let NewPack = pack.getAttribute('packname');
+				await Settings.set('SelectedPack', NewPack);
+				window.location.reload();
+			}
+		});
+		let ChosenPack = find(`.AvailableDataPack[packname="${await Settings.get('SelectedPack', 'PatPat Classic')}"]`);
+		if (ChosenPack) {ChosenPack.classList.add('Active');}
+		
+		
+		let RemovePack = find(`div.removeSavedDataPack`);
+		if (RemovePack) {
+			RemovePack.onclick = async () => {
+				await Settings.set('SelectedPack', 'PatPat Classic')
+				await Settings.delete('@DataPack');
+				window.location.reload()
+			}
+		}
 
 		
 	}

@@ -15,7 +15,7 @@ body {
 	width: 700px;
 	height: 600px;
 	padding: 6px;
-	border: solid 1px gray;
+	outline: solid 1px #4a4644;
 	display: flex;
 	flex-direction: column;
 }
@@ -152,11 +152,112 @@ img.unpackingTexturesProcess {
 	aspect-ratio: auto
 }
 
-lavel.DataPackDescription {font-size: small; text-align: center; color: gray;}
+label.DataPackDescription {font-size: small; text-align: center; color: gray;}
+
+.ImagePreview img {
+	max-width: 30px;
+    height: 30px;
+	object-fit: contain;
+}
+
+.AvailableDataPack {
+    height: 56px;
+    display: flex;
+	flex-direction: column;
+    gap: 4px;
+    border-radius: 12px;
+    border: solid 1px white;
+    padding: 6px 10px;
+	width: 100%;
+	cursor: pointer
+}
+
+.AvailableDataPack.Active {
+    border: dashed 1px lime;
+    box-shadow: 0px 0px 8px 0px #00ff0073;
+}
+
+div.settingsPane div.PatPatPacks div.UploadPack.DataPack .AvailableDataPack {margin: 10px 0px}
+
+.SettingSection.PatPatPacks.Chosen {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
 
 
+div.removeSavedDataPack {
+    display: flex;
+    position: absolute;
+    top: 45%;
+    height: 16px;
+    right: 6px;
+	cursor: pointer;
+    font-size: x-small;
+    z-index: 2;
+    padding: 2px 4px;
+    background: #ff0000d9;
+    border-radius: 6px;
+}
+
+div.removeSavedDataPack span {
+	top: 1px
+}
+
+.CookedPacksList {
+    display: flex;
+    padding: 10px;
+    padding-top: 2px;
+    gap: 4px;
+    flex-direction: column;
+}
 
 
+.AvailableDataPack:hover {
+	box-shadow: 0px 0px 8px 0px white
+}
+
+.PreviewData {
+    margin-top: -2px;
+    max-height: 30px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.PreviewData.TextType {
+    font-size: small;
+    margin-top: 0px;
+    font-weight: 400;
+    top: -4px;
+    opacity: 0.75;
+}
+
+.PreviewData .ImagePreview {
+    display: flex;
+    gap: 4px;
+    max-width: 200px;
+    overflow: hidden;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+
+.PreviewData span.packName {
+    display: inline-block;
+	top: 4px;
+    width: calc(100% - 260px);
+    font-size: medium;
+    white-space: nowrap;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+.PreviewData.TextType span span {
+    margin-left: 4px;
+}
 
 
 

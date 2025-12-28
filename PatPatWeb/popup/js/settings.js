@@ -50,6 +50,92 @@ const findInput = (settingName) => {
 	find(`input[SettingName="${settingName}"]`).click()
 }
 
+const GetDatapackData = () => {
+	return UserSettings["@DataPack"];
+}
+
+
+const GetDatapack = {
+	Images: () => {
+		let data = GetDatapackData();
+		if (!data) {return []};
+	
+		let HTMLCode = ''
+		for (imgCode of data.sequence) {
+			HTMLCode += `
+				<img src="${imgCode}">
+			`
+		}; return HTMLCode
+		
+	},
+	ImagesNum: () => {
+		let data = GetDatapackData();
+		if (!data) {return 0;} else {return data.sequence.length}
+	},
+	SoundsNum: () => {
+		let data = GetDatapackData();
+		if (!data) {return 0;} else {return data.sounds.length}
+	},
+	AnimationLen: () => {
+		let data = GetDatapackData();
+		if (!data) {return 0;} else {return data.animLength}
+	},
+};
+
+const BuildPack = {
+	Images: (name) => {
+		let data = BuiltinPacks[name];
+		log('data:', BuiltinPacks[name]);
+		if (!data) {return []};
+	
+		let HTMLCode = ''
+		for (imgCode of data.sequence) {
+			HTMLCode += `
+				<img src="${BrowserContext.runtime.getURL(`etc/${data.PackPlace}/${imgCode}`)}">
+			`
+		}; return HTMLCode
+		
+	},
+	ImagesNum: (name) => {
+		let data = BuiltinPacks[name];
+		log('data:', BuiltinPacks[name]);
+		if (!data) {return 0;} else {return data.sequence.length}
+	},
+	SoundsNum: (name) => {
+		let data = BuiltinPacks[name];
+		if (!data) {return 0;} else {return data.sounds.length}
+	},
+	AnimationLen: (name) => {
+		let data = BuiltinPacks[name];
+		if (!data) {return 0;} else {return data.animLength}
+	},
+};
+
+
+const GenerateDataPackLists = () => {
+	let code = '';
+	for (DataPackName of Object.keys(BuiltinPacks)) {
+		const DataPack = BuiltinPacks[DataPackName];
+		
+		code += `
+			<div class="AvailableDataPack" packname="${DataPackName}">
+				<div class="PreviewData">
+					<span class="packName"> ${DataPackName} </span>
+					<div class="ImagePreview"> ${BuildPack.Images(DataPackName)} </div>
+				</div>
+							
+				<div class="PreviewData TextType">
+					<span data-i18n="howmanysounds"> Sounds: <span>${BuildPack.SoundsNum(DataPackName)}</span></span>
+					<span data-i18n="howmanyimages"> Images: <span>${BuildPack.ImagesNum(DataPackName)}</span></span>
+					<span data-i18n="howlong"> Length: <span>${BuildPack.AnimationLen(DataPackName)}ms</span></span>
+				</div>
+			</div>
+		`
+	}
+	return code;
+	
+}
+
 (async() => {
 	UserSettings = await Settings.getAll();
 
@@ -85,7 +171,6 @@ const findInput = (settingName) => {
 			
 			
 			<div class="SettingSection PatPatPacks Chosen">
-				
 				<div class="UploadPack DataPack SettingLine">
 				
 				
@@ -93,10 +178,34 @@ const findInput = (settingName) => {
 						Choose DataPack
 					</label>
 					<input id="zipUploader" type="file" accept=".zip"/>
-					<lavel for="zipUploader" class="DataPackDescription" data-i18n="DataPackDescription"></span>
-
-
-				<div>
+					<label for="zipUploader" class="DataPackDescription" data-i18n="DataPackDescription"></label>
+					${ Object.keys(UserSettings).includes("@DataPack") ? 
+					
+						`
+						<div class="removeSavedDataPack">
+							<img src="icons/delete.svg">
+							<span data-i18n="delete"></span>
+						</div>
+						<div class="AvailableDataPack" packname="@DataPack">
+							<div class="PreviewData">
+								<span class="packName"> Data Pack </span>
+								<div class="ImagePreview"> ${GetDatapack.Images()} </div>
+								
+							</div>
+							
+							<div class="PreviewData TextType">
+								<span data-i18n="howmanysounds"> Sounds: <span>${GetDatapack.SoundsNum()}</span></span>
+								<span data-i18n="howmanyimages"> Images: <span>${GetDatapack.ImagesNum()}</span></span>
+								<span data-i18n="howlong"> Length: <span>${GetDatapack.AnimationLen()}ms</span></span>
+							</div>
+							
+						</div>
+						`	
+					: ''}
+				</div>
+				<div class="CookedPacksList">
+					${GenerateDataPackLists()}
+				</div>
 				
 			</div>
 				

@@ -67,12 +67,12 @@ const unpackData = async function (file) {
 	
 	
 	const HandDataPack = {
-		'@DataPack': true,
+		'animLength': AnimationLength,
+		'author': 'Unknown',
+		'isDataPack': true,
 		'PackPlace': '@DataPack',
 		'sequence': base64Textures,
 		'sounds': Base64Sounds,
-		'animLength': AnimationLength,
-		'author': 'Unknown'
 	}
 	
 	await Settings.set( 'SelectedPack', '@DataPack' )

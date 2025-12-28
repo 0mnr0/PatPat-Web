@@ -16,6 +16,10 @@
 		'unpacker.textures.isNotExtists': `Failed to find or parse textures :(`,
 		'unpacker.status.ok': `Resourse Pack is loaded! :)`,
 		
+		'howmanysounds': `Sounds: `,
+		'howmanyimages': `Images: `,
+		'howlong': `Length: `,
+		
 	},
 	'ru': {
 		'GeneralSettings': "Настройки",
@@ -33,6 +37,10 @@
 		'unpacker.textures.json5_isNotExtists': `Конфиг текстур не найден :(`,
 		'unpacker.textures.isNotExtists': `Не удалось найти текстуры :(`,
 		'unpacker.status.ok': `Пакет данных установлен! :)`,
+		
+		'howmanysounds': `Звуков: `,
+		'howmanyimages': `Изображений: `,
+		'howlong': `Длина: `,
 	},
 	"by": "ru"
 }

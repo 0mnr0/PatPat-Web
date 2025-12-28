@@ -95,33 +95,20 @@ SetupDefault();
 
 
 
-
-
-function canSendToTab(tab) {
-  if (!tab?.id) return false;
-  if (!tab.url) return false;
-
-  if (
-    tab.url.startsWith("chrome://") ||
-    tab.url.startsWith("edge://") ||
-    tab.url.startsWith("about:")
-  ) return false;
-
-  return true;
-}
-
-
 chrome.storage.onChanged.addListener(async (changes) => {
   const tabs = await chrome.tabs.query({});
-
+  await SetupDefault();
+  
+  
   for (const tab of tabs) {
-    if (!canSendToTab(tab)) continue;
+    if (!tab.id) {log('p!'); };
 
     try {
       await chrome.tabs.sendMessage(tab.id, {
-        type: "SettingsChange"
+        type: "PatPat.events.SettingsChange"
       });
-    } catch {
+    } catch(e) {
+		log(e)
     }
   }
 });
