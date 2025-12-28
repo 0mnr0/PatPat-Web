@@ -10,6 +10,12 @@ const getFirstJson5 = function(zip, folderPath) {
   return files.length ? zip.files[files[0]] : null;
 }
 
+const SearchSoundsJson = (zip) => {
+	const matches = zip.file(/^assets\/[^/]+\/sounds\.json$/);
+
+	if (!matches.length) { return null; }
+	return matches[0];
+}
 
 
 
@@ -19,7 +25,7 @@ const getFirstJson5 = function(zip, folderPath) {
 const unpackData = async function (file) {
 	const zip = await JSZip.loadAsync(file);
 	
-	let soundsFile = zip.file("assets/patpat/sounds.json");	
+	let soundsFile = SearchSoundsJson(zip);	
 	
 	if (!soundsFile) {
 		return {status: 'fail', reason: 'unpacker.sounds.json_isNotExtists'};
@@ -32,7 +38,6 @@ const unpackData = async function (file) {
 	const jsonFileExtra2 = getFirstJson5(zip, "assets/patpat/textures/easter");     if (!json5File && jsonFileExtra2) {json5File = jsonFileExtra2}
 	
 	if (!json5File) {
-	    console.error("json5 файл не найден");
 	    return {status: 'fail', reason: 'unpacker.textures.json5_isNotExtists'};
 	}
 	const texturesData = JSON5.parse(await json5File.async("text"));
@@ -40,12 +45,16 @@ const unpackData = async function (file) {
 	let SoundsList = (sounds[Object.keys(sounds)[0]]).sounds;               //patpat:sound_name.ogg
 	let AnimationLength = texturesData.animation.duration;                 // <int> (e.g. 300)
 	let TextureFrames = texturesData.animation.frame.totalFrames;          // <int>
-	let Texture = texturesData.animation.texture.replace('patpat:','');    // textures/animated_piston_texture.png
+	let Texture = texturesData.animation.texture.replace(':','/');    // textures/animated_piston_texture.png
+	const nameSpace = texturesData.animation.texture.split(':')[0]
 	
-	for (let i = 0; i < SoundsList.length; i++) { SoundsList[i] = SoundsList[i].replaceAll('patpat:', ''); }
+	for (let i = 0; i < SoundsList.length; i++) { 
+		SoundsList[i] = SoundsList[i].split(':')[1];
+	}
+	log(Texture, SoundsList);
 	
 	
-	const pngFile = zip.file(`assets/patpat/${Texture}`);
+	const pngFile = zip.file(`assets/${Texture}`);
 	if (!pngFile) return {status: 'fail', 'reason': 'unpacker.textures.isNotExtists'}
 	const pngBlob = await pngFile.async("blob");
 	
@@ -53,7 +62,7 @@ const unpackData = async function (file) {
 	const SplittedTextures = await splitIntoFiles(pngBlob, TextureFrames);
 	const base64Textures = await convertBlobs(SplittedTextures);
 	
-	const Base64Sounds = await getBase64Sounds(zip, SoundsList);
+	const Base64Sounds = await getBase64Sounds(zip, nameSpace, SoundsList);
 	if (Base64Sounds.status !== undefined) {return Base64Sounds}
 	
 	
@@ -95,12 +104,13 @@ const convertBlobs = async (urls) => {
 
 
 
-const getBase64Sounds = async (zip, soundList) => {
+const getBase64Sounds = async (zip, namespace, soundList) => {
 	try{ 
 		let convertedSounds = [];
 		
 		for (sound of soundList) { 
-			const oggFile = zip.file(`assets/patpat/sounds/${sound}.ogg`);
+			log(`assets/${namespace}/sounds/${sound}.ogg`)
+			const oggFile = zip.file(`assets/${namespace}/sounds/${sound}.ogg`);
 			const oggBlob = await oggFile.async("blob");
 			convertedSounds.push(await blobToBase64(oggBlob))
 		}
