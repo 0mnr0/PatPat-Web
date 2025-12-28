@@ -49,12 +49,11 @@ const Settings = {
 const findInput = (settingName) => {
 	find(`input[SettingName="${settingName}"]`).click()
 }
+
 (async() => {
 	UserSettings = await Settings.getAll();
 
 	window.GenerateSettingsCode = async () => {
-		log(TranslateAssistant.defaultLocale())
-		log(TranslateAssistant.isLangAvailable(navigator.language) ? navigator.language : 'en')
 		function GetSwitch(settingName) {
 			const isEnabled = UserSettings[settingName];
 			return `
@@ -67,7 +66,6 @@ const findInput = (settingName) => {
 		}
 		return `
 			<div class="SettingSection General">
-			
 				<div class="SettingLine">
 					${GetSwitch('AllowSound')} 
 					<div class="inlineSetting">
@@ -81,12 +79,23 @@ const findInput = (settingName) => {
 					${GetSwitch('ShowImages')} 
 					<p data-i18n="ShowImagesDescription"></p>
 				</div>
+			</div>
+			
+			
+			
+			
+			<div class="SettingSection PatPatPacks Chosen">
 				
-				<div class="SettingLine">
-					${GetSwitch('ShowImages')} 
-					<p data-i18n="ShowHandDescription"></p>
-				</div>
+				<div class="UploadPack DataPack SettingLine">
 				
+				
+					<label for="zipUploader" class="zipUpload" data-i18n="UploadDatapack">
+						Choose DataPack
+					</label>
+					<input id="zipUploader" type="file" accept=".zip"/>
+
+
+				<div>
 				
 			</div>
 				
@@ -104,7 +113,8 @@ const findInput = (settingName) => {
 
 
 const runPatSound = async function() {
-	let audio = new Audio(BrowserContext.runtime.getURL("etc/sounds/pat0.ogg"));
+	let SoundPlace = 'etc/'+LoadedPack.PackPlace+'/'+LoadedPack.sounds[0];
+	let audio = new Audio(BrowserContext.runtime.getURL(SoundPlace));
 	audio.volume = (await Settings.get('PatVolume', 0.5))/100;
 	audio.play();
 }

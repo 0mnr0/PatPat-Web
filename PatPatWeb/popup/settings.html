@@ -5,10 +5,14 @@
 	<link href="css/bootstrap.css" rel="stylesheet">
 	<link href="css/styles.css" rel="stylesheet">
 	
+	<script src="js/.jszip.js"></script>
+	<script src="js/.json5.js"></script>
+	
 	<script src="js/LightCore.js" defer></script>
 	<script src="js/dict.js" defer></script>
 	<script src="js/index.js" defer></script>
 	<script src="js/settings.js" defer></script>
+	<script src="js/unpacker.js" defer></script>
 </head>
 
 
@@ -26,13 +30,19 @@
 	
 		<div class="pane leftPane flex">
 			
-			<div class="General">
+			<div class="General active" SettingLinkedTo="General">
 				<img src="icons/general.svg">
 				<span data-i18n="GeneralSettings"> General Settings <span>
 			</div>
-			<div class="BlackList">
+			
+			<div class="PatPatPacks" SettingLinkedTo="PatPatPacks">
+				<img src="icons/zip.svg">
+				<span data-i18n="DataSet"> Data Set <span>
+			</div>
+			
+			<div class="BlockList" SettingLinkedTo="BlockList">
 				<img src="icons/block.svg">
-				<span data-i18n="BlackList"> Black List <span>
+				<span data-i18n="BlockList"> Block List <span>
 			</div>
 			
 		</div>

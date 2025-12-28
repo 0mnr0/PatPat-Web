@@ -11,7 +11,9 @@ const PatStrength = 0.25;
 const PatAnimationLength = 140;
 
 const PattingRightNow = new Set();
+let IsDataPack = false;
 let UserSettings = {};
+let LoadedPack = null;
 let patFiles = []; // png sequence will be loaded here
 let patSounds = []; // ogg sequence will be loaded heere
 
@@ -25,11 +27,16 @@ async function loadPacks() {
 
 
 
-let LoadedPack = null;
+
 const loadPackData = async function() {
 	let PackName = await Settings.get('SelectedPack', 'PatPat Classic');
 	let BuiltinPacks = await loadPacks();
+	IsDataPack = PackName === "@DataPack";
 	LoadedPack = BuiltinPacks[PackName];
+	
+	
+	if (IsDataPack) { LoadedPack = await Settings.get('@DataPack', null) }
+	
 	if (LoadedPack === undefined) {
 		alert(`Мы не можем подключить набор ресурсов "${PackName}" в PatPat :(. Выберите другой`);
 		return
@@ -41,7 +48,7 @@ const loadPackData = async function() {
 	for (let loader of Loaders) {
 		let LOADINGThing = LoadedPack[loader];
 		for (let thing of LOADINGThing) {
-			let path = BrowserContext.runtime.getURL(`etc/${LoadedPack.PackPlace}/${thing}`);
+			let path = IsDataPack ? thing : BrowserContext.runtime.getURL(`etc/${LoadedPack.PackPlace}/${thing}`);
 			
 			if (loader==="sequence") { 
 				patFiles.push(path);
@@ -54,6 +61,21 @@ const loadPackData = async function() {
 }
 loadPackData();
 
+function base64ToUrl(base64Str) {
+    const parts = base64Str.split(';base64,');
+    const contentType = parts[0].split(':')[1];
+    const raw = window.atob(parts[1]);
+    const rawLength = raw.length;
+    const uInt8Array = new Uint8Array(rawLength);
+
+    for (let i = 0; i < rawLength; ++i) {
+        uInt8Array[i] = raw.charCodeAt(i);
+    }
+
+    const blob = new Blob([uInt8Array], { type: 'audio/ogg' }); // или audio/mpeg
+    return URL.createObjectURL(blob);
+}
+
 function preloadImages() {
 	return Promise.all(
 		patFiles.map(url => new Promise((resolve, reject) => {
@@ -65,6 +87,39 @@ function preloadImages() {
 	);
 }; 
 
+
+async function playBase64Audio(base64String, {volume = 1.0, muted = false} = {}) {
+	const isMuted = !UserSettings.AllowSound
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    const base64Data = base64String.split(';base64,')[1] || base64String;
+    const binaryString = atob(base64Data);
+    const bytes = new Uint8Array(binaryString.length);
+
+    for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    try {
+        const audioBuffer = await audioContext.decodeAudioData(bytes.buffer);
+
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = isMuted ? 0 : getVolume();
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        source.start();
+        return { audioContext, source, gainNode };
+    } catch (e) {
+        console.error("Ошибка декодирования аудио:", e);
+    }
+}
+
+function getVolume() {
+	return Number(UserSettings.PatVolume)/100
+}
 
 async function runPatAnimation(element, isAutoClicked, scaleWas) {
 	if (!LoadedPack || PattingRightNow.has(element)) return;
@@ -92,10 +147,15 @@ async function runPatAnimation(element, isAutoClicked, scaleWas) {
 	
 	window.getSelection().removeAllRanges();
 	let goBackAnim = false;
-	let Sound = new Audio(randChoose(patSounds)); 
-	Sound.muted = !UserSettings.AllowSound;
-	Sound.volume = Number(UserSettings.PatVolume)/100;
-	Sound.play();
+	
+	if (IsDataPack) {
+		playBase64Audio(randChoose(patSounds))
+	} else {
+		let Sound = new Audio(randChoose(patSounds)); 
+		Sound.muted = !UserSettings.AllowSound;
+		Sound.volume = getVolume();;
+		Sound.play();
+	}
 	
 	
 	for (let i = 0; i < patFiles.length; i++) {
