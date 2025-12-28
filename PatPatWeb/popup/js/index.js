@@ -2,8 +2,9 @@ const BrowserContext = (typeof chrome === 'object') ? chrome : browser;
 const SettingsPane = find('.settingsPane');
 let UserSettings = {};
 let LoadedPack = null;
-let patFiles = []
-let patSounds = []
+let patFiles = [];
+let patSounds = [];
+let IsDataPack = false;
 
 
 async function loadPacks() {
@@ -17,7 +18,8 @@ async function loadPackData() {
 	let PackName = await Settings.get('SelectedPack', 'PatPat Classic');
 	let BuiltinPacks = await loadPacks();
 	LoadedPack = BuiltinPacks[PackName];
-	if (PackName === "@DataPack") { LoadedPack = await Settings.get('@DataPack', null) }
+	IsDataPack = PackName === "@DataPack"
+	if (IsDataPack) { LoadedPack = await Settings.get('@DataPack', null) }
 	const Loaders = ["sequence", "sounds"];
 	
 	
@@ -25,7 +27,7 @@ async function loadPackData() {
 	for (let loader of Loaders) {
 		let LOADINGThing = LoadedPack[loader];
 		for (let thing of LOADINGThing) {
-			let path = BrowserContext.runtime.getURL(`etc/${LoadedPack.PackPlace}/${thing}`);
+			let path = IsDataPack ? thing : BrowserContext.runtime.getURL(`etc/${LoadedPack.PackPlace}/${thing}`);
 			
 			if (loader==="sequence") { 
 				patFiles.push(path);

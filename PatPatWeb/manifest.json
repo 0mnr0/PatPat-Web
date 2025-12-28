@@ -4,7 +4,7 @@
   "version": "1.0",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
-  "permissions": ["storage", "file:///*"],
+  "permissions": ["storage", "tabs"],
   "icons": {
 	"128": "/etc/icon.png"
   },

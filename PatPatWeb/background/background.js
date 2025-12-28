@@ -76,10 +76,9 @@ const DefaultValues = {
 
 
 
-(async () => {
+async function SetupDefault () {
 	const BuiltinPacks = await loadPacks();
 	const UserSettings = await Settings.getAll();
-	console.log(UserSettings);
 	
 	const DefaultValuesKeys = Object.keys(DefaultValues);
 	for (let i = 0; i < DefaultValuesKeys.length; i++) {
@@ -89,5 +88,25 @@ const DefaultValues = {
 		}
 	}
 	
-})()
+}
+SetupDefault();
 
+
+
+
+chrome.storage.onChanged.addListener((changes, areaName) => {
+  if (areaName !== "local") return;
+  SetupDefault();
+  log('change!');
+
+
+  chrome.tabs.query({}, (tabs) => {
+    for (const tab of tabs) {
+      if (!tab.id) continue;
+
+      chrome.tabs.sendMessage(tab.id, {
+        type: "PatPat.events.SettingsChange"
+      });
+    }
+  });
+});

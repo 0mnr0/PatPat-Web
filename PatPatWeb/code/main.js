@@ -8,7 +8,6 @@ const SupportedElements =
 	: ['img', 'svg'];
 	
 const PatStrength = 0.25;
-const PatAnimationLength = 140;
 
 const PattingRightNow = new Set();
 let IsDataPack = false;
@@ -41,6 +40,8 @@ const loadPackData = async function() {
 		alert(`Мы не можем подключить набор ресурсов "${PackName}" в PatPat :(. Выберите другой`);
 		return
 	}
+	patFiles = [];
+	patSounds = [];
 	const Loaders = ["sequence", "sounds"];
 	
 	
@@ -61,20 +62,6 @@ const loadPackData = async function() {
 }
 loadPackData();
 
-function base64ToUrl(base64Str) {
-    const parts = base64Str.split(';base64,');
-    const contentType = parts[0].split(':')[1];
-    const raw = window.atob(parts[1]);
-    const rawLength = raw.length;
-    const uInt8Array = new Uint8Array(rawLength);
-
-    for (let i = 0; i < rawLength; ++i) {
-        uInt8Array[i] = raw.charCodeAt(i);
-    }
-
-    const blob = new Blob([uInt8Array], { type: 'audio/ogg' }); // или audio/mpeg
-    return URL.createObjectURL(blob);
-}
 
 function preloadImages() {
 	return Promise.all(
@@ -113,7 +100,7 @@ async function playBase64Audio(base64String, {volume = 1.0, muted = false} = {})
         source.start();
         return { audioContext, source, gainNode };
     } catch (e) {
-        console.error("Ошибка декодирования аудио:", e);
+        console.error("Failed to decode audio:", e);
     }
 }
 
@@ -134,7 +121,7 @@ async function runPatAnimation(element, isAutoClicked, scaleWas) {
 	
 	let newYScale = null;
 	if (origScaleData.YScale) {newYScale = parseFloat(origScaleData.YScale)-PatStrength} else {newYScale = 1 - PatStrength};
-	let scaleStringRule = `scale ${(PatAnimationLength/2)/1000}s`;
+	let scaleStringRule = `scale ${(LoadedPack.animLength/2)/1000}s`;
 	
 	element.style.transition = origTransition + (origTransition.includes(scaleStringRule) ? '' : ', '+scaleStringRule);
 	element.style.scale = origScaleData.XScale+' '+newYScale;
@@ -168,9 +155,9 @@ async function runPatAnimation(element, isAutoClicked, scaleWas) {
 			goBackAnim = true;
 			element.style.scale = origScale;
 		}
-		await sleep(PatAnimationLength/patFiles.length);
+		await sleep(LoadedPack.animLength/patFiles.length);
 	}
-	await sleep(PatAnimationLength/patFiles.length);
+	await sleep(LoadedPack.animLength/patFiles.length);
 
 		
 	if (overlay) { overlay.remove(); }
@@ -216,3 +203,12 @@ document.addEventListener("contextmenu", e => {
 		e.preventDefault();
 	}
 }, true);
+
+
+
+
+chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
+  if (msg.type === "PatPat.events.SettingsChange") {
+	  await loadPackData();
+  }
+});

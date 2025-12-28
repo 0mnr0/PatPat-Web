@@ -114,7 +114,40 @@ const findInput = (settingName) => {
 
 const runPatSound = async function() {
 	let SoundPlace = 'etc/'+LoadedPack.PackPlace+'/'+LoadedPack.sounds[0];
-	let audio = new Audio(BrowserContext.runtime.getURL(SoundPlace));
+	if (IsDataPack) {
+		SoundPlace = LoadedPack.sounds[0]
+	}
+	let audio = new Audio(IsDataPack ? SoundPlace : BrowserContext.runtime.getURL(SoundPlace));
 	audio.volume = (await Settings.get('PatVolume', 0.5))/100;
 	audio.play();
+}
+
+
+async function playBase64Audio(base64String, {volume = 1.0, muted = false} = {}) {
+	const isMuted = !UserSettings.AllowSound
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+    const base64Data = base64String.split(';base64,')[1] || base64String;
+    const binaryString = atob(base64Data);
+    const bytes = new Uint8Array(binaryString.length);
+
+    for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+
+    try {
+        const audioBuffer = await audioContext.decodeAudioData(bytes.buffer);
+
+        const source = audioContext.createBufferSource();
+        source.buffer = audioBuffer;
+        const gainNode = audioContext.createGain();
+        gainNode.gain.value = isMuted ? 0 : getVolume();
+        source.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+
+        source.start();
+        return { audioContext, source, gainNode };
+    } catch (e) {
+        console.error("Failed to decode audio:", e);
+    }
 }
