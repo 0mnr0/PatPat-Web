@@ -3,6 +3,7 @@
 		'GeneralSettings': "General Settings",
 		'BlockList': "Black List",
 		'AllowSound': 'Allow sounds',
+		'PatSpeed': 'Animation Speed: ',
 		'PatVolume': 'Volume: ',
 		'ShowImages': 'Show Image',
 		'ShowImagesDescription': 'Specify whether to show images (Default is Hand)',
@@ -15,32 +16,37 @@
 		'unpacker.textures.json5_isNotExtists': `Texture config is not found :(`,
 		'unpacker.textures.isNotExtists': `Failed to find or parse textures :(`,
 		'unpacker.status.ok': `Resourse Pack is loaded! :)`,
+		'delete': `Delete`,
 		
 		'howmanysounds': `Sounds: `,
 		'howmanyimages': `Images: `,
 		'howlong': `Length: `,
+		'PackAuthor': `Author: `,
 		
 	},
 	'ru': {
 		'GeneralSettings': "Настройки",
 		'BlockList': "Черный список",
 		'AllowSound': 'Разрешить звуки',
+		'PatSpeed': 'Скорость анимации: ',
 		'PatVolume': 'Громкость: ',
 		'ShowImages': 'Показывать изображение',
 		'ShowImagesDescription': 'Укажите, стоит ли показывать изображения',
 		'DataSet': 'Набор данных',
 		'UploadDatapack': 'Загрузить набор данных',
 		'DataPackProcessing': 'Обработка...',
-		'DataPackDescription': 'Загружайте .zip ресурспаки, разработанный для PatPat. (Поддерживаются не все)',		
+		'DataPackDescription': 'Загружайте .zip ресурспаки, разработанные для PatPat. (Поддерживаются не все)',		
 		
 		'unpacker.sounds.json_isNotExtists': `Файл "sounds.json" не найден :(`,
 		'unpacker.textures.json5_isNotExtists': `Конфиг текстур не найден :(`,
 		'unpacker.textures.isNotExtists': `Не удалось найти текстуры :(`,
 		'unpacker.status.ok': `Пакет данных установлен! :)`,
+		'delete': `Удалить`,
 		
 		'howmanysounds': `Звуков: `,
 		'howmanyimages': `Изображений: `,
 		'howlong': `Длина: `,
+		'PackAuthor': `Автор: `,
 	},
 	"by": "ru"
 }

@@ -108,6 +108,26 @@ function getVolume() {
 	return Number(UserSettings.PatVolume)/100
 }
 
+function getAnimationSpeed() {
+	const Speed = UserSettings.PatSpeed;
+	if (Speed === undefined || Speed === null) {return 1;}
+	return Speed;
+	
+	
+	// IF I EVER NEED REVERSE ALGHORYTM:
+	if (Speed > 1) {
+		
+		// for example [1.25]: We Should Speed Up AnEimation
+		const Difference = 1 - Speed; // 1 - 1.25  -->  -0.25
+		return Speed - Difference; // --> 0.75 
+		
+	} else {
+		// for example [0.75]: We Should Slow Up Animation
+		const Difference = 1 - Speed; // 1 - 0.75  -->  0.25
+		return Speed + Difference; // --> 1.25 
+	}
+}
+
 async function runPatAnimation(element, isAutoClicked, scaleWas) {
 	if (!LoadedPack || PattingRightNow.has(element)) return;
 	if (SupportedElements.includes(element.parentElement.nodeName.toLowerCase())) {return}
@@ -140,7 +160,7 @@ async function runPatAnimation(element, isAutoClicked, scaleWas) {
 	} else {
 		let Sound = new Audio(randChoose(patSounds)); 
 		Sound.muted = !UserSettings.AllowSound;
-		Sound.volume = getVolume();;
+		Sound.volume = getVolume();
 		Sound.play();
 	}
 	
@@ -153,11 +173,11 @@ async function runPatAnimation(element, isAutoClicked, scaleWas) {
 		
 		if (i>=(patFiles.length/2) && !goBackAnim) { //start animate scale backwards
 			goBackAnim = true;
-			element.style.scale = origScale;
+			element.style.scale = (scaleWas !== undefined) ? scaleWas : origScale;
 		}
-		await sleep(LoadedPack.animLength/patFiles.length);
+		await sleep(LoadedPack.animLength/patFiles.length*getAnimationSpeed());
 	}
-	await sleep(LoadedPack.animLength/patFiles.length);
+
 
 		
 	if (overlay) { overlay.remove(); }
@@ -166,13 +186,13 @@ async function runPatAnimation(element, isAutoClicked, scaleWas) {
 	PattingRightNow.delete(element);
 	
 	if (nextPat) {
-		if (scaleWas !== undefined) { runPatAnimation(nextPat, true, scaleWas); }
-		else { runPatAnimation(nextPat, true, origScale); }
-	} else if (isAutoClicked) {
+		if (scaleWas !== undefined) { await runPatAnimation(nextPat, true, scaleWas); return}
+		else { await runPatAnimation(nextPat, true, origScale); return }
+	} 
+	
+	else if (isAutoClicked) {
 		element.style.scale = scaleWas
 	}
-	
-	
 }
 
 function randChoose(array) {return array[Math.floor(Math.random()*array.length)]}

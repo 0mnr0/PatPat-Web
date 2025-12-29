@@ -80,12 +80,15 @@ const GetDatapack = {
 		let data = GetDatapackData();
 		if (!data) {return 0;} else {return data.animLength}
 	},
+	FirstImage: () => {
+		let data = GetDatapackData();
+		return data.sequence[0]
+	}
 };
 
 const BuildPack = {
 	Images: (name) => {
 		let data = BuiltinPacks[name];
-		log('data:', BuiltinPacks[name]);
 		if (!data) {return []};
 	
 		let HTMLCode = ''
@@ -98,7 +101,6 @@ const BuildPack = {
 	},
 	ImagesNum: (name) => {
 		let data = BuiltinPacks[name];
-		log('data:', BuiltinPacks[name]);
 		if (!data) {return 0;} else {return data.sequence.length}
 	},
 	SoundsNum: (name) => {
@@ -109,6 +111,16 @@ const BuildPack = {
 		let data = BuiltinPacks[name];
 		if (!data) {return 0;} else {return data.animLength}
 	},
+	FirstImage: (name) => {
+		let data = BuiltinPacks[name];
+		return BrowserContext.runtime.getURL(`etc/${data.PackPlace}/${data.sequence[0]}`)
+	},
+	GetAuthor: (name) => {
+		let data = BuiltinPacks[name];
+		if (!data) {return ''}
+		let author = data.author; if (!author) {return ''}
+		return author
+	}
 };
 
 
@@ -119,21 +131,58 @@ const GenerateDataPackLists = () => {
 		
 		code += `
 			<div class="AvailableDataPack" packname="${DataPackName}">
+				<div class="FullWidthpreview">
+					<img src="${BuildPack.FirstImage(DataPackName)}"</img>
+				</div>
 				<div class="PreviewData">
 					<span class="packName"> ${DataPackName} </span>
 					<div class="ImagePreview"> ${BuildPack.Images(DataPackName)} </div>
 				</div>
 							
 				<div class="PreviewData TextType">
-					<span data-i18n="howmanysounds"> Sounds: <span>${BuildPack.SoundsNum(DataPackName)}</span></span>
-					<span data-i18n="howmanyimages"> Images: <span>${BuildPack.ImagesNum(DataPackName)}</span></span>
+					<span data-i18n="howmanysounds"> Sounds: <span>${BuildPack.SoundsNum(DataPackName)} | </span> <span data-i18n="howmanyimages"> Images: <span>${BuildPack.ImagesNum(DataPackName)}</span> </span> </span>
 					<span data-i18n="howlong"> Length: <span>${BuildPack.AnimationLen(DataPackName)}ms</span></span>
+					<span data-i18n="PackAuthor" class="PackAuthor"> Author: <span> ${BuildPack.GetAuthor(DataPackName)}<span></span>
 				</div>
 			</div>
 		`
 	}
 	return code;
 	
+}
+
+
+const RegisterPacksAnimations = () => {
+	findAll('.AvailableDataPack').forEach(async (pack) => {
+		const packName = pack.getAttribute('packname');
+		let PackData = null;
+		let PackIsLoaded = false;
+		if (packName === '@DataPack') {PackData = GetDatapackData(); PackIsLoaded=true;} else {
+			PackData = BuiltinPacks[packName]
+		}
+		const previewPlace = pack.find('.FullWidthpreview img');
+		
+		let currentImage = 0;
+		let pngTime = (PackData.animLength / PackData.sequence.length) * 2; // to prevent too fast anims
+		
+		
+		while (true) {
+			let img = '';
+			if (PackIsLoaded) {
+				img = PackData.sequence[currentImage]
+			} else {
+				img = `${BrowserContext.runtime.getURL(`etc/${PackData.PackPlace}/${PackData.sequence[currentImage]}`)}`
+			}
+			
+			previewPlace.src = img;
+			currentImage++;
+			if (currentImage >= PackData.sequence.length) {
+				currentImage = 0;
+				await sleep(pngTime);
+			}
+			await sleep(pngTime > 10 ? pngTime : 10); // "0ms" potential fix
+		}
+	})
 }
 
 (async() => {
@@ -157,13 +206,21 @@ const GenerateDataPackLists = () => {
 					<div class="inlineSetting">
 						<label for="volume" data-i18n="PatVolume"></label>
 						<input type="range" style="width: 100%" id="volume" min="0" max="100" value="${await Settings.get('PatVolume', 0)}" SettingName="PatVolume" updatetext="y">
-						<label for="volume"> (${await Settings.get('PatVolume', 0)}%) </label>
+						<label for="volume" class="Percentage"> (${await Settings.get('PatVolume', 0)}%) </label>
 					</div>
 				</div>
 				
 				<div class="SettingLine">
 					${GetSwitch('ShowImages')} 
 					<p data-i18n="ShowImagesDescription"></p>
+				</div>
+				
+				<div class="SettingLine">
+					<div class="inlineSetting single">
+						<label for="PatSpeedValue" data-i18n="PatSpeed"></label>
+						<input type="range" style="width: 100%" id="PatSpeedValue" min="0.75" max="1.75" step="0.01" value="${await Settings.get('PatSpeed', 1)}" SettingName="PatSpeed" updatetext="y">
+						<label for="PatSpeedValue" class="Percentage"> ${Math.round(await Settings.get('PatSpeed', 1)*100)}% </label>
+					</div>
 				</div>
 			</div>
 			
@@ -187,15 +244,18 @@ const GenerateDataPackLists = () => {
 							<span data-i18n="delete"></span>
 						</div>
 						<div class="AvailableDataPack" packname="@DataPack">
+							<div class="FullWidthpreview">
+								<img src="${GetDatapack.FirstImage()}"</img>
+							</div>
 							<div class="PreviewData">
 								<span class="packName"> Data Pack </span>
 								<div class="ImagePreview"> ${GetDatapack.Images()} </div>
 								
+								
 							</div>
 							
 							<div class="PreviewData TextType">
-								<span data-i18n="howmanysounds"> Sounds: <span>${GetDatapack.SoundsNum()}</span></span>
-								<span data-i18n="howmanyimages"> Images: <span>${GetDatapack.ImagesNum()}</span></span>
+								<span data-i18n="howmanysounds"> Sounds: <span>${GetDatapack.SoundsNum()} | </span> <span data-i18n="howmanyimages"> Images: <span>${GetDatapack.ImagesNum()}</span> </span> </span>
 								<span data-i18n="howlong"> Length: <span>${GetDatapack.AnimationLen()}ms</span></span>
 							</div>
 							

@@ -90,15 +90,3 @@ patStyle.textContent = `
 	}
 `
 document.head.appendChild(patStyle);
-
-
-
-
-
-
-
-
-
-
-
-

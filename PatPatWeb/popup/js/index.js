@@ -78,18 +78,34 @@ function getVolume() {
 		
 		SettingsPane.findAll('div.SettingLine input[type="range"]').forEach(el => {
 			let SetName = el.getAttribute('SettingName');
+			
+			
+			
 			el.addEventListener('input', async () => {
 				if (SetName) {
-					NewValue = Number(el.value)
-					await Settings.set(SetName, NewValue);
+					let NewValue = Number(el.value);
+					if (SetName === 'PatSpeed') {NewValue = Math.round(NewValue*100); if (NewValue>=98 && NewValue<=102) { el.value = 1; NewValue = 100;}}
+					
 					const RangeTextValue = el.nextElementSibling;
-					loadPackData();
 					if (RangeTextValue) {RangeTextValue.textContent = `${NewValue}%`}
 				}
 			});
 			
 			if (SetName === 'PatVolume') {
-				el.addEventListener('change', runPatSound)
+				el.addEventListener('change', async () => {
+					let NewValue = Number(el.value)
+					await Settings.set(SetName, NewValue);
+					await loadPackData();
+					runPatSound();
+				})
+			}
+			
+			if (SetName === 'PatSpeed') {
+				el.addEventListener('change', async () => {
+					let NewValue = Number(el.value)
+					await Settings.set(SetName, NewValue);
+					await loadPackData();
+				})
 			}
 		});
 		
@@ -165,6 +181,8 @@ function getVolume() {
 				window.location.reload()
 			}
 		}
+		
+		RegisterPacksAnimations();
 
 		
 	}

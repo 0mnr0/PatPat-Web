@@ -57,6 +57,7 @@ const DefaultValues = {
 	SelectedPack: "PatPat Classic",
 	ShowImages: true,
 	AllowSound: true,
+	PatSpeed: 1,
 	PatVolume: 50
 };
 

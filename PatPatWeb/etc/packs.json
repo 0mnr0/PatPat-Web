@@ -13,9 +13,11 @@
 			"sounds/pat1.ogg",
 			"sounds/pat2.ogg"
 		],
-		"animLength": 140,
+		"animLength": 160,
 		"author": "LopyMine"
 	},
+	
+	
 
 	"PatPat Bonk": {
 		"PackPlace": "PatPat.Bonk",
@@ -34,5 +36,25 @@
 		"XPosMultiplier": -0.25,
 		"YPosMultiplier": -0.4,
 		"author": "LopyMine"
-	}	
+	}, 
+	
+	
+
+	"PatPat Piston": {
+		"PackPlace": "PatPat.Piston",
+		"sequence": [
+			"sequence/piston0.png",
+			"sequence/piston1.png",
+			"sequence/piston2.png",
+			"sequence/piston3.png",
+			"sequence/piston4.png"
+		],
+		"sounds": [
+			"sounds/piston_sound.ogg"
+		],
+		"animLength": 170,
+		"XPosMultiplier": -0,
+		"YPosMultiplier": -0.2,
+		"author": "LopyMine"
+	}
 }

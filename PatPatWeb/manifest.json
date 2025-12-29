@@ -27,9 +27,9 @@
 			"/etc/PatPat.Classic/sequence/pat2.png",
 			"/etc/PatPat.Classic/sequence/pat3.png",
 			"/etc/PatPat.Classic/sequence/pat4.png",
-			"etc/PatPat.Classic/sounds/pat0.ogg",
-			"etc/PatPat.Classic/sounds/pat1.ogg",
-			"etc/PatPat.Classic/sounds/pat2.ogg",
+			"/etc/PatPat.Classic/sounds/pat0.ogg",
+			"/etc/PatPat.Classic/sounds/pat1.ogg",
+			"/etc/PatPat.Classic/sounds/pat2.ogg",
 			
 			"/etc/PatPat.Bonk/sequence/bonk_animation0.png",
 			"/etc/PatPat.Bonk/sequence/bonk_animation1.png",
@@ -37,7 +37,14 @@
 			"/etc/PatPat.Bonk/sequence/bonk_animation3.png",
 			"/etc/PatPat.Bonk/sequence/bonk_animation4.png",
 			"/etc/PatPat.Bonk/sequence/bonk_animation5.png",
-			"etc/PatPat.Bonk/sounds/bonk.ogg"
+			"/etc/PatPat.Bonk/sounds/bonk.ogg",
+			
+			"/etc/PatPat.Piston/sequence/piston0.png",
+			"/etc/PatPat.Piston/sequence/piston1.png",
+			"/etc/PatPat.Piston/sequence/piston2.png",
+			"/etc/PatPat.Piston/sequence/piston3.png",
+			"/etc/PatPat.Piston/sequence/piston4.png",
+			"/etc/PatPat.Piston/sounds/piston_sound.ogg"
 		],
 		"matches": ["<all_urls>", "file:///*"]
 	  }
