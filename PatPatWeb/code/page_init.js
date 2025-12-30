@@ -6,7 +6,9 @@ window.addEventListener("keyup", e => { if (e.key === "Shift") shiftPressed = fa
 
 let nextPat = null;
 function runPatInit() {
-	findAll('body '+(SupportedElements.join())).forEach(element => {
+	let rules = GetSiteRuleSet(window.location.hostname); if (rules.length > 0) {rules = ", "+rules}
+	
+	findAll('body '+(SupportedElements.join())+rules).forEach(element => {
 		if (patListening.includes(element) || element.className === 'patClassAnimation') {return}
 		patListening.push(element)
 		
@@ -17,7 +19,7 @@ function runPatInit() {
 				runPatAnimation(element);
 			}
 		});
-		element.addEventListener("contextmenu", e => { if(shiftPressed) { e.preventDefault() }});
+		element.addEventListener("contextmenu", e => { if(shiftPressed) { e.preventDefault(); e.stopPropagation(); }});
 		
 		
 		

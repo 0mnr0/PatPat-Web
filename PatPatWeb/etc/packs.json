@@ -53,7 +53,7 @@
 			"sounds/piston_sound.ogg"
 		],
 		"animLength": 170,
-		"XPosMultiplier": -0,
+		"XPosMultiplier": 0,
 		"YPosMultiplier": -0.2,
 		"author": "LopyMine"
 	}

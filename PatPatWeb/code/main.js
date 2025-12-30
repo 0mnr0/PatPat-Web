@@ -130,7 +130,7 @@ function getAnimationSpeed() {
 
 async function runPatAnimation(element, isAutoClicked, scaleWas) {
 	if (!LoadedPack || PattingRightNow.has(element)) return;
-	if (SupportedElements.includes(element.parentElement.nodeName.toLowerCase())) {return}
+	if (patListening.includes(element.parentElement)) {return}
 	
 	let origScale = Attribute.get(element, 'scale', '');
 	let origScaleData = Attribute.getScale(element); // {"XScale": 1, "YScale": 1}
@@ -221,6 +221,7 @@ function addOverlay(target) {
 document.addEventListener("contextmenu", e => {
 	if (e.shiftKey) {
 		e.preventDefault();
+		e.stopPropagation();
 	}
 }, true);
 

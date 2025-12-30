@@ -10,7 +10,7 @@
   },
   "content_scripts": [
     {
-		"js": ["code/LightCore.js", "code/tools.js", "code/main.js", "code/page_init.js"],
+		"js": ["code/LightCore.js", "code/rules.js", "code/tools.js", "code/main.js", "code/page_init.js"],
         "matches": ["https://*/*"]
     }
   ], 
