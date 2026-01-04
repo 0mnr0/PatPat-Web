@@ -121,12 +121,13 @@ function getVolume() {
 					let newDivide = settingType.getAttribute('SettingLinkedTo')
 					ClearAllSettingTypes();
 					findAll('div.SettingSection').forEach(SettingDisplayingType => {
-						SettingDisplayingType.style.display = 'none';
+						SettingDisplayingType.classList.remove('Chosen');
+						SettingDisplayingType.classList.add('Hidden');
 					});
 					LocalStorage.save('LastSection', newDivide);
 					let CurrentSetting = find(`div.SettingSection.${newDivide}`);
 					if (!CurrentSetting) {warn('Setting Div is not found :('); return}
-					CurrentSetting.style.display='';
+					CurrentSetting.classList.remove('Hidden');
 					CurrentSetting.classList.add('Chosen');
 					settingType.classList.add('active');
 				}

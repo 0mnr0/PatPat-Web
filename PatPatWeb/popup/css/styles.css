@@ -85,7 +85,10 @@ div.leftPane > div.active {
 
 
 div.settingsPane {
-	width: 100%;
+    height: 100%;
+    display: flex;
+    width: 100%;
+    flex-direction: column;
 }
 
 
@@ -93,10 +96,7 @@ div.settingsPane {
 
 
 
-
-
-
-div.SettingSection {width: 100%;}
+div.SettingSection {width: 100%; top: 0px}
 div.SettingLine h2 {margin-bottom: 0px; width: calc(100% - 78px); font-size: 120%; font-weight: bold; top: 2px}
 div.SettingLine p {margin-bottom: 0px; opacity: 0.66; font-weight: 300; margin-top: 6px; font-size: small;}
 .SettingLine {
@@ -114,7 +114,7 @@ div.inlineSetting.single {margin-bottom: 8px; align-items: center; font-size: la
 div.inlineSetting label {font-size: smaller;}
 div.inlineSetting label.Percentage {min-width: 35px; text-align: center}
 
-div.SettingSection:not(.Chosen) {display: none}
+div.SettingSection:not(.Chosen) {position: absolute; left: 0px; top: -20px; z-index: -2; opacity: 0; scale: 1.02; height: 0%; overflow: hidden; width: 100%}
 
 
 
@@ -155,6 +155,10 @@ img.unpackingTexturesProcess {
 	right: 0px;
 	width: 30px;
 	aspect-ratio: auto
+}
+
+.SettingSection.Hidden {
+	z-index: -2;
 }
 
 label.DataPackDescription {font-size: small; text-align: center; color: gray;}
