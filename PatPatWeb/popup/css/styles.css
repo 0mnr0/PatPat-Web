@@ -7,8 +7,14 @@
         -ms-user-select: none; 
             user-select: none; 
 }
+
+* {
+  scrollbar-color: #cdbeb1 transparent;
+  scrollbar-width: thin;
+}
 span {display: flex; align-items: center}
 
+html {overflow: hidden} /* fix for toast */ 
 
 body {
 	background: #0a0a0a;
@@ -45,8 +51,10 @@ img.patPatLoader {
 	z-index: 0;
 	top: 4px;
 }
-div.SettingsDiv {height: 100%;}
 
+div.SettingsDiv {
+    height: calc(100% - 74px);
+}
 
 
 div.leftPane {
@@ -89,8 +97,9 @@ div.settingsPane {
     display: flex;
     width: 100%;
     flex-direction: column;
+    overflow: hidden;
+    overflow-y: auto;
 }
-
 
 
 
@@ -324,11 +333,13 @@ div.removeSavedDataPack span {
     gap: 5px;
     border-bottom: solid 1px #80808078;
     padding-bottom: 10px;
-    margin-bottom: 10px;
 }
 
 
 .SettingSection.BlockList .list {
+	display: flex;
+	gap: 3px;
+	flex-direction: column;
     height: 100%;
     width: 100%;
     overflow: auto;
@@ -410,6 +421,48 @@ div.removeSavedDataPack span {
 
 .toggle-switch input:checked+.slider::before {
     transform: translateX(25px);
+}
+
+.domainDiv {
+    display: flex;
+    background: #2a2a2a;
+    gap: 4px;
+    padding: 7px;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    padding-left: 10px;
+    max-width: 457px;
+}
+
+.domainDiv span {
+    width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    display: block;
+    text-overflow: ellipsis;
+}
+
+
+.domainDiv img.preview {
+    height: 22px;
+    scale: 1.25;
+    margin-right: 4px;
+    border-radius: 40px;
+    width: 22px;
+    object-fit: contain;
+}
+
+
+.domainDiv img.delete {
+    height: 100%;
+    scale: 0.95;
+    cursor: pointer;
+    max-width: 28px;
+}
+
+.domainDiv img.delete:hover {
+    scale: 1.05;
 }
 
 

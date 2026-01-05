@@ -1,3 +1,4 @@
+let WorkAllowedOnThisSite = true;
 let allowPatKeyPressed = false;
 const PatAllowTriggerKey = isFireFox ? "Control" : "Shift"; //shift on firefox is force-showing contextmenu
 
@@ -52,6 +53,7 @@ let needsUpdate = false;
 const THROTTLE_MS = 200;
 
 function throttledRunPatInit() {
+  if (!WorkAllowedOnThisSite) {return}
   if (isPaused) {
     needsUpdate = true;
     return;
@@ -71,6 +73,7 @@ function throttledRunPatInit() {
 }
 
 const observer = new MutationObserver((mutations) => {
+    if (!WorkAllowedOnThisSite) {return}
     throttledRunPatInit();
 });
 
@@ -95,3 +98,4 @@ patStyle.textContent = `
 	}
 `
 document.head.appendChild(patStyle);
+

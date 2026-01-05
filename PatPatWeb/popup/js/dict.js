@@ -12,7 +12,9 @@
 		'DataPackProcessing': 'Processing...',
 		'DataPackDescription': 'Upload it .A zip resource pack developed for PatPat. (Not all are supported)',
 		'SpecifyCorrectDomainName': 'Please specify the correct domain name',
-		'BlackListSetting': 'Ignore websites',
+		'SiteIsAlreadyIgnoring': 'The site is already on the ignored list',
+		'BlockList.ReloadPageToApply': 'Reload the necessary pages to apply the rules',
+		'BlockListSetting': 'Ignore websites',
 		
 		'unpacker.sounds.json_isNotExtists': `File "sounds.json" is not found :(`,
 		'unpacker.textures.json5_isNotExtists': `Texture config is not found :(`,
@@ -39,7 +41,9 @@
 		'DataPackProcessing': 'Обработка...',
 		'DataPackDescription': 'Загружайте .zip ресурспаки, разработанные для PatPat. (Поддерживаются не все)',	
 		'SpecifyCorrectDomainName': 'Пожалуйста укажите правильное доменное имя',
-		'BlackListSetting': 'Игнорировать сайты',
+		'SiteIsAlreadyIgnoring': 'Сайт уже находится в списке игнорируемых',
+		'BlockList.ReloadPageToApply': 'Перезагрузите нужные страницы чтобы применить правила',
+		'BlockListSetting': 'Игнорировать сайты',
 		
 		'unpacker.sounds.json_isNotExtists': `Файл "sounds.json" не найден :(`,
 		'unpacker.textures.json5_isNotExtists': `Конфиг текстур не найден :(`,

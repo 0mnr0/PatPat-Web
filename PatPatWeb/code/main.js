@@ -24,6 +24,10 @@ async function loadPacks() {
 const loadPackData = async function() {
 	let PackName = await Settings.get('SelectedPack', 'PatPat Classic');
 	let BuiltinPacks = await loadPacks();
+	if (UserSettings.IgnoreSites.includes(location.host) || UserSettings.IgnoreSites.includes(location.host.replace('www.',''))) {
+		DeLoadThings();
+		return
+	} 
 	IsDataPack = PackName === "@DataPack";
 	LoadedPack = BuiltinPacks[PackName];
 	
@@ -123,6 +127,7 @@ function getAnimationSpeed() {
 }
 
 async function runPatAnimation(element, isAutoClicked, scaleWas) {
+	if (!WorkAllowedOnThisSite) {console.warn('PatPat skipping because this site in a blocklist!')}
 	if (!LoadedPack || PattingRightNow.has(element)) return;
 	if (patListening.includes(element.parentElement)) {return}
 	
@@ -212,14 +217,14 @@ function addOverlay(target) {
 
 if (isFireFox) {
 	document.addEventListener("contextmenu", e => {
-		if (allowPatKeyPressed) {
+		if (WorkAllowedOnThisSite && allowPatKeyPressed) {
 			e.preventDefault();
 			e.stopPropagation();
 		}
 	}, true);
 } else {
 	window.addEventListener('contextmenu', (e) => {
-		if (allowPatKeyPressed) e.preventDefault();
+		if (allowPatKeyPressed && WorkAllowedOnThisSite) e.preventDefault();
 	}, true);
 }
 
@@ -227,7 +232,22 @@ if (isFireFox) {
 
 
 chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
-  if (msg.type === "PatPat.events.SettingsChange") {
-	  await loadPackData();
-  }
+    if (msg.type === "PatPat.events.SettingsChange" && WorkAllowedOnThisSite) {
+	    await loadPackData();
+    }
 });
+
+
+
+const DeLoadThings = () => {
+	WorkAllowedOnThisSite = false;
+	if (patStyle) {patStyle.remove();}
+	
+	
+	//clear ram a bit
+	IsDataPack = false;
+	UserSettings = {};
+	LoadedPack = null;
+	patFiles = [];
+	patSounds = [];
+}

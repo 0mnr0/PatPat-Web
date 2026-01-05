@@ -184,7 +184,7 @@ function getVolume() {
 		}
 		
 		RegisterPacksAnimations();
-		RegisterBlackListProcessor();
+		RegisterBlockListProcessor();
 
 		
 	}

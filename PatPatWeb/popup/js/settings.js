@@ -271,11 +271,10 @@ const RegisterPacksAnimations = () => {
 			
 			
 			<div class="SettingSection BlockList">
-				<h2 class="BlackListDesc" data-i18n="BlackListSetting"></h2> 
+				<h2 class="BlockListDesc" data-i18n="BlockListSetting"></h2> 
 				
 				<div class="flex inputBar">
-					<input type="text" autocomplete="off" placeholder="example.com" id="BlackListInputBar"></input>
-					<img class="search" alt="Search Element" src="icons/search.svg">
+					<input type="text" autocomplete="off" placeholder="example.com" id="BlockListInputBar"></input>
 					<img class="add" alt="Add Element" src="icons/add.svg">
 				</div>
 				
@@ -340,33 +339,81 @@ async function playBase64Audio(base64String, {volume = 1.0, muted = false} = {})
     }
 }
 
-
-const GetIgnoreList = () => {
-	
+const GetIgnoreSitesList = () => {
+	let val = UserSettings.IgnoreSites;
+	if (val === undefined || val === null) {
+		return [];
+	} else { return val }
 }
 
-const RegisterBlackListProcessor = () => {
-	let BlackListInput = find('.SettingSection.BlockList .inputBar input');
-	let BlackListAddButton = find('.SettingSection.BlockList .inputBar img.add');
-	let BlackListSearchButton = find('.SettingSection.BlockList .inputBar img.search');
+const RegisterBlockListProcessor = () => {
+	let BlockList = find('.SettingSection.BlockList div.list');
+	
+	let BlockListInput = find('.SettingSection.BlockList .inputBar input');
+	let BlockListAddButton = find('.SettingSection.BlockList .inputBar img.add');
 	
 	let processedDomain = '';
-	BlackListInput.addEventListener('input', (event) => {
-		processedDomain = getCleanDomain(BlackListInput.value)
+	BlockListInput.addEventListener('input', (event) => {
+		processedDomain = getCleanDomain(BlockListInput.value)
 	});
 	
-	BlackListAddButton.onclick = () => {
+	BlockListAddButton.onclick = async () => {
 		if (!processedDomain.includes('.')) {
+			// if site doamin doest not have "." in domain   ->    abort
 			Toast.create(
 				TranslateAssistant.translate.get('SpecifyCorrectDomainName'),
 				3000,
 				"OK",
 			);
 			return;
+			
+		} else if (GetIgnoreSitesList().includes(processedDomain)) {
+			// if site doamin already ignoring
+			Toast.create(
+				TranslateAssistant.translate.get('SiteIsAlreadyIgnoring'),
+				3000,
+				"OK",
+			);
+			return;
+		} else {
+			let newIgnoreList = GetIgnoreSitesList();
+			newIgnoreList.push(processedDomain);
+			await Settings.set('IgnoreSites', newIgnoreList);
+			AddIntoIgnoreList(BlockList, processedDomain);
+			UserSettings.IgnoreSites = newIgnoreList;
+			BlockListInput.value = '';
+			Toast.create(
+				TranslateAssistant.translate.get('BlockList.ReloadPageToApply'),
+				3000
+			);
 		}
-		
-		
+	};
+	
+	for (domain of GetIgnoreSitesList()) {
+		AddIntoIgnoreList(BlockList, domain);
 	}
+}
+
+const AddIntoIgnoreList = (main, domainName) => {
+	let domainDiv = createElementWith('div', {});
+	domainDiv.className = 'domainDiv';
+	
+	domainDiv.innerHTML = `
+		<img class="preview" src="https://www.google.com/s2/favicons?sz=128&domain=${domainName}">
+		<span class="domainName">${domainName}</span>
+		<img class="delete" src="icons/delete.svg">
+	`;
+	main.appendChild(domainDiv);
 	
 	
+	domainDiv.find('img.delete').onclick = async () => {
+		let newIgnoreList = GetIgnoreSitesList().filter(item => item !== domainName)		
+		await Settings.set('IgnoreSites', newIgnoreList);
+		UserSettings.IgnoreSites = newIgnoreList;
+		domainDiv.remove();
+		Toast.create(
+			TranslateAssistant.translate.get('BlockList.ReloadPageToApply'),
+			3000
+		);
+	}
 }

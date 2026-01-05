@@ -1,5 +1,8 @@
 const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
+const BrowserContext = isFirefox ? browser : chrome;
+const ExtensionVersion = BrowserContext.runtime.getManifest().version;
 const log = console.log;
+
 
 const Settings = {
 	  get(key, defValue) {
@@ -61,7 +64,7 @@ const DefaultValues = {
 	AllowSound: true,
 	PatSpeed: 1,
 	PatVolume: 50,
-	IgnoreSites: [],
+	IgnoreSites: []
 };
 
 
