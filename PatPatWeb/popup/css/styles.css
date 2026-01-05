@@ -64,6 +64,7 @@ div.leftPane {
 	flex-direction: column;
 	gap: 6px;
 	padding: 6px;
+	padding-left: 0px;
 	margin: 0px 10px;
 	background: none;
 	border: solid 1px transparent !important;
@@ -388,6 +389,11 @@ div.leftPane .AuthorsTab {
     bottom: 0px;
     left: 0px;
     width: 100%;
+}
+
+div.leftPane .AuthorsTab {
+    width: calc(100% + 10px);
+    left: -9px;
 }
 
 div.leftPane .AuthorsTab.active {
