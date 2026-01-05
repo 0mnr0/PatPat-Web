@@ -17,7 +17,7 @@ const RuleSets = {
 		`,		
 		
 		"youtube.com": `
-			yt-thumbnail-view-model, ytd-player#inline-player .html5-video-container video,
+			div.html5-video-container video, div.ytThumbnailViewModelImage, 
 			yt-icon.ytd-logo, .ytIconWrapperHost.ytd-logo, 
 			yt-avatar-shape
 		`,
@@ -28,6 +28,10 @@ const RuleSets = {
 		
 		"sora.chatgpt.com": `
 			video
+		`,
+	
+		"github.com": `
+			span.user-following-container, .AppHeader-globalBar context-region-controller nav context-region, video
 		`,
 	
 		"wikipedia.org": `

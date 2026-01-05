@@ -15,6 +15,7 @@
 		'SiteIsAlreadyIgnoring': 'The site is already on the ignored list',
 		'BlockList.ReloadPageToApply': 'Reload the necessary pages to apply the rules',
 		'BlockListSetting': 'Ignore websites',
+		'AuthorsTab': 'Authors',
 		
 		'unpacker.sounds.json_isNotExtists': `File "sounds.json" is not found :(`,
 		'unpacker.textures.json5_isNotExtists': `Texture config is not found :(`,
@@ -44,6 +45,7 @@
 		'SiteIsAlreadyIgnoring': 'Сайт уже находится в списке игнорируемых',
 		'BlockList.ReloadPageToApply': 'Перезагрузите нужные страницы чтобы применить правила',
 		'BlockListSetting': 'Игнорировать сайты',
+		'AuthorsTab': 'Авторы',
 		
 		'unpacker.sounds.json_isNotExtists': `Файл "sounds.json" не найден :(`,
 		'unpacker.textures.json5_isNotExtists': `Конфиг текстур не найден :(`,

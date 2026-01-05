@@ -14,7 +14,7 @@
 }
 span {display: flex; align-items: center}
 
-html {overflow: hidden} /* fix for toast */ 
+html {overflow: auto} /* allow scroll in window if with or height is too big */ 
 
 body {
 	background: #0a0a0a;
@@ -125,6 +125,17 @@ div.inlineSetting label.Percentage {min-width: 35px; text-align: center}
 
 div.SettingSection:not(.Chosen) {position: absolute; left: 0px; top: -20px; z-index: -2; opacity: 0; scale: 1.02; height: 0%; overflow: hidden; width: 100%}
 
+
+div.inlineSetting.volumer::before {
+    width: 1px;
+    content: "";
+    position: absolute;
+    height: 100%;
+    background: #808080bd;
+    border-radius: 2px;
+    z-index: 0;
+    left: calc(25% - 9px);
+}
 
 
 input#zipUploader {
@@ -370,6 +381,67 @@ div.removeSavedDataPack span {
     height: 100%;
     cursor: pointer;
 }
+
+div.leftPane .AuthorsTab {
+	overflow: hidden;
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+}
+
+div.leftPane .AuthorsTab.active {
+	background: linear-gradient(90deg, transparent 60%, #75757557 100%);
+}
+
+.AuthorsTab .avatarlist {
+    display: flex;
+    max-height: 20px;
+    width: 40px;
+    margin-right: 25px;
+    margin-left: 3px;
+    justify-content: center;
+    top: 1px;
+}
+
+.AuthorsTab .avatarlist img {
+    height: 100%;
+    border-radius: 20px;
+    margin-right: -10px;
+}
+
+.AuthorsTab div.avatarlist.bgGradientThing {
+    gap: 0px;
+    position: absolute;
+    max-height: 35px;
+    top: 0px;
+    filter: brightness(1.25) blur(6px);
+    scale: 1.25;
+	opacity: 0;
+    z-index: -1;
+    left: -10px;
+}
+
+.AuthorsTab.active div.avatarlist.bgGradientThing {
+	opacity: 1;
+	left: 10px;
+	scale: 1.5;
+}
+.AuthorsTab .bgGradientThing img {
+    height: 35px;
+    aspect-ratio: 1/1;
+    z-index: -1;
+}
+
+
+
+.SettingSection.AuthorsTab {
+    padding: 10px;
+    text-align: center;
+}
+
+
+
 
 
 
