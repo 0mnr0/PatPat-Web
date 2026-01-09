@@ -290,6 +290,27 @@ const RegisterPacksAnimations = () => {
 			
 			<div class="SettingSection AuthorsTab">
 				<h2 class="AuthorsTab" data-i18n="AuthorsTab"></h2> 
+				
+				<div class="AuthorList">
+					<div class="Author">
+						<div class="AvatarAndName">
+							<img src="https://avatars.githubusercontent.com/u/127966446">
+							<a href="https://github.com/LopyMine" target="_blank"> LopyMine, </a>
+							<a href="https://github.com/nikita51bot" target="_blank"> nikita51bot </a>
+							<img src="https://avatars.githubusercontent.com/u/89354519">
+						</div>
+						<span class="ContributorDesc" data-i18n="LopyMineDesc"></span>
+					</div>
+					
+					<div class="Author">
+						<div class="AvatarAndName">
+							<img src="https://avatars.githubusercontent.com/u/99125366">
+							<a href="https://github.com/0mnr0" target="_blank"> dsvl0 </a>
+						</div>
+						<span class="ContributorDesc" data-i18n="dsvl0Desc"></span>
+					</div>
+				</div>
+				
 			</div>
 				
 		

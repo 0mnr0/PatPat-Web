@@ -30,6 +30,9 @@
 		'howlong': `Length: `,
 		'PackAuthor': `Author: `,
 		
+		'LopyMineDesc': `The developers of the "PatPat" mod for Minecraft became the idea for this expansion. Thanks guys for the resources provided for the expansion`,
+		'dsvl0Desc': `Actually I am. (The one who wrote the extension)`,
+		
 	},
 	'ru': {
 		'GeneralSettings': "Настройки",
@@ -61,6 +64,9 @@
 		'howmanyimages': `Изображений: `,
 		'howlong': `Длина: `,
 		'PackAuthor': `Автор: `,
+		
+		'LopyMineDesc': `Разработчики мода "PatPat" для Minecraft, стала идеей для этого расширения. Спасибо ребятам, за ресурсы, предоставленные для расширения.`,
+		'dsvl0Desc': `Собственно я (Тот кто написал расширение)`,
 	},
 	"ru-RU": "ru"
 }

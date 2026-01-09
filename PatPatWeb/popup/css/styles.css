@@ -440,12 +440,58 @@ div.leftPane .AuthorsTab.active {
 }
 
 
-
 .SettingSection.AuthorsTab {
+    display: flex;
+    height: 100%;
     padding: 10px;
     text-align: center;
+    flex-direction: column;
 }
 
+.SettingSection.AuthorsTab .AuthorList {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    gap: 50px;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+
+
+div.SettingSection.AuthorsTab .Author {
+    display: flex;
+    flex-direction: column;
+	align-items: center;
+	margin-bottom: 40px;
+}
+
+div.SettingSection.AuthorsTab .Author .AvatarAndName {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+div.SettingSection.AuthorsTab .Author span.ContributorDesc {
+	margin-top: 4px;
+	opacity: 0.75;
+	font-size: small;
+}
+
+div.SettingSection.AuthorsTab .Author a {
+    font-weight: bold;
+    text-decoration: none;
+    font-size: larger;
+    color: white;
+    text-shadow: 0px 0px 2px #ffffff90;
+}
+
+
+div.SettingSection.AuthorsTab .Author .AvatarAndName img {
+	max-height: 40px;
+	border-radius: 10px;
+}
 
 
 
