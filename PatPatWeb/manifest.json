@@ -4,14 +4,19 @@
   "version": "1.0",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
-  "permissions": ["storage", "tabs"],
+  "permissions": ["storage", "tabs", "activeTab", "scripting"],
   "icons": {
 	"128": "/etc/icon.png"
   },
   "content_scripts": [
     {
 		"js": ["code/LightCore.js", "code/rules.js", "code/tools.js", "code/main.js", "code/page_init.js"],
-        "matches": ["https://*/*"]
+        "matches": [
+			"<all_urls>",
+			"file:///*",
+			"http://localhost/*",
+			"http://127.0.0.1/*"
+		]
     }
   ], 
   "background": {
@@ -47,7 +52,13 @@
 			"/etc/PatPat.Piston/sequence/piston4.png",
 			"/etc/PatPat.Piston/sounds/piston_sound.ogg"
 		],
-		"matches": ["<all_urls>", "file:///*"]
+		"matches": [
+			"<all_urls>",
+			"file:///*",
+			"http://localhost/*",
+			"http://127.0.0.1/*",
+			"http://127.0.0.1:7777/*"
+		]
 	  }
   ],
   "browser_specific_settings": {
@@ -64,7 +75,9 @@
     "default_icon" : "etc/icon.png"
   },
   "host_permissions": [
-    "<all_urls>",
-    "file:///*"
+    "http://localhost/*",
+    "http://127.0.0.1/*",
+    "https://*/*",
+    "http://*/*"
   ]
 }
