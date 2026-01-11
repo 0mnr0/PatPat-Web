@@ -130,7 +130,7 @@ function getAnimationSpeed() {
 }
 
 async function runPatAnimation(element, isAutoClicked, scaleWas, originalStyleLine) {
-	if (!WorkAllowedOnThisSite) {console.warn('PatPat skipping because this site in a blocklist!')}
+	if (!WorkAllowedOnThisSite) {console.warn('PatPat skipping because this site in a blocklist!'); return}
 	if (!LoadedPack || PattingRightNow.has(element)) return;
 	if (patListening.includes(element.parentElement)) {return}
 	
