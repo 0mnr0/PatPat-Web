@@ -6,6 +6,7 @@
   "manifest_version": 3,
   "permissions": ["storage", "tabs"],
   "icons": {
+	"64": "/etc/icon.chrome.x64.png",
 	"128": "/etc/icon.chrome.png"
   },
   "content_scripts": [
