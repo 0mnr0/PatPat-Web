@@ -11,7 +11,7 @@ SupportedElements = ['img', 'svg', 'model-viewer']
 let nextPat = null;
 function runPatInit() {
 	let rules = GetSiteRuleSet(window.location.hostname); if (rules.length > 0) {rules = ", "+rules}
-	findAll('body '+(SupportedElements.join())+rules).forEach(element => {
+	findAll((SupportedElements.join())+rules).forEach(element => {
 		if (patListening.includes(element) || element.className === 'patClassAnimation') {return}
 		patListening.push(element)
 		
