@@ -190,6 +190,8 @@ async function runPatAnimation(element, isAutoClicked, scaleWas, originalStyleLi
 	element.style.transformOrigin = origTransformOrigin;
 	PattingRightNow.delete(element);
 	SuperFeatures.run(element);
+	Stats.add(element);
+	Announce.end(element, isAutoClicked); //Web Events are Supported
 	
 	if (nextPat) {
 		if (scaleWas !== undefined) { await runPatAnimation(nextPat, true, scaleWas, origStyles); return}
@@ -205,7 +207,8 @@ async function runPatAnimation(element, isAutoClicked, scaleWas, originalStyleLi
 		element.style = origStyles
 	}
 	
-	Announce.end(element, isAutoClicked); //Web Events are Supported
+	
+	
 }
 
 function addOverlay(target) {
@@ -329,7 +332,7 @@ const DeLoadThings = () => {
 	if (patStyle) {patStyle.remove();}
 	
 	
-	//clear ram a bit
+	// clear ram a bit
 	IsDataPack = false;
 	UserSettings = {};
 	LoadedPack = null;

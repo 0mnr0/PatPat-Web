@@ -14,7 +14,7 @@
 }
 span {display: flex; align-items: center}
 
-html {overflow: auto} /* allow scroll in window if with or height is too big */ 
+html {overflow: auto; width: fit-content;} /* allow scroll in window if with or height is too big */ 
 
 body {
 	background: #0a0a0a;
