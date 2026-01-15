@@ -47,6 +47,9 @@ const SuperFeatures = {
 	},
 	
 	run: (element) => {
+		if (!WorkAllowedOnThisSite) {return}
+		if (!UserSettings.EnableSuperFeatures) {return}
+		
 		const siteDomain = getSiteDomainName().replace('www.','');
 		if (!SuperFeatures.supporting(siteDomain)) {log('site is not supported'); return}
 		const room = SuperFeatures.getRoom(siteDomain, element);

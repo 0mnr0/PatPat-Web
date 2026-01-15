@@ -220,6 +220,12 @@ const RegisterPacksAnimations = () => {
 				
 				
 				<div class="SettingLine">
+					${GetSwitch('EnableSuperFeatures')} 
+					<p data-i18n="EnableSuperFeatures.Desc"></p>
+				</div>
+				
+				
+				<div class="SettingLine">
 					${GetSwitch('EnableDithering')} 
 					<p data-i18n="EnableDithering.Desc"></p>
 					
@@ -229,7 +235,6 @@ const RegisterPacksAnimations = () => {
 						<p data-i18n="ForceDithering.Desc"></p>
 					</div>
 				</div>
-				
 				
 				<div class="SettingLine">
 					${GetSwitch('ShowImages')} 

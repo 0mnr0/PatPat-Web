@@ -23,6 +23,8 @@
 		'ForceDithering': 'Always',
 		'EnableDithering': 'When an extension creates an animation that takes up a lot of screen space, a transparency filter is applied to it',
 		'ForceDithering': 'Always create animations with transparency effect',
+		'EnableSuperFeatures': 'Super Functions',
+		'EnableSuperFeatures.Desc': 'Enables "Super Features" on supported sites. For example, on Reddit, after patting one photo 10 times, an UpVote is set',
 		
 		
 		'unpacker.sounds.json_isNotExtists': `File "sounds.json" is not found :(`,
@@ -64,6 +66,8 @@
 		'ForceDithering': 'Всегда',
 		'EnableDithering.Desc': 'Когда расширение создает анимацию, которое занимает много места на экране, к нему примениться фильтр прозрачности',
 		'ForceDithering.Desc': 'Всегда создавать анимацию с эффектом прозрачности',
+		'EnableSuperFeatures': 'Включить СуперФункции',
+		'EnableSuperFeatures.Desc': 'Включает "Супер Функции" на поддерживаемых сайтах. Например, на Reddit, после похлопывания одного фото 10 раз - ставиться Upvote',
 		
 		
 		'unpacker.sounds.json_isNotExtists': `Файл "sounds.json" не найден :(`,

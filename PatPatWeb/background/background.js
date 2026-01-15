@@ -67,7 +67,7 @@ const DefaultValues = {
 	ShowImages: true,
 	ForceDithering: false,
 	EnableDithering: false,
-	
+	EnableSuperFeatures: false,
 	"MakeAnnouncements.Ext": true
 };
 
