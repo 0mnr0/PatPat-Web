@@ -46,7 +46,7 @@ function runPatInit() {
 		if (patListening.includes(element) || element.className === 'patClassAnimation') {return}
 		patListening.push(element);
 		
-		element.addEventListener("contextmenu", e => { if(PatTriggers.wasActive(e)) { e.preventDefault(); e.stopPropagation(); }});
+		element.addEventListener("contextmenu", e => { if(PatTriggers.wasActive(e) && WorkAllowedOnThisSite) { e.preventDefault(); e.stopPropagation(); }});
 		
 		
 		
@@ -55,7 +55,7 @@ function runPatInit() {
 		    if (e.button === 2) {
 				nextPat = element;
 				rightMouseDownOnElement = true;
-				if(PatTriggers.wasActive(e)) { runPatAnimation(element); e.preventDefault() }
+				if(PatTriggers.wasActive(e) && WorkAllowedOnThisSite) { runPatAnimation(element); e.preventDefault() }
 		    }
 		});
 
