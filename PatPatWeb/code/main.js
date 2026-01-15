@@ -23,7 +23,7 @@ async function loadPacks() {
 const loadPackData = async function() {
 	let PackName = await Settings.get('SelectedPack', 'PatPat Classic');
 	let BuiltinPacks = await loadPacks();
-	if (UserSettings.IgnoreSites.includes(location.host) || UserSettings.IgnoreSites.includes(location.host.replace('www.',''))) {
+	if (isSiteBlockListed()) {
 		DeLoadThings();
 		return
 	}
@@ -189,6 +189,7 @@ async function runPatAnimation(element, isAutoClicked, scaleWas, originalStyleLi
 	element.style.pointerEvents = origPointerEvents;
 	element.style.transformOrigin = origTransformOrigin;
 	PattingRightNow.delete(element);
+	SuperFeatures.run(element);
 	
 	if (nextPat) {
 		if (scaleWas !== undefined) { await runPatAnimation(nextPat, true, scaleWas, origStyles); return}
@@ -289,14 +290,14 @@ function randChoose(array) {return array[Math.floor(Math.random()*array.length)]
 
 if (isFireFox) {
 	document.addEventListener("contextmenu", e => {
-		if (WorkAllowedOnThisSite && allowPatKeyPressed) {
+		if (WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
 			e.preventDefault();
 			e.stopPropagation();
 		}
 	}, true);
 } else {
 	window.addEventListener('contextmenu', (e) => {
-		if (allowPatKeyPressed && WorkAllowedOnThisSite) e.preventDefault();
+		if (PatTriggers.wasActive(e) && WorkAllowedOnThisSite) e.preventDefault();
 	}, true);
 }
 
@@ -322,4 +323,11 @@ const DeLoadThings = () => {
 	LoadedPack = null;
 	patFiles = [];
 	patSounds = [];
+}
+
+function isSiteBlockListed() {
+	return (UserSettings.IgnoreSites.includes(getSiteDomainName()) || UserSettings.IgnoreSites.includes(getSiteDomainName().replace('www.','')))
+}
+function getSiteDomainName() {
+	return location.host;
 }

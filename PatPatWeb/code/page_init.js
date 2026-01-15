@@ -1,9 +1,40 @@
 let WorkAllowedOnThisSite = true;
 let allowPatKeyPressed = false;
-const PatAllowTriggerKey = isFireFox ? "Control" : "Shift"; //shift on firefox is force-showing contextmenu
 
-window.addEventListener("keydown", e => { if (e.key === PatAllowTriggerKey) allowPatKeyPressed = true; });
-window.addEventListener("keyup", e => { if (e.key === PatAllowTriggerKey) allowPatKeyPressed = false; });
+let PatTriggers = {
+	keyPressed: false,
+	KeyName: isFireFox ? "Control" : "Shift",   // shift on firefox is force-showing contextmenu
+	Key: isFireFox ? "ctrlKey" : "shiftKey",
+	
+	setLastState: (val) => {
+		if (val === true || val === false) {
+			PatTriggers.keyPressed = val;
+			return val;
+		} 
+		return false;
+	},
+	
+	wasActive: (event) => {
+		if (!event) {
+			return PatTriggers.keyPressed; // return last state of keyboard capture as no event data is provided
+		}
+		
+		const MouseEvent = PatTriggers.setLastState(event[PatTriggers.Key]); // if MouseEvent captured that Pat key pressed
+		if (MouseEvent === true) { return true }
+		
+		const PointerEvent = PatTriggers.setLastState(event[PatTriggers.Key]); // if PointerEvent captured that Pat key pressed
+		if (PointerEvent === true) { return true }		
+		
+		
+		// so we have nothing
+		return false;
+	}
+}
+
+
+
+window.addEventListener("keydown", e => { if (e.key === PatTriggers.KeyName) PatTriggers.keyPressed = true; });
+window.addEventListener("keyup", e => { if (e.key === PatTriggers.KeyName) PatTriggers.keyPressed = false; });
 SupportedElements = ['img', 'svg', 'model-viewer']
 
 
@@ -13,16 +44,9 @@ function runPatInit() {
 	let rules = GetSiteRuleSet(window.location.hostname); if (rules.length > 0) {rules = ", "+rules}
 	findAll((SupportedElements.join())+rules).forEach(element => {
 		if (patListening.includes(element) || element.className === 'patClassAnimation') {return}
-		patListening.push(element)
+		patListening.push(element);
 		
-		element.tabIndex = 0;
-		element.addEventListener("mousedown", e => {
-			if (e.button === 2 && allowPatKeyPressed) {
-				e.preventDefault();
-				
-			}
-		});
-		element.addEventListener("contextmenu", e => { if(allowPatKeyPressed) { e.preventDefault(); e.stopPropagation(); }});
+		element.addEventListener("contextmenu", e => { if(PatTriggers.wasActive(e)) { e.preventDefault(); e.stopPropagation(); }});
 		
 		
 		
@@ -31,7 +55,7 @@ function runPatInit() {
 		    if (e.button === 2) {
 				nextPat = element;
 				rightMouseDownOnElement = true;
-				if(allowPatKeyPressed) { runPatAnimation(element); e.preventDefault() }
+				if(PatTriggers.wasActive(e)) { runPatAnimation(element); e.preventDefault() }
 		    }
 		});
 
