@@ -59,12 +59,15 @@ async function loadPacks() {
 }
 
 const DefaultValues = {
-	SelectedPack: "PatPat Classic",
-	ShowImages: true,
 	AllowSound: true,
+	IgnoreSites: [],
 	PatSpeed: 1,
 	PatVolume: 50,
-	IgnoreSites: [],
+	SelectedPack: "PatPat Classic",
+	ShowImages: true,
+	ForceDithering: false,
+	EnableDithering: false,
+	
 	"MakeAnnouncements.Ext": true
 };
 

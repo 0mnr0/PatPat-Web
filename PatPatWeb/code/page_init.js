@@ -103,7 +103,6 @@ const observer = new MutationObserver((mutations) => {
 observer.observe(document.documentElement, {
   childList: true,
   subtree: true,
-  attributes: false,
   characterData: false
 });
 
@@ -119,6 +118,17 @@ patStyle.textContent = `
 		outline: none;
 		background-position: center;
 	}
+	
+	.patClassAnimation.dithering {
+	   --size: 4px;
+
+	   mask-image:
+		    linear-gradient(90deg, #000 50%, rgb(0 0 0 / 40%) 0),
+		    linear-gradient(#000 50%, rgb(0 0 0 / 40%) 0);
+	  
+	   mask-size: var(--size) var(--size);
+	   mask-composite: intersect;
+	 }
 `
 document.head.appendChild(patStyle);
 

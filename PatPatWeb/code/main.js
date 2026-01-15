@@ -214,9 +214,21 @@ function addOverlay(target) {
 	let topPos = rect.top + window.scrollY;
 	if (LoadedPack.XPosMultiplier) { leftPos = leftPos + (rect.width * LoadedPack.XPosMultiplier) }
 	if (LoadedPack.YPosMultiplier) { topPos = topPos + (rect.height * LoadedPack.YPosMultiplier) }
+	
+	function ditheringRule() {
+		if (
+			UserSettings.EnableDithering && (
+			rect.width > (window.innerWidth/2) ||
+			rect.height > (window.innerHeight/1.5)
+		)) {return true;}
+		// OR
+		if (UserSettings.EnableDithering && UserSettings.ForceDithering) {return true;}
+		
+		return false;
+	}
 
 	const overlay = document.createElement('img');
-	overlay.className = 'patClassAnimation';
+	overlay.className = `patClassAnimation ${ditheringRule() ? 'dithering' : ''} `;
 	overlay.style.left = leftPos +'px';
 	overlay.style.top = topPos + 'px';
 	overlay.style.width = rect.width + 'px';

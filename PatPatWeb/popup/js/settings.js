@@ -220,6 +220,18 @@ const RegisterPacksAnimations = () => {
 				
 				
 				<div class="SettingLine">
+					${GetSwitch('EnableDithering')} 
+					<p data-i18n="EnableDithering.Desc"></p>
+					
+					
+					<div class="SettingLine inlineSetting">
+						${GetSwitch('ForceDithering')} 
+						<p data-i18n="ForceDithering.Desc"></p>
+					</div>
+				</div>
+				
+				
+				<div class="SettingLine">
 					${GetSwitch('ShowImages')} 
 					<p data-i18n="ShowImagesDescription"></p>
 				</div>

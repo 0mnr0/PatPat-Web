@@ -17,7 +17,13 @@
 		'BlockListSetting': 'Ignore websites',
 		'MakeAnnouncements.Ext': 'Web Events',
 		'MakeAnnouncements.Ext.Desc': 'If the site supports this extension, it will be able to receive Pat events when interacting with the site and perform any actions',
-		'AuthorsTab': 'Authors',
+		
+		
+		'EnableDithering': 'Adaptive transparency',
+		'ForceDithering': 'Always',
+		'EnableDithering': 'When an extension creates an animation that takes up a lot of screen space, a transparency filter is applied to it',
+		'ForceDithering': 'Always create animations with transparency effect',
+		
 		
 		'unpacker.sounds.json_isNotExtists': `File "sounds.json" is not found :(`,
 		'unpacker.textures.json5_isNotExtists': `Texture config is not found :(`,
@@ -29,6 +35,7 @@
 		'howmanyimages': `Images: `,
 		'howlong': `Length: `,
 		'PackAuthor': `Author: `,
+		'AuthorsTab': 'Authors',
 		
 		'LopyMineDesc': `The developers of the "PatPat" mod for Minecraft became the idea for this expansion. Thanks guys for the resources provided for the expansion`,
 		'dsvl0Desc': `Actually I am. (The one who wrote the extension)`,
@@ -52,7 +59,12 @@
 		'BlockListSetting': 'Игнорировать сайты',
 		'MakeAnnouncements.Ext': 'События на сайтах',
 		'MakeAnnouncements.Ext.Desc': 'Если сайт поддерживает это расширение, оно сможет получать Pat события при взаимодействии с сайтом и выполнять какие-либо действия',
-		'AuthorsTab': 'Авторы',
+		
+		'EnableDithering': 'Адаптивная прозрачность',
+		'ForceDithering': 'Всегда',
+		'EnableDithering.Desc': 'Когда расширение создает анимацию, которое занимает много места на экране, к нему примениться фильтр прозрачности',
+		'ForceDithering.Desc': 'Всегда создавать анимацию с эффектом прозрачности',
+		
 		
 		'unpacker.sounds.json_isNotExtists': `Файл "sounds.json" не найден :(`,
 		'unpacker.textures.json5_isNotExtists': `Конфиг текстур не найден :(`,
@@ -64,6 +76,7 @@
 		'howmanyimages': `Изображений: `,
 		'howlong': `Длина: `,
 		'PackAuthor': `Автор: `,
+		'AuthorsTab': 'Авторы',
 		
 		'LopyMineDesc': `Разработчики мода "PatPat" для Minecraft, стала идеей для этого расширения. Спасибо ребятам, за ресурсы, предоставленные для расширения.`,
 		'dsvl0Desc': `Собственно я (Тот кто написал расширение)`,
