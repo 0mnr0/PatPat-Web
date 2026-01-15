@@ -8,12 +8,14 @@ const BrowserContext = (typeof chrome === 'object') ? chrome : browser;
 
 const Attribute = {
 	getStylesLine: (element) => {
-		const styles = element.style;
-		let elementInLineStyle = '';
-		for (styleAttributeName of styles) {
-			elementInLineStyle += (`${styleAttributeName}: ${styles[styleAttributeName]}; `)
-		}
-		return elementInLineStyle;
+		
+		// const styles = element.style;
+		// let elementInLineStyle = '';
+		// for (styleAttributeName of styles) {
+		//  	elementInLineStyle += (`${styleAttributeName}: ${styles[styleAttributeName]}; `)
+		// }
+		
+		return element.style.cssText;
 		
 	},
 	
