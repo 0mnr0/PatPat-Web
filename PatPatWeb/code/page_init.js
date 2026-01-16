@@ -105,30 +105,3 @@ observer.observe(document.documentElement, {
   subtree: true,
   characterData: false
 });
-
-
-let patStyle = document.createElement('style');
-patStyle.textContent = `
-	.patClassAnimation {
-		position: absolute;
-		pointer-events: none;
-		z-index: 999999999999;
-		object-fit: contain;
-		border: none; 
-		outline: none;
-		background-position: center;
-	}
-	
-	.patClassAnimation.dithering {
-	   --size: 4px;
-
-	   mask-image:
-		    linear-gradient(90deg, #000 50%, rgb(0 0 0 / 40%) 0),
-		    linear-gradient(#000 50%, rgb(0 0 0 / 40%) 0);
-	  
-	   mask-size: var(--size) var(--size);
-	   mask-composite: intersect;
-	 }
-`
-document.head.appendChild(patStyle);
-

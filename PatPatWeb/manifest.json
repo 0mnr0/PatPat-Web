@@ -4,20 +4,21 @@
   "version": "0.8",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
-  "permissions": ["storage", "tabs"],
+  "permissions": ["storage", "tabs", "scripting"],
   "icons": {
 	"64": "/etc/icon.chrome.x64.png",
 	"128": "/etc/icon.chrome.png"
   },
   "content_scripts": [
     {
-		"js": ["code/LightCore.js", "code/rules.js", "code/tools.js", "code/main.js", "code/page_init.js", "code/SuperFeatures.js", "code/stats.js"],
+		"css": ["code/css/patStyles.css"],
         "matches": [
 			"<all_urls>",
 			"file:///*",
 			"http://localhost/*",
 			"http://127.0.0.1/*"
-		]
+		],
+		"run_at": "document_start"
     }
   ], 
   "background": {

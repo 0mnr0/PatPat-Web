@@ -124,3 +124,40 @@ chrome.storage.onChanged.addListener(async (changes) => {
   }
 });
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+// After DOM Loader
+
+chrome.runtime.onInstalled.addListener(async () => {
+	
+  const oldScripts = await chrome.scripting.getRegisteredContentScripts();
+  if (oldScripts.length > 0) {
+    await chrome.scripting.unregisterContentScripts();
+  }
+
+  await chrome.scripting.registerContentScripts([{
+    id: "early-injector",
+    js: ["code/LightCore.js", "code/rules.js", "code/tools.js", "code/main.js", "code/page_init.js", "code/SuperFeatures.js", "code/stats.js"],
+    matches: [
+			"<all_urls>",
+			"file:///*",
+			"http://localhost/*",
+			"http://127.0.0.1/*"
+		],
+    runAt: "document_start",
+    persistAcrossSessions: true
+  }]);
+  
+  
+});
