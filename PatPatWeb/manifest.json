@@ -12,13 +12,14 @@
   "content_scripts": [
     {
 		"css": ["code/css/patStyles.css"],
+		"js": ["code/LightCore.js", "code/rules.js", "code/tools.js", "code/main.js", "code/page_init.js", "code/SuperFeatures.js", "code/stats.js"],
         "matches": [
 			"<all_urls>",
 			"file:///*",
 			"http://localhost/*",
 			"http://127.0.0.1/*"
 		],
-		"run_at": "document_start"
+		"run_at": "document_end"
     }
   ], 
   "background": {
