@@ -190,8 +190,13 @@ async function runPatAnimation(element, isAutoClicked, scaleWas, originalStyleLi
 	element.style.transformOrigin = origTransformOrigin;
 	PattingRightNow.delete(element);
 	SuperFeatures.run(element);
-	Stats.add(element);
-	Announce.end(element, isAutoClicked); //Web Events are Supported
+	
+	try { 
+		Stats.add(element);
+		Announce.end(element, isAutoClicked); //Web Events are Supported
+	} catch(e) {
+		warn("PatPat is cant execute ternal operations! Is Context is gone? ", e);
+	}
 	
 	if (nextPat) {
 		if (scaleWas !== undefined) { await runPatAnimation(nextPat, true, scaleWas, origStyles); return}

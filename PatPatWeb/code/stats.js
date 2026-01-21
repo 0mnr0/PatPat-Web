@@ -28,9 +28,24 @@ function getImageSource(element) {
 
 
 const Stats = {
+	getYear: () => { return new Date().getFullYear() },
+	
 	get: async () => {
-		return await Settings.get("UserStats", {})
+		let stats = await Settings.get("UserStats", {});
+		if (stats.note === undefined) {
+			stats.note = "Any of this data will NOT be sended anywhere. This is local and only local data-usage. Later i'll add feature that shows user stats (or maybe i'll make it as spotify wrapped)"
+		}
+		
+		const StatsYear = Stats.getYear();
+		let YearStatsContext = stats[StatsYear];
+		
+		if (!YearStatsContext) {
+			YearStatsContext = {};
+			stats[StatsYear] = YearStatsContext;
+		}
+		return stats;
 	},
+	
 	
 	initIfEmpty: (statsObj) => {
 		
@@ -45,13 +60,16 @@ const Stats = {
 		if (statsObj.packsUsage === undefined) {
 			statsObj.packsUsage = {}
 		}
+		
+		
 		return statsObj;
 		
 	},
 	
 	add: async (element) => {		
 		const siteDomain = getSiteDomainName().replace('www.','');
-		currentStats = await Stats.get();
+		let allStats = await Stats.get();
+		currentStats = allStats[Stats.getYear()];
 		currentStats = Stats.initIfEmpty(currentStats);
 		
 		
@@ -61,6 +79,21 @@ const Stats = {
 		currentStats.sites[siteDomain] = currentStats.sites[siteDomain] + 1;
 		
 		
-		await Settings.set("UserStats", currentStats);
+		
+		// Count for packs usage
+		if (currentStats.packsUsage[UserSettings.SelectedPack] === undefined) { currentStats.packsUsage[UserSettings.SelectedPack] = 0; }
+		currentStats.packsUsage[UserSettings.SelectedPack] = currentStats.packsUsage[UserSettings.SelectedPack] + 1;
+		
+		
+		// Count for top pated 
+		const patSource = getImageSource(element);
+		if (patSource !== null) {
+			if (currentStats.topPated[patSource.src] === undefined) { currentStats.topPated[patSource.src] = {type: null, count: 0}; }
+			currentStats.topPated[patSource.src].type = patSource.type;
+			currentStats.topPated[patSource.src].count = currentStats.topPated[patSource.src].count + 1;
+		}	
+		
+		log(allStats);
+		await Settings.set("UserStats", allStats);
 	}
 }
