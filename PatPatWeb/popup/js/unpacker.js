@@ -42,10 +42,10 @@ const unpackData = async function (file) {
 	}
 	const texturesData = JSON5.parse(await json5File.async("text"));
 	
-	let SoundsList = (sounds[Object.keys(sounds)[0]]).sounds;               //patpat:sound_name.ogg
-	let AnimationLength = texturesData.animation.duration;                 // <int> (e.g. 300)
-	let TextureFrames = texturesData.animation.frame.totalFrames;          // <int>
-	let Texture = texturesData.animation.texture.replace(':','/');    // textures/animated_piston_texture.png
+	let SoundsList = (sounds[Object.keys(sounds)[0]]).sounds;               // patpat:sound_name.ogg
+	let AnimationLength = texturesData.animation.duration;                  // <int> (e.g. 300)
+	let TextureFrames = texturesData.animation.frame.totalFrames;           // <int>
+	let Texture = texturesData.animation.texture.replace(':','/');    		// textures/animated_piston_texture.png
 	const nameSpace = texturesData.animation.texture.split(':')[0]
 	
 	for (let i = 0; i < SoundsList.length; i++) { 

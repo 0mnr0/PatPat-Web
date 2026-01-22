@@ -1,7 +1,7 @@
 {
   "name": "PatPat",
   "description": "Pat Images on the websites!",
-  "version": "0.8",
+  "version": "0.9",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
   "permissions": ["storage", "tabs", "scripting"],
@@ -12,7 +12,7 @@
   "content_scripts": [
     {
 		"css": ["code/css/patStyles.css"],
-		"js": ["code/LightCore.js", "code/rules.js", "code/tools.js", "code/main.js", "code/page_init.js", "code/SuperFeatures.js", "code/stats.js"],
+		"js": ["code/LightTools.js", "code/rules.js", "code/tools.js", "code/main.js", "code/page_init.js", "code/SuperFeatures.js", "code/stats.js"],
         "matches": [
 			"<all_urls>",
 			"file:///*",
