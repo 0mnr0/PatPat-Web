@@ -4,8 +4,9 @@
   "version": "0.9",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
-  "permissions": ["storage", "tabs", "scripting"],
+  "permissions": ["storage", "tabs", "scripting", "contextMenus", "menus"],
   "icons": {
+	"16": "/etc/icon.nano.png",
 	"64": "/etc/icon.chrome.x64.png",
 	"128": "/etc/icon.chrome.png"
   },

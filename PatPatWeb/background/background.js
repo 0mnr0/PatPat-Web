@@ -60,28 +60,17 @@ async function loadPacks() {
 
 const DefaultValues = {
 	AllowSound: true,
+	AllowContextMenu: true,
+	ForceDithering: false,
+	EnableDithering: false,
+	EnableSuperFeatures: false,
 	IgnoreSites: [],
 	PatSpeed: 1,
 	PatVolume: 50,
 	SelectedPack: "PatPat Classic",
 	ShowImages: true,
-	ForceDithering: false,
-	EnableDithering: false,
-	EnableSuperFeatures: false,
 	"MakeAnnouncements.Ext": true
 };
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -112,8 +101,6 @@ chrome.storage.onChanged.addListener(async (changes) => {
   
   
   for (const tab of tabs) {
-    if (!tab.id) {log('p!'); };
-
     try {
       await chrome.tabs.sendMessage(tab.id, {
         type: "PatPat.events.SettingsChange"
@@ -124,3 +111,21 @@ chrome.storage.onChanged.addListener(async (changes) => {
   }
 });
 
+
+
+
+BrowserContext.runtime.onInstalled.addListener(() => {
+    BrowserContext.contextMenus.create({
+        id: "PatPat.It.Item",
+        title: "Pat It!",
+        contexts: ["image", "video"]
+    });
+});
+
+BrowserContext.contextMenus.onClicked.addListener((info, tab) => {
+    if (info.menuItemId === "PatPat.It.Item") {
+        BrowserContext.tabs.sendMessage(tab.id, {
+            type: "PatPat.It.Item"
+        });
+    }
+});

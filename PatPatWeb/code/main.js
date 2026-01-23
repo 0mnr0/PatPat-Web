@@ -308,8 +308,11 @@ const Announce = {
 
 function randChoose(array) {return array[Math.floor(Math.random()*array.length)]}
 
+
+let PossibleContextMenuPatPat = null;
 if (isFireFox) {
 	document.addEventListener("contextmenu", e => {
+		PossibleContextMenuPatPat = e.target;
 		if (WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
 			e.preventDefault();
 			e.stopPropagation();
@@ -317,16 +320,24 @@ if (isFireFox) {
 	}, true);
 } else {
 	window.addEventListener('contextmenu', (e) => {
+		PossibleContextMenuPatPat = e.target;
 		if (PatTriggers.wasActive(e) && WorkAllowedOnThisSite) e.preventDefault();
 	}, true);
 }
 
 
 
-
-chrome.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
+BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
     if (msg.type === "PatPat.events.SettingsChange" && WorkAllowedOnThisSite) {
 	    await loadPackData();
+    }
+	
+	if (msg.type === "PatPat.It.Item" && WorkAllowedOnThisSite && PossibleContextMenuPatPat) {
+		
+	    for (let i = 0; i < 5; i++) {
+			await runPatAnimation(PossibleContextMenuPatPat);
+		}
+		lastClickedElement = null;
     }
 });
 
