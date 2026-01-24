@@ -95,14 +95,20 @@ SetupDefault();
 
 
 
-chrome.storage.onChanged.addListener(async (changes) => {
-  const tabs = await chrome.tabs.query({});
+BrowserContext.storage.onChanged.addListener(async (changes) => {
+  const tabs = await BrowserContext.tabs.query({});
   await SetupDefault();
+  
+  if (await Settings.get('AllowContextMenu')) {
+	  setupContextMenu();
+  } else {
+	  removeContextMenu();
+  }
   
   
   for (const tab of tabs) {
     try {
-      await chrome.tabs.sendMessage(tab.id, {
+      await BrowserContext.tabs.sendMessage(tab.id, {
         type: "PatPat.events.SettingsChange"
       });
     } catch(e) {
@@ -113,15 +119,25 @@ chrome.storage.onChanged.addListener(async (changes) => {
 
 
 
+let menuCreated = false;
+function removeContextMenu() {
+	try { BrowserContext.contextMenus.remove("PatPat.It.Item"); } catch(e) {} // Already Deleted
+	menuCreated = false;
+}
 
-BrowserContext.runtime.onInstalled.addListener(() => {
-    BrowserContext.contextMenus.create({
-        id: "PatPat.It.Item",
-        title: "Pat It!",
-        contexts: ["image", "video"]
-    });
-});
+function setupContextMenu() {
+	if (!menuCreated) {
+		BrowserContext.contextMenus.create({
+			id: "PatPat.It.Item",
+			title: "Pat It!",
+			contexts: ["image", "video"]
+		});
+		menuCreated = true;
+	}
+}
 
+
+BrowserContext.runtime.onInstalled.addListener(setupContextMenu);
 BrowserContext.contextMenus.onClicked.addListener((info, tab) => {
     if (info.menuItemId === "PatPat.It.Item") {
         BrowserContext.tabs.sendMessage(tab.id, {

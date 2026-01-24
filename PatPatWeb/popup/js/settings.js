@@ -327,17 +327,20 @@ const RegisterPacksAnimations = () => {
 						<span class="ContributorDesc" data-i18n="dsvl0Desc"></span>
 					</div>
 				</div>
-				
+			</div>
+			
+			
+			<div class="SettingSection OtherTab">
+				<div class="SettingLine">
+					${GetSwitch('AllowContextMenu')} 
+					<p data-i18n="AllowContextMenu.Desc"></p>
+				</div>
 			</div>
 				
 		
 		`
 		
 	}
-	
-	// Animation Speed
-	// ShowHand
-	// Hand Skins
 	
 	document.runSettingBing();
 })()

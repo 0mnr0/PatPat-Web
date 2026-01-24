@@ -113,9 +113,9 @@ function getVolume() {
 		
 		// Divides Switcher
 			function ClearAllSettingTypes() {
-				findAll('div.SettingsDiv div.leftPane > div').forEach(settingType => { settingType.classList.remove('active'); })
+				findAll('div.SettingsDiv div.leftPane > div > div' ).forEach(settingType => { settingType.classList.remove('active'); })
 			}
-			findAll('div.SettingsDiv div.leftPane > div').forEach(settingType => {
+			findAll('div.SettingsDiv div.leftPane > div > div').forEach(settingType => {
 				
 				settingType.onclick = () => {
 					let newDivide = settingType.getAttribute('SettingLinkedTo')

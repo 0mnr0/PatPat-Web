@@ -17,6 +17,9 @@
 		'BlockListSetting': 'Ignore websites',
 		'MakeAnnouncements.Ext': 'Web Events',
 		'MakeAnnouncements.Ext.Desc': 'If the site supports this extension, it will be able to receive Pat events when interacting with the site and perform any actions',
+		'OtherTab': 'Other',
+		'AllowContextMenu': 'Context Menu',
+		'AllowContextMenu.Desc': 'Show "Pat IT!" in context menu',
 		
 		
 		'EnableDithering': 'Adaptive transparency',
@@ -61,6 +64,9 @@
 		'BlockListSetting': 'Игнорировать сайты',
 		'MakeAnnouncements.Ext': 'События на сайтах',
 		'MakeAnnouncements.Ext.Desc': 'Если сайт поддерживает это расширение, оно сможет получать Pat события при взаимодействии с сайтом и выполнять какие-либо действия',
+		'OtherTab': 'Другое',
+		'AllowContextMenu': 'Контексное меню',
+		'AllowContextMenu.Desc': 'Показывать "Pat IT!" в контекстном меню',
 		
 		'EnableDithering': 'Адаптивная прозрачность',
 		'ForceDithering': 'Всегда',
