@@ -258,7 +258,10 @@ const RegisterPacksAnimations = () => {
 						Choose DataPack
 					</label>
 					<input id="zipUploader" type="file" accept=".zip"/>
-					<label for="zipUploader" class="DataPackDescription" data-i18n="DataPackDescription"></label>
+					<label for="zipUploader" class="DataPackDescription" data-i18n="DataPackDescription">
+						Upload .zip resource-packs! <br>
+						<a data-i18n="ResourcePackTip" href="https://modrinth.com/discover/resourcepacks?q=PatPat" target="_blank"> Explore Here! </a>
+					</label>
 					${ Object.keys(UserSettings).includes("@DataPack") ? 
 					
 						`
