@@ -6,5 +6,5 @@
 <br><br><br>
 
 ------------------------------------
-### Coming Soon if LopyMine give me a permission (please bro)
+### Coming Soon on Chrome WebStore and FireFox Addons
 <a href="https://github.com/LopyMine/PatPat"> Original Idea - By LopyMine </a>
