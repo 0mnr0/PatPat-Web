@@ -457,10 +457,33 @@ ContextMenuContainer.addEventListener("contextmenu", e => {
 	if (WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
 		e.preventDefault();
 		e.stopPropagation();
-		
-		if (containBackgroundImage(PossibleContextMenuPatPat)) {}
 	}
 }, true);
+
+
+let isMouseDownOnAnyElement = false;
+ContextMenuContainer.addEventListener('mousedown', (e) => {
+	if (
+		e.button === 2 &&
+		WorkAllowedOnThisSite &&
+		PatTriggers.wasActive(e) &&
+		containBackgroundImage(e.target) &&
+		(e.target && !SupportedElements.includes(e.target.tagName.toLowerCase()))
+	
+	){
+		nextPat = e.target;
+		isMouseDownOnAnyElement = true;
+		runPat(e.target);
+	}
+});
+
+ContextMenuContainer.addEventListener('mouseup', (e) => {
+	if (e.button === 2 && WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
+		isMouseDownOnAnyElement = false;
+		nextPat = null;
+	}
+});
+
 
 
 function containBackgroundImage(element) {
