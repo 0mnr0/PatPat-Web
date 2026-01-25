@@ -35,7 +35,7 @@ let PatTriggers = {
 
 window.addEventListener("keydown", e => { if (e.key === PatTriggers.KeyName) PatTriggers.keyPressed = true; });
 window.addEventListener("keyup", e => { if (e.key === PatTriggers.KeyName) PatTriggers.keyPressed = false; });
-SupportedElements = ['img', 'svg', 'model-viewer'];
+const SupportedElements = ['img', 'svg', 'model-viewer'];
 
 
 
@@ -43,8 +43,8 @@ let nextPat = null;
 function runPatInit() {
 	let rules = GetSiteRuleSet(window.location.hostname); if (rules.length > 0) {rules = ", "+rules}
 	findAll((SupportedElements.join())+rules).forEach(element => {
-		if (patListening.includes(element) || element.className === 'patClassAnimation') {return}
-		patListening.push(element);
+		if (patListening.has(element) || element.className === 'patClassAnimation') {return}
+		patListening.has(element);
 		
 
 		let rightMouseDownOnElement = false;

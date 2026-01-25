@@ -1,9 +1,9 @@
 const TriggerKey = isFireFox ? "Alt" : "Shift";
 
-const patListening = [];	
+const patListening = new WeakSet();
 const PatStrength = 0.2;
 
-const PattingRightNow = new Set();
+const PattingRightNow = new WeakSet();
 let IsDataPack = false;
 let UserSettings = {};
 let LoadedPack = null;
@@ -72,9 +72,15 @@ function preloadImages() {
 }; 
 
 
+const SharedAudio = { ctx: null };
+function getAudioCtx() {
+  if (!SharedAudio.ctx) SharedAudio.ctx = new (window.AudioContext || window.webkitAudioContext)();
+  return SharedAudio.ctx;
+}
+
 async function playBase64Audio(base64String, {volume = 1.0, muted = false} = {}) {
-	const isMuted = !UserSettings.AllowSound
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+	if (isMuted) {return}
+    const audioContext = getAudioCtx();
 
     const base64Data = base64String.split(';base64,')[1] || base64String;
     const binaryString = atob(base64Data);
@@ -147,7 +153,7 @@ async function runPat(element, reRunData) {
 	Announce.start(element, isAutoRunning ? reRunData.isAutoPat : false);
 	
 	
-	PatTools.addTransitions(element);
+	PatTools.enableTransitions(element);
 	let originalTransform = isAutoRunning ? reRunData.originalTransform : PatTools.getTransform(element, reRunData);
 	let transormData = PatTools.getTransform(element, reRunData);
 	let newYTranslate = isAutoRunning ? reRunData.FixedYTranslate : PatTools.calculateYTransform(element, transormData);
@@ -197,7 +203,7 @@ async function runPat(element, reRunData) {
 	
 	
 	if (!nextPat && isAutoRunning || !nextPat && !isAutoRunning) {
-		element.style = startStyle
+		element.style.cssText = startStyle
 	}
 	
 	
@@ -213,7 +219,7 @@ const PatTools = {
 		if (!WorkAllowedOnThisSite) {console.warn('PatPat skipping because this site in a blocklist!'); return false;}
 		if (element.classList.contains("theExactPatPatHandAnimation")) return false;
 		if (!LoadedPack || PattingRightNow.has(element)) return false;
-		if (patListening.includes(element.parentElement)) {return false;}
+		if (patListening.has(element.parentElement)) {return false;}
 
 		return true;
 	},
@@ -248,12 +254,10 @@ const PatTools = {
 		// 	   P.S. сейчас установлено полтора потому что на момент написания этого текста мне кажется это идеальным по отношеню сдвига центра объекта
 	},
 	
-	addTransitions: (element) => {
+	enableTransitions: (element) => {
 		let origTransition = Attribute.get(element, 'transition', 'all');
 		let scaleStringRule = `scale ${(LoadedPack.animLength/2)/1000}s, transform ${(LoadedPack.animLength/2)/1000}s`;
 		element.style.transition = origTransition + (origTransition.includes(scaleStringRule) ? '' : ', '+scaleStringRule);
-		
-		
 	},
 	
 	
@@ -298,7 +302,9 @@ const PatTools = {
 
 function getMatrix(transform) {
     const match = transform.match(/matrix\(([^)]+)\)/);
-    if (!match) return null;
+    if (!match) {
+		return { XScale:1, YScale:1, Xtranslate:0, Ytranslate:0, XSkew:0, YSkew:0 }
+	}
 
     const [a, b, c, d, e, f] = match[1]
        .split(',')

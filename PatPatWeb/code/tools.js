@@ -28,7 +28,7 @@ const Attribute = {
 	
 	get: (element, attr, defaultValue=null) => {
 		let FinalAttribute = window.getComputedStyle(element)[attr];
-		if (FinalAttribute === 'none') {FinalAttribute = defaultValue; wasEmpty = true;}
+		if (FinalAttribute === 'none') {FinalAttribute = defaultValue; }
 		return FinalAttribute
 	}, 
 	
