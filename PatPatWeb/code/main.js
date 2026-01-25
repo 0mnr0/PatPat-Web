@@ -452,8 +452,6 @@ BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) =
 
 const DeLoadThings = () => {
 	WorkAllowedOnThisSite = false;
-	if (patStyle) {patStyle.remove();}
-	
 	
 	// clear ram a bit
 	IsDataPack = false;
