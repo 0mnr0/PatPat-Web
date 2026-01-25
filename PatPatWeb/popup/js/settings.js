@@ -10,6 +10,7 @@ const Settings = {
 
 	  set(key, value) {
 		return new Promise(resolve => {
+		  notifySettingsChange();
 		  chrome.storage.local.set({ [key]: value }, resolve);
 		});
 	  },
