@@ -8,7 +8,8 @@ let IsDataPack = false;
 let UserSettings = {};
 let LoadedPack = null;
 let patFiles = []; // png sequence will be loaded here
-let patSounds = []; // ogg sequence will be loaded heere
+let patSounds = []; // ogg sequence will be loaded here
+let patSoundBuffers = []; //this is for sounds caching
 
 async function loadPacks() {
 	UserSettings = await Settings.getAll();
@@ -55,7 +56,14 @@ const loadPackData = async function() {
 			}
 		}
 	}
-	preloadImages();
+	
+	
+	
+	if (!IsDataPack) {
+        await Promise.all([preloadImages(), preloadSounds()]);
+    } else {
+        await preloadImages();
+    }
 }
 loadPackData();
 
@@ -71,6 +79,23 @@ function preloadImages() {
 	);
 }; 
 
+function preloadSounds() {
+    const ctx = getAudioCtx();
+    patSoundBuffers = [];
+
+    return Promise.all(
+        patSounds.map(url => fetch(url)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => ctx.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => {
+                patSoundBuffers.push(audioBuffer);
+            })
+            .catch(e => console.error("Error loading sound:", url, e))
+        )
+    );
+}
+
+
 
 const SharedAudio = { ctx: null };
 function getAudioCtx() {
@@ -79,7 +104,7 @@ function getAudioCtx() {
 }
 
 async function playBase64Audio(base64String, {volume = 1.0, muted = false} = {}) {
-	if (isMuted) {return}
+	if (muted) {return}
     const audioContext = getAudioCtx();
 
     const base64Data = base64String.split(';base64,')[1] || base64String;
@@ -96,7 +121,7 @@ async function playBase64Audio(base64String, {volume = 1.0, muted = false} = {})
         const source = audioContext.createBufferSource();
         source.buffer = audioBuffer;
         const gainNode = audioContext.createGain();
-        gainNode.gain.value = isMuted ? 0 : getVolume();
+        gainNode.gain.value = muted ? 0 : getVolume();
         source.connect(gainNode);
         gainNode.connect(audioContext.destination);
 
@@ -441,6 +466,7 @@ function containBackgroundImage(element) {
 
 
 BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
+	log(msg.type);
     if (msg.type === "PatPat.events.SettingsChange" && WorkAllowedOnThisSite) {
 	    await loadPackData();
     }

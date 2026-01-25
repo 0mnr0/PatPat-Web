@@ -95,26 +95,29 @@ SetupDefault();
 
 
 
-BrowserContext.storage.onChanged.addListener(async (changes) => {
-  const tabs = await BrowserContext.tabs.query({});
-  await SetupDefault();
-  
-  if (await Settings.get('AllowContextMenu')) {
-	  setupContextMenu();
-  } else {
-	  removeContextMenu();
-  }
-  
-  
-  for (const tab of tabs) {
-    try {
-      await BrowserContext.tabs.sendMessage(tab.id, {
-        type: "PatPat.events.SettingsChange"
-      });
-    } catch(e) {
-		log(e)
-    }
-  }
+BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
+	
+	if (msg.type === "PatPat.events.SettingsChange") {
+	    const tabs = await BrowserContext.tabs.query({});
+	    await SetupDefault();
+	  
+	    if (await Settings.get('AllowContextMenu')) {
+	  	    setupContextMenu();
+	    } else {
+	        removeContextMenu();
+	    }
+	  
+	  
+	    for (const tab of tabs) {
+			try {
+			    await BrowserContext.tabs.sendMessage(tab.id, {
+					type: "PatPat.events.SettingsChange"
+			    });
+			} catch(e) {
+				log(e)
+			}
+	    }
+	}
 });
 
 

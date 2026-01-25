@@ -46,6 +46,10 @@ function getVolume() {
 	return Number(UserSettings.PatVolume)/100
 }
 
+function notifySettingsChange(){
+	chrome.runtime.sendMessage({type: "PatPat.events.SettingsChange"}, () => {});
+}
+
 
 (async () => {
 	
@@ -73,6 +77,7 @@ function getVolume() {
 		SettingsPane.findAll('div.SettingLine input[type="checkbox"]').forEach(el => {
 			el.onclick = () => {
 				Settings.set(el.getAttribute('SettingName'), el.checked);
+				notifySettingsChange();
 			}
 		});
 		
@@ -82,6 +87,7 @@ function getVolume() {
 			
 			
 			el.addEventListener('input', async () => {
+				notifySettingsChange();
 				if (SetName) {
 					let NewValue = Number(el.value);
 					if (SetName === 'PatSpeed') {NewValue = Math.round(NewValue*100); if (NewValue>=98 && NewValue<=102) { el.value = 1; NewValue = 100;}}
@@ -93,6 +99,7 @@ function getVolume() {
 			
 			if (SetName === 'PatVolume') {
 				el.addEventListener('change', async () => {
+					notifySettingsChange();
 					let NewValue = Number(el.value)
 					await Settings.set(SetName, NewValue);
 					await loadPackData();
@@ -102,6 +109,7 @@ function getVolume() {
 			
 			if (SetName === 'PatSpeed') {
 				el.addEventListener('change', async () => {
+					notifySettingsChange();
 					let NewValue = Number(el.value)
 					await Settings.set(SetName, NewValue);
 					await loadPackData();
