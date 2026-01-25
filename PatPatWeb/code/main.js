@@ -103,20 +103,25 @@ function getAudioCtx() {
   return SharedAudio.ctx;
 }
 
-async function playBase64Audio(base64String, {volume = 1.0, muted = false} = {}) {
+async function decodeAndPlayAudio(mediaData, {volume = 1.0, muted = false} = {}, useBuffer = false) {
 	if (muted) {return}
     const audioContext = getAudioCtx();
-
-    const base64Data = base64String.split(';base64,')[1] || base64String;
-    const binaryString = atob(base64Data);
-    const bytes = new Uint8Array(binaryString.length);
-
-    for (let i = 0; i < binaryString.length; i++) {
-        bytes[i] = binaryString.charCodeAt(i);
+	if (audioContext.state === 'suspended') {
+        audioContext.resume();
     }
 
+    const base64Data = useBuffer ? null : mediaData.split(';base64,')[1] || mediaData;
+    const binaryString = useBuffer ? null : atob(base64Data);
+    const bytes = useBuffer ? null : new Uint8Array(binaryString.length);
+
+	if (!useBuffer) {
+		for (let i = 0; i < binaryString.length; i++) {
+			bytes[i] = binaryString.charCodeAt(i);
+		}
+	}
+
     try {
-        const audioBuffer = await audioContext.decodeAudioData(bytes.buffer);
+        const audioBuffer = useBuffer ? mediaData : await audioContext.decodeAudioData(bytes.buffer);
 
         const source = audioContext.createBufferSource();
         source.buffer = audioBuffer;
@@ -295,9 +300,16 @@ const PatTools = {
 	
 	runSounds: () => {
 		if (IsDataPack) {
-			playBase64Audio(randChoose(patSounds))
+			decodeAndPlayAudio(randChoose(patSounds))
 		} else {
-			playBase64Audio(randChoose(patSoundBuffers));
+			decodeAndPlayAudio(
+				randChoose(patSoundBuffers),
+				{
+					volume: UserSettings.PatVolume,
+					muted: !UserSettings.AllowSound
+				},
+				true			
+			);
 		}
 	},
 	

@@ -341,6 +341,16 @@ const RegisterPacksAnimations = () => {
 				</div>
 			</div>
 				
+				
+			
+			
+			
+			
+			
+			<div class="SettingSection changeLog">
+				${LastChangeLogs}
+			</div>
+			
 		
 		`
 		
@@ -472,4 +482,9 @@ const AddIntoIgnoreList = (main, domainName) => {
 			3000
 		);
 	}
+}
+
+
+function showChangeLog() {
+	
 }

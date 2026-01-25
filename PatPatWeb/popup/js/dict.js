@@ -24,11 +24,11 @@
 		
 		
 		'EnableDithering': 'Adaptive transparency',
+		'EnableDithering.Desc': 'When an extension creates an animation that takes up a lot of screen space, a transparency filter is applied to it',
 		'ForceDithering': 'Always',
-		'EnableDithering': 'When an extension creates an animation that takes up a lot of screen space, a transparency filter is applied to it',
-		'ForceDithering': 'Always create animations with transparency effect',
+		'ForceDithering.Desc': 'Always create animations with transparency effect',
 		'EnableSuperFeatures': 'Super Functions',
-		'EnableSuperFeatures.Desc': 'Enables "Super Features" on supported sites. For example, on Reddit, after patting one photo 10 times, an UpVote is set',
+		'EnableSuperFeatures.Desc': 'Enables "Super Features" on supported sites. For example, on Reddit, after patting one photo 12 times, an UpVote is set',
 		
 		
 		'unpacker.sounds.json_isNotExtists': `File "sounds.json" is not found :(`,
@@ -44,7 +44,7 @@
 		'AuthorsTab': 'Authors',
 		
 		'LopyMineDesc': `The developers of the "PatPat" mod for Minecraft became the idea for this expansion. Thanks guys for the resources provided for the expansion`,
-		'dsvl0Desc': `Actually I am. (The one who wrote the extension)`,
+		'dsvl0Desc': `And me`
 		
 	},
 	'ru': {
@@ -75,7 +75,7 @@
 		'EnableDithering.Desc': 'Когда расширение создает анимацию, которое занимает много места на экране, к нему примениться фильтр прозрачности',
 		'ForceDithering.Desc': 'Всегда создавать анимацию с эффектом прозрачности',
 		'EnableSuperFeatures': 'Включить СуперФункции',
-		'EnableSuperFeatures.Desc': 'Включает "Супер Функции" на поддерживаемых сайтах. Например, на Reddit, после похлопывания одного фото 10 раз - ставиться Upvote',
+		'EnableSuperFeatures.Desc': 'Включает "Супер Функции" на поддерживаемых сайтах. Например, на Reddit, после похлопывания одного фото 12 раз - ставиться Upvote',
 		
 		
 		'unpacker.sounds.json_isNotExtists': `Файл "sounds.json" не найден :(`,
@@ -91,7 +91,7 @@
 		'AuthorsTab': 'Авторы',
 		
 		'LopyMineDesc': `Разработчики мода "PatPat" для Minecraft, стала идеей для этого расширения. Спасибо ребятам, за ресурсы, предоставленные для расширения.`,
-		'dsvl0Desc': `Собственно я (Тот кто написал расширение)`,
+		'dsvl0Desc': `И я`,
 	},
 	"ru-RU": "ru"
 }

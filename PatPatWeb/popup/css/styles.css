@@ -46,6 +46,20 @@ div.pane.topPane {
 }
 
 div.topPane span { font-size: xx-large; font-weight: 800 }
+div.topPane span.Extension.version {
+    color: gray;
+    font-weight: 400;
+    font-size: smaller;
+    white-space: nowrap;
+    position: absolute;
+    right: -30px;
+    bottom: -0px;
+    padding: 10px;
+	cursor: help;
+    display: flex;
+    align-content: flex-end;
+    flex-wrap: wrap;
+}
 
 img.patPatLoader {
 	z-index: 0;
@@ -519,6 +533,61 @@ div.SettingSection.AuthorsTab .Author .AvatarAndName img {
 
 
 
+div.SettingSection.changeLog diff {
+    width: 100%;
+    position: relative;
+    display: block;
+    padding: 10px;
+    font-weight: 800;
+    text-align: center;
+    font-size: larger;
+	border-bottom: solid 1px #8080805c;
+	margin-bottom: 10px;
+}
+
+
+div.SettingSection.changeLog > div {
+    display: flex;
+    margin: 0px 10px;
+    gap: 2px;
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+
+
+div.SettingSection.changeLog > div:before {
+    display: block;
+    width: 100%;
+    text-align: center;
+}
+
+div.SettingSection.changeLog > div.NEW:before { content: "New: "; }
+div.SettingSection.changeLog > div.CHANGED:before { content: "Changed: "; }
+div.SettingSection.changeLog > div.REMOVED:before { content: "Removed: "; }
+
+
+div.SettingSection.changeLog > div.NONE {display: none !important}
+div.SettingSection.changeLog > div.NEW > span { background: linear-gradient(90deg, #00ff0073, transparent); }
+div.SettingSection.changeLog > div.CHANGED > span { background: linear-gradient(90deg, #efff0073, transparent); }
+div.SettingSection.changeLog > div.REMOVED > span { background: linear-gradient(90deg, #ff003b73, transparent); }
+
+div.SettingSection.changeLog > div > span {
+    padding: 4px;
+    border-radius: 10px;
+}
+
+div.SettingSection.changeLog > div > span:before {
+    width: 30px;
+    height: 20px;
+    content: "";
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+div.SettingSection.changeLog > div.NEW > span:before { background-image: url('../icons/add.svg'); }
+div.SettingSection.changeLog > div.CHANGED > span:before { background-image: url('../icons/edit.svg'); }
+div.SettingSection.changeLog > div.REMOVED > span:before { background-image: url('../icons/block.svg'); }
 
 
 

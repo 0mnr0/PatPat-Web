@@ -49,6 +49,9 @@ function getVolume() {
 function notifySettingsChange(){
 	chrome.runtime.sendMessage({type: "PatPat.events.SettingsChange"}, () => {});
 }
+function ClearAllSettingTypes() {
+	findAll('div.SettingsDiv div.leftPane > div > div' ).forEach(settingType => { settingType.classList.remove('active'); })
+}
 
 
 (async () => {
@@ -116,10 +119,8 @@ function notifySettingsChange(){
 		
 		
 		
-		// Divides Switcher
-			function ClearAllSettingTypes() {
-				findAll('div.SettingsDiv div.leftPane > div > div' ).forEach(settingType => { settingType.classList.remove('active'); })
-			}
+			// Divides Switcher
+			
 			findAll('div.SettingsDiv div.leftPane > div > div').forEach(settingType => {
 				
 				settingType.onclick = () => {
@@ -208,4 +209,31 @@ const getCleanDomain = function(url) {
   } catch (e) {
       return null;
   }
+}
+
+
+
+
+
+
+const manifestData = chrome.runtime.getManifest();
+const version = manifestData.version;
+if (version) {
+	let versionDisplay = find('span.Extension.version');
+	
+	versionDisplay.textContent = version;
+	versionDisplay.onclick = () => {
+		ClearAllSettingTypes();
+		
+		findAll('div.SettingSection').forEach(SettingDisplayingType => {
+			SettingDisplayingType.classList.remove('Chosen');
+			SettingDisplayingType.classList.add('Hidden');
+		});
+		let CurrentSetting = find(`div.SettingSection.changeLog`);
+		if (!CurrentSetting) {warn('Setting Div is not found :('); return}
+		
+		CurrentSetting.classList.remove('Hidden');
+		CurrentSetting.classList.add('Chosen');
+		
+	};
 }
