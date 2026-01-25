@@ -35,7 +35,7 @@ const loadPackData = async function() {
 	if (IsDataPack) { LoadedPack = await Settings.get('@DataPack', null) }
 	
 	if (LoadedPack === undefined) {
-		alert(`Мы не можем подключить набор ресурсов "${PackName}" в PatPat :(. Выберите другой`);
+		alert(`We couldn't load "${PackName}" datapack into PatPat :(. Please choose another one`);
 		return
 	}
 	patFiles = [];
