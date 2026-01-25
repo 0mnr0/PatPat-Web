@@ -34,6 +34,10 @@ const RuleSets = {
 			span.user-following-container, .AppHeader-globalBar context-region-controller nav context-region, video
 		`,
 	
+		"chess.com": `
+			wc-chess-board div.piece
+		`,
+	
 		"wikipedia.org": `
 			nav.central-featured, a.mw-wiki-logo
 		`,

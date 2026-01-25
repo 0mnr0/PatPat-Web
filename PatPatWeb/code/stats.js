@@ -93,7 +93,6 @@ const Stats = {
 			currentStats.topPated[patSource.src].count = currentStats.topPated[patSource.src].count + 1;
 		}	
 		
-		log(allStats);
 		await Settings.set("UserStats", allStats);
 	}
 }

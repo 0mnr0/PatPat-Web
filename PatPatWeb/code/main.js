@@ -1,7 +1,8 @@
 const TriggerKey = isFireFox ? "Alt" : "Shift";
 
 const patListening = [];	
-const PatStrength = 0.25;
+const PatStrength = 0.2;
+const PatStretch = 0.5;
 
 const PattingRightNow = new Set();
 let IsDataPack = false;
@@ -129,92 +130,185 @@ function getAnimationSpeed() {
 	}
 }
 
-async function runPatAnimation(element, isAutoClicked, scaleWas, originalStyleLine) {
-	if (!WorkAllowedOnThisSite) {console.warn('PatPat skipping because this site in a blocklist!'); return}
-	if (!LoadedPack || PattingRightNow.has(element)) return;
-	if (patListening.includes(element.parentElement)) {return}
+
+async function runPat(element, reRunData) {
+	if (!PatTools.isRunAllowed(element)) {return}
+	// reRunData: {
+	//		isAutoPat: bool,
+	//		startStyle: str,
+	//      calculatedTransform: {YScale: ...},
+	//      FixedYTranslate: int
+	// }
 	
-	let origStyles = (originalStyleLine !== undefined) ? originalStyleLine : Attribute.getStylesLine(element); //getting all inline styles
-	Announce.start(element, isAutoClicked); //Web Events are Supported
 	
-	let origScale = Attribute.get(element, 'scale', '');
-	let origScaleData = Attribute.getScale(element); // {"XScale": 1, "YScale": 1}
+	PattingRightNow.add(element);
+	const isAutoRunning = (reRunData !== undefined);
 	
-	let origTransition = Attribute.get(element, 'transition', 'all');
-	let origTransformOrigin = Attribute.get(element, 'transform', '');
-	let origPointerEvents = Attribute.get(element, 'pointer-events', 'auto');
+	let startStyle = isAutoRunning ? reRunData.startStyle : Attribute.getStylesLine(element);
+	Announce.start(element, isAutoRunning ? reRunData.isAutoPat : false);
 	
-	let newYScale = null;
-	if (origScaleData.YScale) {newYScale = parseFloat(origScaleData.YScale)-PatStrength} else {newYScale = 1 - PatStrength};
-	let scaleStringRule = `scale ${(LoadedPack.animLength/2)/1000}s`;
 	
-	element.style.transition = origTransition + (origTransition.includes(scaleStringRule) ? '' : ', '+scaleStringRule);
-	element.style.scale = origScaleData.XScale+' '+newYScale;
-	element.style.transformOrigin = 'bottom';
-	element.style.pointerEvents = 'none';
+	PatTools.addTransitions(element);
+	let originalTransform = isAutoRunning ? reRunData.originalTransform : PatTools.getTransform(element, reRunData);
+	let transormData = PatTools.getTransform(element, reRunData);
+	let newYTranslate = isAutoRunning ? reRunData.FixedYTranslate : PatTools.calculateYTransform(element, transormData);
+	transormData.YScale = transormData.YScale - PatStrength;
+	transormData.Ytranslate = newYTranslate;
 	
+	element.style.transform = PatTools.buildTransform(transormData);
+	PatTools.runSounds();
 	
 	let overlay = UserSettings.ShowImages ? addOverlay(element) : null;
-	PattingRightNow.add(element);
-	
 	window.getSelection().removeAllRanges();
-	let goBackAnim = false;
-	
-	if (IsDataPack) {
-		playBase64Audio(randChoose(patSounds))
-	} else {
-		let Sound = new Audio(randChoose(patSounds)); 
-		Sound.muted = !UserSettings.AllowSound;
-		Sound.volume = getVolume();
-		Sound.play();
-	}
+	let shouldRevevrseAnim = false;
 	
 	
+	let animationFrameSleep = LoadedPack.animLength/patFiles.length*getAnimationSpeed();
 	for (let i = 0; i < patFiles.length; i++) {
 		const pat = patFiles[i];
 		if (overlay) { overlay.src = pat; }
 		
-		
-		
-		if (i>=(patFiles.length/2) && !goBackAnim) { //start animate scale backwards
-			goBackAnim = true;
-			element.style.scale = (scaleWas !== undefined) ? scaleWas : origScale;
+		if (i>=(patFiles.length/2) && !shouldRevevrseAnim) { //start animate scale backwards
+			shouldRevevrseAnim = true;
+			element.style.transform = PatTools.buildTransform(originalTransform);
 		}
-		await sleep(LoadedPack.animLength/patFiles.length*getAnimationSpeed());
+		await sleep(animationFrameSleep);
 	}
-
-
-		
-	if (overlay) { overlay.remove(); }
-	element.style.pointerEvents = origPointerEvents;
-	element.style.transformOrigin = origTransformOrigin;
-	PattingRightNow.delete(element);
-	SuperFeatures.run(element);
 	
-	try { 
-		Stats.add(element);
-		Announce.end(element, isAutoClicked); //Web Events are Supported
-	} catch(e) {
-		warn("PatPat is cant execute ternal operations! Is Context is gone? ", e);
-	}
+	if (overlay) { overlay.remove(); }
+	PatTools.runAdditionalFeatures(element, reRunData);
 	
 	if (nextPat) {
-		if (scaleWas !== undefined) { await runPatAnimation(nextPat, true, scaleWas, origStyles); return}
-		else { await runPatAnimation(nextPat, true, origScale, origStyles); return }
-	} 
-	
-	if (!nextPat && isAutoClicked) {
-		element.style.scale = scaleWas
-		element.style = origStyles
+		let newReRun = reRunData;
+		if (!reRunData) {
+			newReRun = {
+				isAutoPat: true,
+				startStyle: startStyle,
+				originalTransform: originalTransform,
+				FixedYTranslate: newYTranslate
+			}
+		} 
+		await runPat(element, newReRun);
 	}
-	
-	if (!nextPat && !isAutoClicked) {
-		element.style = origStyles
+	if (!nextPat && isAutoRunning || !nextPat && !isAutoRunning) {
+		element.style = startStyle
 	}
 	
 	
 	
 }
+
+
+
+const PatTools = {
+	matrixDefault: "matrix(1, 0, 0, 1, 0, 0)",
+	
+	isRunAllowed: (element) => {
+		if (!WorkAllowedOnThisSite) {console.warn('PatPat skipping because this site in a blocklist!'); return false;}
+		if (element.classList.contains("theExactPatPatHandAnimation")) return false;
+		if (!LoadedPack || PattingRightNow.has(element)) return false;
+		if (patListening.includes(element.parentElement)) {return false;}
+
+		return true;
+	},
+	
+	calculateYTransform: (element, transformData) => {
+		const Y = transformData.Ytranslate;
+		const Stretch = element.clientHeight * (PatStrength/1.5);
+		
+		if (Y > 0) {
+			return Y + Stretch;
+			// OR: return Y * (PatStrength + 1);
+		}
+		if (Y < 0) {
+			return Y - Stretch;
+			// OR: return Y / (PatStrength + 1);
+		}
+		if (Y === 0) {
+			return Stretch;
+		}
+		
+		
+		// Есть другой метод, который основывается на процентаже (если мне вдруг это понадобится):
+		// IF translateY(-50%) then:
+		//     Y / (0.25 + 1) -> двигаем вниз на всё пространство что сжали
+		
+		// if translateY(50%) then:
+		//     Y * (0.25 + 1) -> сдвигаем вниз на всё пространство что сжали
+		
+		// if translateY(0px) then:
+		//     Расчитываем высоту элемента и сдвигаем его на половину от PatStrength (хз почему на половину но если сдвинуть на PatStrength - будет перееезд)
+		//     сдвигаем вниз на всё пространство что сжали
+		// 	   P.S. сейчас установлено полтора потому что на момент написания этого текста мне кажется это идеальным по отношеню сдвига центра объекта
+	},
+	
+	addTransitions: (element) => {
+		let origTransition = Attribute.get(element, 'transition', 'all');
+		let scaleStringRule = `scale ${(LoadedPack.animLength/2)/1000}s, transform ${(LoadedPack.animLength/2)/1000}s`;
+		element.style.transition = origTransition + (origTransition.includes(scaleStringRule) ? '' : ', '+scaleStringRule);
+		
+		
+	},
+	
+	
+	runAdditionalFeatures: (element, reRunData) => {
+		PattingRightNow.delete(element);
+		SuperFeatures.run(element);
+		Stats.add(element);
+		Announce.end(element, (reRunData) ? reRunData.isAutoPat : false);
+	},
+	
+	runSounds: () => {
+		if (IsDataPack) {
+			playBase64Audio(randChoose(patSounds))
+		} else {
+			let Sound = new Audio(randChoose(patSounds)); 
+			Sound.muted = !UserSettings.AllowSound;
+			Sound.volume = getVolume();
+			Sound.play();
+		}
+	},
+	
+	getTransform: (element, reRunData) => {
+		if (reRunData && reRunData.calculatedTransform !== undefined) {
+			return reRunData.calculatedTransform;
+		} else {
+			
+			// matrix(scale X, -, -, scale Y, Transform X, Transform Y)
+			let tranformStyle = Attribute.get(element, 'transform', PatTools.matrixDefault); // matrix(1.01, 0, 0, 0.75, 234, 546)
+			return getMatrix(tranformStyle);
+		}
+	},
+	
+	buildTransform: (transormData) => {
+		return `matrix(${transormData.XScale}, ${transormData.YSkew}, ${transormData.XSkew}, ${transormData.YScale}, ${transormData.Xtranslate}, ${transormData.Ytranslate})`;
+	},
+}
+
+
+
+
+
+
+function getMatrix(transform) {
+  const match = transform.match(/matrix\(([^)]+)\)/);
+  if (!match) return null;
+
+  const [a, b, c, d, e, f] = match[1]
+    .split(',')
+    .map(v => parseFloat(v.trim()));
+
+  return {
+    XScale: a,
+    YScale: d,
+    Xtranslate: e,
+    Ytranslate: f,
+    XSkew: c,
+    YSkew: b
+  };
+}
+
+
 
 function addOverlay(target) {
 	const rect = target.getBoundingClientRect();
@@ -236,7 +330,7 @@ function addOverlay(target) {
 	}
 
 	const overlay = document.createElement('img');
-	overlay.className = `patClassAnimation ${ditheringRule() ? 'dithering' : ''} `;
+	overlay.className = `theExactPatPatHandAnimation patClassAnimation ${ditheringRule() ? 'dithering' : ''} `;
 	overlay.style.left = leftPos +'px';
 	overlay.style.top = topPos + 'px';
 	overlay.style.width = rect.width + 'px';
@@ -310,21 +404,27 @@ function randChoose(array) {return array[Math.floor(Math.random()*array.length)]
 
 
 let PossibleContextMenuPatPat = null;
-if (isFireFox) {
-	document.addEventListener("contextmenu", e => {
-		PossibleContextMenuPatPat = e.target;
-		if (WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
-			e.preventDefault();
-			e.stopPropagation();
-		}
-	}, true);
-} else {
-	window.addEventListener('contextmenu', (e) => {
-		PossibleContextMenuPatPat = e.target;
-		if (PatTriggers.wasActive(e) && WorkAllowedOnThisSite) e.preventDefault();
-	}, true);
-}
+const ContextMenuContainer = isFireFox ? document : window;
 
+ContextMenuContainer.addEventListener("contextmenu", e => {
+	PossibleContextMenuPatPat = e.target;
+	if (WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
+		e.preventDefault();
+		e.stopPropagation();
+		if (containBackgroundImage(PossibleContextMenuPatPat)) {}
+	}
+}, true);
+
+
+function containBackgroundImage(element) {
+	let bgImg = Attribute.get(element, 'background-image');
+	let result = null;
+			
+	if (bgImg && bgImg.includes('url("')) {
+		result = element;
+	}
+	return result;
+}
 
 
 BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
@@ -335,7 +435,7 @@ BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) =
 	if (msg.type === "PatPat.It.Item" && WorkAllowedOnThisSite && PossibleContextMenuPatPat) {
 		
 	    for (let i = 0; i < 5; i++) {
-			await runPatAnimation(PossibleContextMenuPatPat);
+			await runPat(PossibleContextMenuPatPat);
 		}
 		lastClickedElement = null;
     }

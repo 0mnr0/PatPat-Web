@@ -35,7 +35,7 @@ let PatTriggers = {
 
 window.addEventListener("keydown", e => { if (e.key === PatTriggers.KeyName) PatTriggers.keyPressed = true; });
 window.addEventListener("keyup", e => { if (e.key === PatTriggers.KeyName) PatTriggers.keyPressed = false; });
-SupportedElements = ['img', 'svg', 'model-viewer']
+SupportedElements = ['img', 'svg', 'model-viewer'];
 
 
 
@@ -46,16 +46,13 @@ function runPatInit() {
 		if (patListening.includes(element) || element.className === 'patClassAnimation') {return}
 		patListening.push(element);
 		
-		element.addEventListener("contextmenu", e => { if(PatTriggers.wasActive(e) && WorkAllowedOnThisSite) { e.preventDefault(); e.stopPropagation(); }});
-		
-		
-		
+
 		let rightMouseDownOnElement = false;
 		element.addEventListener('mousedown', (e) => {
 		    if (e.button === 2) {
 				nextPat = element;
 				rightMouseDownOnElement = true;
-				if(PatTriggers.wasActive(e) && WorkAllowedOnThisSite) { runPatAnimation(element); e.preventDefault() }
+				if(PatTriggers.wasActive(e) && WorkAllowedOnThisSite) { runPat(element); e.preventDefault() }
 		    }
 		});
 
@@ -68,6 +65,8 @@ function runPatInit() {
 
 	})
 }
+
+
 
 
 
