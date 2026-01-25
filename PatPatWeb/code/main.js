@@ -297,10 +297,7 @@ const PatTools = {
 		if (IsDataPack) {
 			playBase64Audio(randChoose(patSounds))
 		} else {
-			let Sound = new Audio(randChoose(patSounds)); 
-			Sound.muted = !UserSettings.AllowSound;
-			Sound.volume = getVolume();
-			Sound.play();
+			playBase64Audio(randChoose(patSoundBuffers));
 		}
 	},
 	
@@ -466,14 +463,13 @@ function containBackgroundImage(element) {
 
 
 BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) => {
-	log(msg.type);
     if (msg.type === "PatPat.events.SettingsChange" && WorkAllowedOnThisSite) {
 	    await loadPackData();
     }
 	
 	if (msg.type === "PatPat.It.Item" && WorkAllowedOnThisSite && PossibleContextMenuPatPat) {
 		
-	    for (let i = 0; i < 5; i++) {
+	    for (let i = 0; i < 3; i++) {
 			await runPat(PossibleContextMenuPatPat);
 		}
 		lastClickedElement = null;
