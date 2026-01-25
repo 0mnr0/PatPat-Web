@@ -2,7 +2,6 @@ const TriggerKey = isFireFox ? "Alt" : "Shift";
 
 const patListening = [];	
 const PatStrength = 0.2;
-const PatStretch = 0.5;
 
 const PattingRightNow = new Set();
 let IsDataPack = false;
@@ -158,7 +157,7 @@ async function runPat(element, reRunData) {
 	element.style.transform = PatTools.buildTransform(transormData);
 	PatTools.runSounds();
 	
-	let overlay = UserSettings.ShowImages ? addOverlay(element) : null;
+	let overlay = UserSettings.ShowImages ? (isAutoRunning ? reRunData.overlay : addOverlay(element)) : null;
 	window.getSelection().removeAllRanges();
 	let shouldRevevrseAnim = false;
 	
@@ -168,14 +167,15 @@ async function runPat(element, reRunData) {
 		const pat = patFiles[i];
 		if (overlay) { overlay.src = pat; }
 		
-		if (i>=(patFiles.length/2) && !shouldRevevrseAnim) { //start animate scale backwards
+		if (i>=(patFiles.length/2) && !shouldRevevrseAnim) { //start animate ScaleY backwards
 			shouldRevevrseAnim = true;
 			element.style.transform = PatTools.buildTransform(originalTransform);
 		}
 		await sleep(animationFrameSleep);
 	}
 	
-	if (overlay) { overlay.remove(); }
+	
+	
 	PatTools.runAdditionalFeatures(element, reRunData);
 	
 	if (nextPat) {
@@ -185,11 +185,17 @@ async function runPat(element, reRunData) {
 				isAutoPat: true,
 				startStyle: startStyle,
 				originalTransform: originalTransform,
-				FixedYTranslate: newYTranslate
+				FixedYTranslate: newYTranslate,
+				overlay: overlay
 			}
 		} 
 		await runPat(element, newReRun);
+	} else {
+		if (overlay) { overlay.remove(); } // [if] beacuse user can disable image showing
 	}
+	
+	
+	
 	if (!nextPat && isAutoRunning || !nextPat && !isAutoRunning) {
 		element.style = startStyle
 	}
@@ -291,21 +297,21 @@ const PatTools = {
 
 
 function getMatrix(transform) {
-  const match = transform.match(/matrix\(([^)]+)\)/);
-  if (!match) return null;
+    const match = transform.match(/matrix\(([^)]+)\)/);
+    if (!match) return null;
 
-  const [a, b, c, d, e, f] = match[1]
-    .split(',')
-    .map(v => parseFloat(v.trim()));
+    const [a, b, c, d, e, f] = match[1]
+       .split(',')
+       .map(v => parseFloat(v.trim()));
 
-  return {
-    XScale: a,
-    YScale: d,
-    Xtranslate: e,
-    Ytranslate: f,
-    XSkew: c,
-    YSkew: b
-  };
+    return {
+		XScale: a,
+		YScale: d,
+		Xtranslate: e,
+		Ytranslate: f,
+		XSkew: c,
+		YSkew: b
+    };
 }
 
 
@@ -411,6 +417,7 @@ ContextMenuContainer.addEventListener("contextmenu", e => {
 	if (WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
 		e.preventDefault();
 		e.stopPropagation();
+		
 		if (containBackgroundImage(PossibleContextMenuPatPat)) {}
 	}
 }, true);

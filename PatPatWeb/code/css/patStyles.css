@@ -1,4 +1,4 @@
-	.patClassAnimation {
+	.theExactPatPatHandAnimation.patClassAnimation {
 		position: absolute;
 		pointer-events: none;
 		z-index: 999999999999;
@@ -8,7 +8,7 @@
 		background-position: center;
 	}
 	
-	.patClassAnimation.dithering {
+	.theExactPatPatHandAnimation.patClassAnimation.dithering {
 	   --size: 4px;
 
 	   mask-image:
