@@ -576,6 +576,23 @@ div.SettingSection.changeLog > div > span {
     border-radius: 10px;
 }
 
+
+div.flex.github {
+    background: #000;
+    border-radius: 4px;
+    height: 40px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+	cursor: pointer;
+}
+
+div.flex.github img {
+    height: 100%;
+    padding: 2px 10px;
+}
+}
+
 div.SettingSection.changeLog > div > span:before {
     width: 30px;
     height: 20px;

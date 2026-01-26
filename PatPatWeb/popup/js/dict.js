@@ -36,6 +36,7 @@
 		'unpacker.textures.isNotExtists': `Failed to find or parse textures :(`,
 		'unpacker.status.ok': `Resourse Pack is loaded! :)`,
 		'delete': `Delete`,
+		'ProjectOnGitHub': `Show Project On GitHub`,
 		
 		'howmanysounds': `Sounds: `,
 		'howmanyimages': `Images: `,
@@ -83,6 +84,7 @@
 		'unpacker.textures.isNotExtists': `Не удалось найти текстуры :(`,
 		'unpacker.status.ok': `Пакет данных установлен! :)`,
 		'delete': `Удалить`,
+		'ProjectOnGitHub': `Проект на GitHub`,
 		
 		'howmanysounds': `Звуков: `,
 		'howmanyimages': `Изображений: `,

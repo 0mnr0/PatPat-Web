@@ -331,6 +331,10 @@ const RegisterPacksAnimations = () => {
 						<span class="ContributorDesc" data-i18n="dsvl0Desc"></span>
 					</div>
 				</div>
+				<div class="flex github">
+					<img src="icons/github.svg">
+					<span data-i18n="ProjectOnGitHub"></span>
+				</div>
 			</div>
 			
 			

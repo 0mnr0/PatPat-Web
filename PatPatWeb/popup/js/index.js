@@ -1,3 +1,4 @@
+const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
 const BrowserContext = (typeof chrome === 'object') ? chrome : browser;
 const SettingsPane = find('.settingsPane');
 let UserSettings = {};
@@ -191,7 +192,7 @@ function ClearAllSettingTypes() {
 		
 		RegisterPacksAnimations();
 		RegisterBlockListProcessor();
-
+		setGitListener();
 		
 	}
 	
@@ -218,7 +219,7 @@ const getCleanDomain = function(url) {
 
 const manifestData = chrome.runtime.getManifest();
 const version = manifestData.version;
-if (version) {
+if (version && !isFirefox) { // i'll do firefox support a bit later
 	let versionDisplay = find('span.Extension.version');
 	
 	versionDisplay.textContent = version;
@@ -236,4 +237,14 @@ if (version) {
 		CurrentSetting.classList.add('Chosen');
 		
 	};
+}
+
+
+
+
+function setGitListener() {
+	
+	find('div.github').onclick = () => {
+		window.open('https://github.com/0mnr0/PatPat-Web')
+	}
 }
