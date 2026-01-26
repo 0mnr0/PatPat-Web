@@ -1,5 +1,3 @@
-const TriggerKey = isFireFox ? "Alt" : "Shift";
-
 const patListening = new WeakSet();
 const PatStrength = 0.2;
 
@@ -475,14 +473,14 @@ ContextMenuContainer.addEventListener('mousedown', (e) => {
 		isMouseDownOnAnyElement = true;
 		runPat(e.target);
 	}
-});
+}, true);
 
 ContextMenuContainer.addEventListener('mouseup', (e) => {
 	if (e.button === 2 && WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
 		isMouseDownOnAnyElement = false;
 		nextPat = null;
 	}
-});
+}, true);
 
 
 

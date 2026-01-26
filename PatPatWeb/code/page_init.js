@@ -1,5 +1,8 @@
 let WorkAllowedOnThisSite = true;
 let allowPatKeyPressed = false;
+const SupportedElements = ['img', 'svg', 'model-viewer'];
+let rules = GetSiteRuleSet(window.location.hostname); if (rules.length > 0) {rules = ", "+rules}
+const targetSelectors = 'img, svg, model-viewer, div.viewBox';
 
 let PatTriggers = {
 	keyPressed: false,
@@ -16,6 +19,8 @@ let PatTriggers = {
 	
 	wasActive: (event) => {
 		if (!event) {
+			
+		log("No event provided!");
 			return PatTriggers.keyPressed; // return last state of keyboard capture as no event data is provided
 		}
 		
@@ -35,72 +40,81 @@ let PatTriggers = {
 
 window.addEventListener("keydown", e => { if (e.key === PatTriggers.KeyName) PatTriggers.keyPressed = true; });
 window.addEventListener("keyup", e => { if (e.key === PatTriggers.KeyName) PatTriggers.keyPressed = false; });
-const SupportedElements = ['img', 'svg', 'model-viewer'];
+
 
 
 
 let nextPat = null;
-function runPatInit() {
-	let rules = GetSiteRuleSet(window.location.hostname); if (rules.length > 0) {rules = ", "+rules}
-	findAll((SupportedElements.join())+rules).forEach(element => {
+function runPatInit(element) {
 		if (patListening.has(element) || element.className === 'patClassAnimation') {return}
-		patListening.has(element);
+		patListening.add(element);
 		
 
-		let rightMouseDownOnElement = false;
+		
 		element.addEventListener('mousedown', (e) => {
 		    if (e.button === 2) {
 				nextPat = element;
-				rightMouseDownOnElement = true;
+				isMouseDownOnAnyElement = true;
 				if(PatTriggers.wasActive(e) && WorkAllowedOnThisSite) { runPat(element); e.preventDefault() }
 		    }
 		});
-
-		document.addEventListener('mouseup', (e) => {
-		  if (e.button === 2 && rightMouseDownOnElement) {
-			rightMouseDownOnElement = false;
-			nextPat = null;
-		  }
-		});
-
-	})
+	
 }
 
 
 
 
 
-let isPaused = false;
-let needsUpdate = false;
-const THROTTLE_MS = 200;
 
-function throttledRunPatInit() {
-  if (!WorkAllowedOnThisSite) {return}
-  if (isPaused) {
-    needsUpdate = true;
-    return;
-  }
 
-  runPatInit();
-  isPaused = true;
-  setTimeout(() => {
-    isPaused = false;
+// More optimized dom listener
 
-    if (needsUpdate) {
-      needsUpdate = false;
-      throttledRunPatInit();
+
+function processNode(node) {
+    if (node.nodeType !== 1) return;
+
+    if (node.matches(targetSelectors)) {
+        if (!patListening.has(node)) {
+            runPatInit(node);
+        }
     }
-  }, THROTTLE_MS);
 
+    if (node.childElementCount > 0) {
+        const children = node.querySelectorAll(targetSelectors);
+        for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            if (!patListening.has(child)) {
+                runPatInit(child);
+            }
+        }
+    }
+}
+
+function initialScan() {
+    if (typeof WorkAllowedOnThisSite !== 'undefined' && !WorkAllowedOnThisSite) return;
+    
+    const elements = document.querySelectorAll(targetSelectors);
+    for (let i = 0; i < elements.length; i++) {
+        processNode(elements[i]);
+    }
 }
 
 const observer = new MutationObserver((mutations) => {
-    if (!WorkAllowedOnThisSite) {return}
-    throttledRunPatInit();
+    if (typeof WorkAllowedOnThisSite !== 'undefined' && !WorkAllowedOnThisSite) return;
+    for (const mutation of mutations) {
+        if (mutation.addedNodes.length > 0) {
+            for (let i = 0; i < mutation.addedNodes.length; i++) {
+                processNode(mutation.addedNodes[i]);
+            }
+        }
+    }
 });
 
-observer.observe(document.documentElement, {
-  childList: true,
-  subtree: true,
-  characterData: false
-});
+if (typeof WorkAllowedOnThisSite === 'undefined' || WorkAllowedOnThisSite) {
+    initialScan();
+
+    observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true
+    });
+}
