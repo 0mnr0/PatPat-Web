@@ -66,6 +66,52 @@ img.patPatLoader {
 	top: 4px;
 }
 
+
+div.SettingSection.OtherTab {
+    height: calc(100% - 35px);
+}
+span.madeWith {
+    text-align: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    bottom: -35px;
+    padding: 5px 0px;
+    border-top: solid 1px #80808085;
+    opacity: 0.65;
+    font-size: small;
+}
+
+span.madeWith div {
+    width: auto;
+    display: flex;
+    height: 23px;
+    flex-direction: column;
+    overflow: hidden;
+    margin-left: 6px;
+    top: -2px;
+}
+span.madeWith div span.prev {
+    transform: rotate3d(1, 0, 0, 45deg);
+    opacity: 0.25;
+    margin-top: -16px;
+}
+span.madeWith div span {
+    white-space: nowrap;
+	transition: all 0.55s, transform ease-out 0.5s, margin 0.8s
+}
+span.madeWith div span.displaying {
+    width: fit-content;
+    margin-top: 0px;
+}
+
+span.madeWith div span.next {
+	margin-top: 5px;
+	transform: rotate3d(1, 0, 0, -45deg);
+	opacity: 0.25;
+}
+
 div.SettingsDiv {
     height: calc(100% - 74px);
 }

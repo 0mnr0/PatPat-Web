@@ -343,6 +343,8 @@ const RegisterPacksAnimations = () => {
 					${GetSwitch('AllowContextMenu')} 
 					<p data-i18n="AllowContextMenu.Desc"></p>
 				</div>
+				
+				<span class="madeWith"></span>
 			</div>
 				
 				
@@ -489,6 +491,76 @@ const AddIntoIgnoreList = (main, domainName) => {
 }
 
 
-function showChangeLog() {
+const MadeWithController = {
+	runNextTimeout: 3500,
+	display: undefined,
+	varinats: [
+		"for fun", "for people", "for pating cats", "for pating anything", "with the soul", "with love", "with love, by humans"
+	],
+	current: -1,
+	
+	get: () => {
+		return MadeWithController.varinats[MadeWithController.current];
+	},
+	
+	getPrev: () => {
+		return MadeWithController.varinats[MadeWithController.current-1];
+	},
+	
+	getNext: () => {
+		return MadeWithController.varinats[MadeWithController.current+1];
+	},
+	
+	init: () => {
+		MadeWithController.display = find("span.madeWith");
+		MadeWithController.display.innerHTML = `
+			
+			Made
+			<div class="flex">
+				<span class="prev">${MadeWithController.getPrev()}</span>
+				<span class="displaying">${MadeWithController.get()}</span>
+				<span class="next">${MadeWithController.getNext()}</span>
+			</div>
+		
+		`
+		log(MadeWithController.display.innerHTML);
+		MadeWithController.showNext();
+		setInterval(MadeWithController.showNext, MadeWithController.runNextTimeout);
+	},
+	
+	showNext: () => {
+		if (window.StopRoulette) {return}
+		
+		let display = MadeWithController.display;
+		MadeWithController.current++;
+		
+		const DISPLAYING = "displaying"; const PREV = "prev";  const NEXT = "next"; 
+		
+		let previous = display.find(`.${PREV}`);
+		let displaying = display.find(`.${DISPLAYING}`);
+		let next = display.find(`.${NEXT}`);
+		
+		if (previous) { previous.remove(); previous = displaying; displaying.classList.add(PREV); displaying.classList.remove(DISPLAYING); }
+		displaying = next;
+		displaying.classList.add(DISPLAYING); displaying.classList.remove(NEXT); 
+		
+		
+		next = document.createElement('span');
+		next.classList.add(NEXT);
+		next.textContent = MadeWithController.getNext();
+		
+		
+		let div = display.find('div');
+		div.appendChild(next);		
+		display.style.paddingLeft = "20px";
+		div.style.width = (displaying.realWidth + 20) +"px";
+		
+		
+		if (MadeWithController.current >= MadeWithController.varinats.length-2) {
+			MadeWithController.current = -2;			
+		}
+	}
 	
 }
+
+

@@ -193,6 +193,7 @@ function ClearAllSettingTypes() {
 		RegisterPacksAnimations();
 		RegisterBlockListProcessor();
 		setGitListener();
+		MadeWithController.init();
 		
 	}
 	

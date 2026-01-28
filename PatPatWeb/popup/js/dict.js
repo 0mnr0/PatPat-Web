@@ -45,8 +45,7 @@
 		'AuthorsTab': 'Authors',
 		
 		'LopyMineDesc': `The developers of the "PatPat" mod for Minecraft became the idea for this expansion. Thanks guys for the resources provided for the expansion`,
-		'dsvl0Desc': `And me`
-		
+		'dsvl0Desc': `And me`,
 	},
 	'ru': {
 		'GeneralSettings': "Настройки",
