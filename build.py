@@ -54,6 +54,7 @@ def patch_firefox_manifest(manifest_path: Path):
 
     data["icons"] = {
         "16": "/etc/icon.nano.png",
+        "32": "/etc/icon.firefox.x32.png",
         "64": "/etc/icon.firefox.x64.png",
         "128": "/etc/icon.firefox.png"
     }

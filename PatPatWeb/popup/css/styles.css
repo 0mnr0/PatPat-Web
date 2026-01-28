@@ -81,6 +81,9 @@ span.madeWith {
     opacity: 0.65;
     font-size: small;
 }
+span.madeWith.FF div {
+	top: -1px; /* fix for FireFox */
+}
 
 span.madeWith div {
     width: auto;

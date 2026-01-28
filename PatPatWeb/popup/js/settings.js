@@ -514,7 +514,6 @@ const MadeWithController = {
 	init: () => {
 		MadeWithController.display = find("span.madeWith");
 		MadeWithController.display.innerHTML = `
-			
 			Made
 			<div class="flex">
 				<span class="prev">${MadeWithController.getPrev()}</span>
@@ -523,7 +522,7 @@ const MadeWithController = {
 			</div>
 		
 		`
-		log(MadeWithController.display.innerHTML);
+		if (isFirefox) {MadeWithController.display.classList.add("FF");}
 		MadeWithController.showNext();
 		setInterval(MadeWithController.showNext, MadeWithController.runNextTimeout);
 	},
