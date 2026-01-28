@@ -192,7 +192,7 @@ div.inlineSetting.single {margin-bottom: 8px; align-items: center; font-size: la
 div.inlineSetting label {font-size: smaller;}
 div.inlineSetting label.Percentage {min-width: 35px; text-align: center}
 
-div.SettingSection:not(.Chosen) {position: absolute; left: 0px; top: -20px; z-index: -2; opacity: 0; scale: 1.02; height: 0%; overflow: hidden; width: 100%}
+div.SettingSection:not(.Chosen) {position: absolute; left: 0px; top: -20px; z-index: -2; opacity: 0; scale: 1.02; height: 90%; overflow: hidden; width: 100%}
 
 
 div.inlineSetting.volumer::before {

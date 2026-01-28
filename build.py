@@ -28,18 +28,24 @@ def copy_folder(src: Path, dst: Path):
     shutil.copytree(src, dst)
 
 
-def packZip(folder: Path, output_zip: Path):
+def packZip(folder: Path, output_zip: Path, current_dir: Path):
+    os.chdir(folder)
+    print("getcwd:", os.getcwd())
     if output_zip.exists():
         output_zip.unlink()
+
 
     cmd = [
         SEVEN_ZIP,
         "a",
         str(output_zip),
-        str(folder / "*")
+        str("*")
     ]
+    print(cmd)
 
     subprocess.run(cmd, check=True)
+    os.chdir(current_dir)
+    print("getcwd:", os.getcwd())
 
 
 def patch_firefox_manifest(manifest_path: Path):
@@ -64,6 +70,7 @@ def main():
     if OUTPUT.exists(): shutil.rmtree(OUTPUT) # Cleaning all old files
     OUTPUT.mkdir(exist_ok=True)
 
+
     print("Working with tmp files...")
     copy_folder(SOURCE_DIR, CHROMIUM_DIR)
     copy_folder(SOURCE_DIR, FIREFOX_DIR)
@@ -71,9 +78,9 @@ def main():
     patch_firefox_manifest(FIREFOX_DIR / "manifest.json")
 
     print("Building Chromium...")
-    packZip(CHROMIUM_DIR, CHROMIUM_ZIP); cls()
+    packZip(CHROMIUM_DIR, CHROMIUM_ZIP.absolute(), Path('.').absolute())
     print("Building FireFox...")
-    packZip(FIREFOX_DIR, FIREFOX_ZIP); cls()
+    packZip(FIREFOX_DIR, FIREFOX_ZIP.absolute(), Path('.').absolute())
 
     print("Cleaning tmp files...")
     shutil.rmtree(CHROMIUM_DIR)

@@ -1,7 +1,7 @@
 {
   "name": "PatPat",
   "description": "Pat Images on the websites!",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
   "permissions": ["storage", "tabs", "contextMenus", "menus"],
