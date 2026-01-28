@@ -476,7 +476,8 @@ ContextMenuContainer.addEventListener('mousedown', (e) => {
 }, true);
 
 ContextMenuContainer.addEventListener('mouseup', (e) => {
-	if (e.button === 2 && WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
+	if (e.button === 2 && WorkAllowedOnThisSite && (PatTriggers.wasActive(e) || true)) {
+		// i using "|| true" to update last state in wasActive, bc firefox is a little bit different with context menu's (Chrome is returning true from .wasActive, FF - Not)
 		isMouseDownOnAnyElement = false;
 		nextPat = null;
 	}

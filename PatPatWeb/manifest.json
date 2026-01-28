@@ -1,7 +1,7 @@
 {
   "name": "PatPat",
   "description": "Pat Images on the websites!",
-  "version": "0.9",
+  "version": "0.9.1",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
   "permissions": ["storage", "tabs", "contextMenus", "menus"],
@@ -82,5 +82,10 @@
     "http://127.0.0.1/*",
     "https://*/*",
     "http://*/*"
+  ],
+  "optional_permissions": [],
+  "optional_host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*"
   ]
 }
