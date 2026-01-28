@@ -218,11 +218,10 @@ const getCleanDomain = function(url) {
 
 
 const manifestData = chrome.runtime.getManifest();
-const version = manifestData.version;
-if (version && !isFirefox) { // i'll do firefox support a bit later
+if (manifestData && manifestData.version) {
 	let versionDisplay = find('span.Extension.version');
 	
-	versionDisplay.textContent = version;
+	versionDisplay.textContent = manifestData.version;
 	versionDisplay.onclick = () => {
 		ClearAllSettingTypes();
 		
@@ -243,7 +242,6 @@ if (version && !isFirefox) { // i'll do firefox support a bit later
 
 
 function setGitListener() {
-	
 	find('div.github').onclick = () => {
 		window.open('https://github.com/0mnr0/PatPat-Web')
 	}

@@ -52,10 +52,10 @@ div.topPane span.Extension.version {
     font-size: smaller;
     white-space: nowrap;
     position: absolute;
-    right: -30px;
-    bottom: -0px;
-    padding: 10px;
-	cursor: help;
+    right: 5px;
+    bottom: 2px;
+    padding: 5px;
+    cursor: help;
     display: flex;
     align-content: flex-end;
     flex-wrap: wrap;
