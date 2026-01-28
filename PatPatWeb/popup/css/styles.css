@@ -78,7 +78,6 @@ span.madeWith {
     position: absolute;
     bottom: -35px;
     padding: 5px 0px;
-    border-top: solid 1px #80808085;
     opacity: 0.65;
     font-size: small;
 }
