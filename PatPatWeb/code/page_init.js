@@ -2,7 +2,7 @@ let WorkAllowedOnThisSite = true;
 let allowPatKeyPressed = false;
 const SupportedElements = ['img', 'svg', 'model-viewer'];
 let rules = GetSiteRuleSet(window.location.hostname); if (rules.length > 0) {rules = ", "+rules}
-const targetSelectors = 'img, svg, model-viewer, div.viewBox';
+const targetSelectors = 'img, svg, model-viewer, div.viewBox'+rules;
 
 let PatTriggers = {
 	keyPressed: false,
@@ -51,7 +51,7 @@ function runPatInit(element) {
 		
 
 		
-		element.addEventListener('mousedown', (e) => {
+		element.addEventListener('mousedown', (e) => { 
 		    if (e.button === 2) {
 				nextPat = element;
 				isMouseDownOnAnyElement = true;

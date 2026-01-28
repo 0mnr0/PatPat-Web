@@ -11,15 +11,9 @@ const RuleSets = {
 			.UserPic-Image, .SwipeImage.MMImageWrapper
 		`,
 		
-		"vk.com, vk.ru": `
-			.AvatarRich__img, .vkuiRootComponent__host,
-			.BasicAvatar, .vkuiImageBase__children
-		`,		
-		
 		"youtube.com": `
-			div.html5-video-container video, div.ytThumbnailViewModelImage, 
-			yt-icon.ytd-logo, .ytIconWrapperHost.ytd-logo, 
-			yt-avatar-shape
+			div.html5-video-container video,
+			yt-icon.ytd-logo, .yt-spec-avatar-shape--avatar-size-medium
 		`,
 		
 		"google.com": `
@@ -44,7 +38,7 @@ const RuleSets = {
 		
 		"vk.com, vk.ru": `
 			.AvatarRich__img, .vkuiAvatar__host, .OwnerPageAvatar__in,
-			.BasicAvatar
+			.BasicAvatar, .vkuiImageBase__children
 		`,
 		
 		"x.com": `

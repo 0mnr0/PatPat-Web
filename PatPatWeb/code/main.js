@@ -461,6 +461,7 @@ ContextMenuContainer.addEventListener("contextmenu", e => {
 
 let isMouseDownOnAnyElement = false;
 ContextMenuContainer.addEventListener('mousedown', (e) => {
+	
 	if (
 		e.button === 2 &&
 		WorkAllowedOnThisSite &&
