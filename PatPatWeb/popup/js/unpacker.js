@@ -51,7 +51,6 @@ const unpackData = async function (file) {
 	for (let i = 0; i < SoundsList.length; i++) { 
 		SoundsList[i] = SoundsList[i].split(':')[1];
 	}
-	log(Texture, SoundsList);
 	
 	
 	const pngFile = zip.file(`assets/${Texture}`);

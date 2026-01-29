@@ -288,11 +288,14 @@ div.settingsPane div.PatPatPacks div.UploadPack.DataPack .FullWidthpreview {heig
     flex-direction: column;
 }
 
+.DataPackHTMLPosition {
+    width: calc(100% - 6px);
+}
 
 div.removeSavedDataPack {
     display: flex;
     position: absolute;
-    top: 45%;
+    top: 0px;
     height: 16px;
     right: 6px;
 	cursor: pointer;

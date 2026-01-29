@@ -155,6 +155,11 @@ const GenerateDataPackLists = () => {
 
 const RegisterPacksAnimations = () => {
 	findAll('.AvailableDataPack').forEach(async (pack) => {
+		await runPackAnimation(pack);
+	})
+}
+
+const runPackAnimation = async (pack) => {
 		const packName = pack.getAttribute('packname');
 		let PackData = null;
 		let PackIsLoaded = false;
@@ -183,7 +188,7 @@ const RegisterPacksAnimations = () => {
 			}
 			await sleep(pngTime > 10 ? pngTime : 10); // "0ms" potential fix
 		}
-	})
+	
 }
 
 (async() => {
@@ -263,32 +268,13 @@ const RegisterPacksAnimations = () => {
 						Upload .zip resource-packs! <br>
 						<a data-i18n="ResourcePackTip" href="https://modrinth.com/discover/resourcepacks?q=PatPat" target="_blank"> Explore Here! </a>
 					</label>
-					${ Object.keys(UserSettings).includes("@DataPack") ? 
+					<div class="DataPackHTMLPosition">
+						${ Object.keys(UserSettings).includes("@DataPack")
+							? runDataPackGeneration()
+							: ''
+						}
 					
-						`
-						<div class="removeSavedDataPack">
-							<img src="icons/delete.svg">
-							<span data-i18n="delete"></span>
-						</div>
-						<div class="AvailableDataPack" packname="@DataPack">
-							<div class="FullWidthpreview">
-								<img src="${GetDatapack.FirstImage()}"</img>
-							</div>
-							<div class="PreviewData">
-								<span class="packName"> Data Pack </span>
-								<div class="ImagePreview"> ${GetDatapack.Images()} </div>
-								
-								
-							</div>
-							
-							<div class="PreviewData TextType">
-								<span data-i18n="howmanysounds"> Sounds: <span>${GetDatapack.SoundsNum()} | </span> <span data-i18n="howmanyimages"> Images: <span>${GetDatapack.ImagesNum()}</span> </span> </span>
-								<span data-i18n="howlong"> Length: <span>${GetDatapack.AnimationLen()}ms</span></span>
-							</div>
-							
-						</div>
-						`	
-					: ''}
+					</div>
 				</div>
 				<div class="CookedPacksList">
 					${GenerateDataPackLists()}
@@ -563,3 +549,28 @@ const MadeWithController = {
 }
 
 
+const runDataPackGeneration = function() { //data-i18n
+	return `
+						<div class="removeSavedDataPack">
+							<img src="icons/delete.svg">
+							<span data-i18n="delete">${TranslateAssistant.translate.get('delete')}</span>
+						</div>
+						<div class="AvailableDataPack" packname="@DataPack">
+							<div class="FullWidthpreview">
+								<img src="${GetDatapack.FirstImage()}"</img>
+							</div>
+							<div class="PreviewData">
+								<span class="packName"> Data Pack </span>
+								<div class="ImagePreview"> ${GetDatapack.Images()} </div>
+								
+								
+							</div>
+							
+							<div class="PreviewData TextType">
+								<span data-i18n="howmanysounds"> Sounds: <span>${GetDatapack.SoundsNum()} | </span> <span data-i18n="howmanyimages"> Images: <span>${GetDatapack.ImagesNum()}</span> </span> </span>
+								<span data-i18n="howlong"> Length: <span>${GetDatapack.AnimationLen()}ms</span></span>
+							</div>
+							
+						</div>
+						`	
+}

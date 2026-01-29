@@ -1,6 +1,7 @@
 const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
 const BrowserContext = (typeof chrome === 'object') ? chrome : browser;
 const SettingsPane = find('.settingsPane');
+let DataPackHTMLPosition = undefined;
 let UserSettings = {};
 let LoadedPack = null;
 let patFiles = [];
@@ -69,6 +70,7 @@ function ClearAllSettingTypes() {
 	
 	document.runSettingBing = async () => {
 		await loadPackData();
+		log(DataPackHTMLPosition)
 		SettingsPane.innerHTML = await GenerateSettingsCode();
 		TranslateAssistant.translate.all();
 		
@@ -159,7 +161,11 @@ function ClearAllSettingTypes() {
 				DataPackFileText.classList.add('failed');
 			} else {
 				DataPackFileText.classList.remove('failed');
-				window.location.reload();
+				await loadPackData();
+				DataPackHTMLPosition.innerHTML = runDataPackGeneration();
+				SetActiveCurrentPack();
+				runPackAnimation(DataPackHTMLPosition.find('.AvailableDataPack'));
+				RegisterDataPackRemove();
 			}
 			DataPackFileText.textContent = TranslateAssistant.translate.get(result.reason);
 			
@@ -170,26 +176,26 @@ function ClearAllSettingTypes() {
 		});
 		
 		
-		findAll('.AvailableDataPack').forEach(pack => {
+		
+		DataPackHTMLPosition = find('div.DataPackHTMLPosition');
+		let AvailableDataPacks = findAll('.AvailableDataPack');
+		AvailableDataPacks.forEach(pack => {
 			pack.onclick = async () => {
 				let NewPack = pack.getAttribute('packname');
+				if (NewPack === UserSettings.SelectedPack) { return }
+				
 				await Settings.set('SelectedPack', NewPack);
-				window.location.reload();
+				await loadPackData();
+				SetActiveCurrentPack();
+				DataPackHTMLPosition.innerHTML = runDataPackGeneration();
 			}
 		});
 		let ChosenPack = find(`.AvailableDataPack[packname="${await Settings.get('SelectedPack', 'PatPat Classic')}"]`);
 		if (ChosenPack) {ChosenPack.classList.add('Active');}
 		
 		
-		let RemovePack = find(`div.removeSavedDataPack`);
-		if (RemovePack) {
-			RemovePack.onclick = async () => {
-				await Settings.set('SelectedPack', 'PatPat Classic')
-				await Settings.delete('@DataPack');
-				window.location.reload()
-			}
-		}
 		
+		RegisterDataPackRemove();
 		RegisterPacksAnimations();
 		RegisterBlockListProcessor();
 		setGitListener();
@@ -198,9 +204,35 @@ function ClearAllSettingTypes() {
 	}
 	
 	
-})()
+})();
+
+const RegisterDataPackRemove = () => {
+	let RemovePack = find(`div.removeSavedDataPack`);
+	if (RemovePack) {
+		RemovePack.onclick = async () => {
+			await Settings.set('SelectedPack', 'PatPat Classic')
+			await Settings.delete('@DataPack');
+			await loadPackData();
+			let CustomPackDiv = find(`.AvailableDataPack[packname="@DataPack"]`);
+			if (CustomPackDiv) {CustomPackDiv.remove} else {location.reload();}
+			DataPackHTMLPosition.innerHTML = ``
+			SetActiveCurrentPack();
+		}
+	}
+}
 
 
+const SetActiveCurrentPack = function() {
+	let currentPack = UserSettings.SelectedPack;
+	let packs = findAll('.AvailableDataPack');
+	packs.forEach(p => {
+		p.classList.remove("Active");
+	});
+	let NowLoaded = find(`div.AvailableDataPack[packname="${currentPack}"]`);
+	if (NowLoaded) {
+		NowLoaded.classList.add("Active");
+	}
+}
 
 const getCleanDomain = function(url) {
   try {

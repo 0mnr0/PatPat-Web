@@ -21,6 +21,7 @@
 		'OtherTab': 'Other',
 		'AllowContextMenu': 'Context Menu',
 		'AllowContextMenu.Desc': 'Show "Pat IT!" in context menu',
+		'SettingsWasReloaded': 'Settings was applied!',
 		
 		
 		'EnableDithering': 'Adaptive transparency',
@@ -69,6 +70,7 @@
 		'OtherTab': 'Другое',
 		'AllowContextMenu': 'Контексное меню',
 		'AllowContextMenu.Desc': 'Показывать "Pat IT!" в контекстном меню',
+		'SettingsWasReloaded': 'Параметры применены!',
 		
 		'EnableDithering': 'Адаптивная прозрачность',
 		'ForceDithering': 'Всегда',
