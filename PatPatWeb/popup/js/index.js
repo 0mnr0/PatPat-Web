@@ -163,9 +163,11 @@ function ClearAllSettingTypes() {
 				DataPackFileText.classList.remove('failed');
 				await loadPackData();
 				DataPackHTMLPosition.innerHTML = runDataPackGeneration();
-				SetActiveCurrentPack();
-				runPackAnimation(DataPackHTMLPosition.find('.AvailableDataPack'));
+				let pack = DataPackHTMLPosition.find('.AvailableDataPack');
 				RegisterDataPackRemove();
+				SetActiveCurrentPack();
+				runPackAnimation(pack);
+				RegisterDataPackOnClick(pack);
 			}
 			DataPackFileText.textContent = TranslateAssistant.translate.get(result.reason);
 			
@@ -180,15 +182,7 @@ function ClearAllSettingTypes() {
 		DataPackHTMLPosition = find('div.DataPackHTMLPosition');
 		let AvailableDataPacks = findAll('.AvailableDataPack');
 		AvailableDataPacks.forEach(pack => {
-			pack.onclick = async () => {
-				let NewPack = pack.getAttribute('packname');
-				if (NewPack === UserSettings.SelectedPack) { return }
-				
-				await Settings.set('SelectedPack', NewPack);
-				await loadPackData();
-				SetActiveCurrentPack();
-				DataPackHTMLPosition.innerHTML = runDataPackGeneration();
-			}
+			RegisterDataPackOnClick(pack);
 		});
 		let ChosenPack = find(`.AvailableDataPack[packname="${await Settings.get('SelectedPack', 'PatPat Classic')}"]`);
 		if (ChosenPack) {ChosenPack.classList.add('Active');}
@@ -221,17 +215,32 @@ const RegisterDataPackRemove = () => {
 	}
 }
 
+const RegisterDataPackOnClick = (pack) => {
+	pack.onclick = async () => {
+		let NewPack = pack.getAttribute('packname');
+		if (NewPack === UserSettings.SelectedPack) { return }
+				
+		await Settings.set('SelectedPack', NewPack);
+		await loadPackData();
+		SetActiveCurrentPack();
+	}
+}
 
 const SetActiveCurrentPack = function() {
 	let currentPack = UserSettings.SelectedPack;
+	log(currentPack);
+	
 	let packs = findAll('.AvailableDataPack');
 	packs.forEach(p => {
 		p.classList.remove("Active");
 	});
+	
 	let NowLoaded = find(`div.AvailableDataPack[packname="${currentPack}"]`);
+	log(NowLoaded);
 	if (NowLoaded) {
 		NowLoaded.classList.add("Active");
 	}
+	log(NowLoaded);
 }
 
 const getCleanDomain = function(url) {
