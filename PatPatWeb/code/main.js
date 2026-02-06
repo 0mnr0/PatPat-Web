@@ -459,26 +459,52 @@ ContextMenuContainer.addEventListener("contextmenu", e => {
 }, true);
 
 
+
+const Check = {
+	hasImage: (item) => {
+		return containBackgroundImage(item)
+	},
+	backgroundImage: (event) => {
+		return Check.hasImage(event.target) &&
+				(event.target && !SupportedElements.includes(event.target.tagName.toLowerCase()))
+	},
+	
+	elementsFromPoint: (event) => {
+		let elements = document.elementsFromPoint(event.clientX, event.clientY);
+		for (e of elements) {
+			if (patListening.has(event)) {continue}
+			
+			if (Check.hasImage(e)) { return e; } 
+		}
+	}
+}
+
+
 let isMouseDownOnAnyElement = false;
 ContextMenuContainer.addEventListener('mousedown', (e) => {
-	
-	if (
-		e.button === 2 &&
-		WorkAllowedOnThisSite &&
-		PatTriggers.wasActive(e) &&
-		containBackgroundImage(e.target) &&
-		(e.target && !SupportedElements.includes(e.target.tagName.toLowerCase()))
-	
-	){
-		nextPat = e.target;
+	// this is support for not-SupportedElements elements
+	// This code is checking background-image and document.elementFromPoint with background image
+	function preRunPatOn(element) {
+		nextPat = element;
 		isMouseDownOnAnyElement = true;
-		runPat(e.target);
+		runPat(element);
 	}
+	
+	if (e.button === 2 && WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
+		if (Check.backgroundImage(e)) {
+			preRunPatOn(e.target);
+		} else {
+			let pointsPat = Check.elementsFromPoint(e);
+			if (pointsPat) { preRunPatOn(pointsPat); }
+		}
+	}
+	
+	
 }, true);
 
 ContextMenuContainer.addEventListener('mouseup', (e) => {
 	if (e.button === 2 && WorkAllowedOnThisSite && (PatTriggers.wasActive(e) || true)) {
-		// i using "|| true" to update last state in wasActive, bc firefox is a little bit different with context menu's (Chrome is returning true from .wasActive, FF - Not)
+		// i using "|| true" to update last state in wasActive, bc firefox is working a little bit different with context menu's events (Chrome is returning true from .wasActive, FF - Not)
 		isMouseDownOnAnyElement = false;
 		nextPat = null;
 	}

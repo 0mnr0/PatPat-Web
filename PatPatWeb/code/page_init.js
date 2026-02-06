@@ -28,7 +28,7 @@ let PatTriggers = {
 		if (MouseEvent === true) { return true }
 		
 		const PointerEvent = PatTriggers.setLastState(event[PatTriggers.Key]); // if PointerEvent captured that Pat key pressed
-		if (PointerEvent === true) { return true }		
+		if (PointerEvent === true) { return true }
 		
 		
 		// so we have nothing
