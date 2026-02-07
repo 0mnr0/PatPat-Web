@@ -47,6 +47,7 @@ const SuperFeatures = {
 	},
 	
 	run: (element) => {
+		if (location.protocol.includes("file")) {return} // skip for local files
 		if (!WorkAllowedOnThisSite) {return}
 		if (!UserSettings.EnableSuperFeatures) {return}
 		
