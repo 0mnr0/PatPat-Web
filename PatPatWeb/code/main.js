@@ -166,11 +166,12 @@ function getAnimationSpeed() {
 
 async function runPat(element, reRunData) {
 	if (!PatTools.isRunAllowed(element)) {return}
+	warn("RUN PAT!");
 	// reRunData: {
-	//		isAutoPat: bool,
-	//		startStyle: str,
+	//		isAutoPat: [bool],
+	//		startStyle: [str],
 	//      calculatedTransform: {YScale: ...},
-	//      FixedYTranslate: int
+	//      FixedYTranslate: [int]
 	// }
 	
 	
@@ -470,11 +471,42 @@ const Check = {
 	},
 	
 	elementsFromPoint: (event) => {
-		let elements = document.elementsFromPoint(event.clientX, event.clientY);
-		for (e of elements) {
+		let elements = document.elementsFromPoint(event.clientX, event.clientY)
+		
+		// here we are doing some interesting things:
+		// first: we are fixing that (possible) overlay can block <img> mousedown event
+		// second: we are checking bloсked img and starting to animate it 
+		// 		  	(if its not overlapped by overlay and mousedown event was triggered, PattingRightNow condition will fix double animation)
+		// third: if 
+		
+		
+		let priorityData = {
+			tag: undefined,  // [str]: "<...> | <img>"
+			type: undefined, // [str]: "BGIMG | Native"
+			element: undefined, // <link>
+			priority: -1
+		};
+		
+		let priority = null;
+		
+		
+		
+		
+		for (el of elements) {
 			if (patListening.has(event)) {continue}
+			let tag = el.tagName.toLowerCase();
 			
-			if (Check.hasImage(e)) { return e; } 
+			if (SupportedElements.includes(tag)) {
+				return el;
+			}
+			
+			if (Check.hasImage(el)) {
+				return el;
+			}
+				
+			
+			
+			if (Check.hasImage(el)) { return el; } 
 		}
 	}
 }
@@ -484,7 +516,7 @@ let isMouseDownOnAnyElement = false;
 ContextMenuContainer.addEventListener('mousedown', (e) => {
 	// this is support for not-SupportedElements elements
 	// This code is checking background-image and document.elementFromPoint with background image
-	function preRunPatOn(element) {
+	function prePatRun(element) {
 		nextPat = element;
 		isMouseDownOnAnyElement = true;
 		runPat(element);
@@ -492,10 +524,10 @@ ContextMenuContainer.addEventListener('mousedown', (e) => {
 	
 	if (e.button === 2 && WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
 		if (Check.backgroundImage(e)) {
-			preRunPatOn(e.target);
+			prePatRun(e.target);
 		} else {
 			let pointsPat = Check.elementsFromPoint(e);
-			if (pointsPat) { preRunPatOn(pointsPat); }
+			if (pointsPat) { prePatRun(pointsPat); }
 		}
 	}
 	
