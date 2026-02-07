@@ -67,6 +67,8 @@ const Stats = {
 	},
 	
 	add: async (element) => {		
+		if (location.protocol.includes("file")) {return} // skip for local files
+		
 		const siteDomain = getSiteDomainName().replace('www.','');
 		let allStats = await Stats.get();
 		currentStats = allStats[Stats.getYear()];
