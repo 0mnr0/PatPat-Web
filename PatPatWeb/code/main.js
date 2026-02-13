@@ -166,7 +166,6 @@ function getAnimationSpeed() {
 
 async function runPat(element, reRunData) {
 	if (!PatTools.isRunAllowed(element)) {return}
-	warn("RUN PAT!");
 	// reRunData: {
 	//		isAutoPat: [bool],
 	//		startStyle: [str],
@@ -200,7 +199,10 @@ async function runPat(element, reRunData) {
 	let animationFrameSleep = LoadedPack.animLength/patFiles.length*getAnimationSpeed();
 	for (let i = 0; i < patFiles.length; i++) {
 		const pat = patFiles[i];
-		if (overlay) { overlay.src = pat; }
+		if (overlay) { 
+			if (!isSvgPage) { overlay.src = pat; }
+			else { overlay.setAttribute('href', pat); }			
+		}
 		
 		if (i>=(patFiles.length/2) && !shouldRevevrseAnim) { //start animate ScaleY backwards
 			shouldRevevrseAnim = true;
@@ -374,14 +376,36 @@ function addOverlay(target) {
 		return false;
 	}
 
-	const overlay = document.createElement('img');
-	overlay.className = `theExactPatPatHandAnimation patClassAnimation ${ditheringRule() ? 'dithering' : ''} `;
-	overlay.style.left = leftPos +'px';
-	overlay.style.top = topPos + 'px';
-	overlay.style.width = rect.width + 'px';
-	overlay.style.height = rect.height + 'px';
-	overlay.src = patFiles[0];
-	document.body.after(overlay);
+	
+	let overlay;
+	if (isSvgPage) {
+		overlay = document.createElementNS('http://www.w3.org/2000/svg', 'image');
+		overlay.setAttribute('x', leftPos);
+		overlay.setAttribute('y', topPos);
+		overlay.setAttribute('width', rect.width);
+		overlay.setAttribute('height', rect.height);
+		overlay.setAttribute('href', patFiles[0]); 
+	} else {
+		overlay = document.createElement('img'); 
+		
+		overlay.style.left = leftPos + 'px';
+		overlay.style.top = topPos + 'px';
+		overlay.style.width = rect.width + 'px';
+		overlay.style.height = rect.height + 'px';
+		overlay.src = patFiles[0];
+	}
+	overlay.className = `theExactPatPatHandAnimation patClassAnimation ${ditheringRule() ? 'dithering' : ''}`;
+
+
+	const root = document.body || document.documentElement;
+	if (root === document.body) {
+		// just in some CSS cases it will be better if i place it after <body>
+		root.after(overlay);
+	} else {
+		// fix for <svg> files (they dont have a <body></body>) root.appendChild(overlay)
+		root.appendChild(overlay);
+	}
+
 	return overlay;
 }
 

@@ -3,6 +3,7 @@ let allowPatKeyPressed = false;
 const SupportedElements = ['img', 'svg', 'model-viewer'];
 let rules = GetSiteRuleSet(window.location.hostname); if (rules.length > 0) {rules = ", "+rules}
 const targetSelectors = 'img, svg, model-viewer, div.viewBox'+rules;
+const isSvgPage = !document.body && document.documentElement.tagName.toLowerCase() === 'svg';
 
 let PatTriggers = {
 	keyPressed: false,
@@ -19,8 +20,6 @@ let PatTriggers = {
 	
 	wasActive: (event) => {
 		if (!event) {
-			
-		log("No event provided!");
 			return PatTriggers.keyPressed; // return last state of keyboard capture as no event data is provided
 		}
 		
