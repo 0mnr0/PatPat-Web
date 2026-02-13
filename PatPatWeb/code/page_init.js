@@ -44,23 +44,59 @@ window.addEventListener("keyup", e => { if (e.key === PatTriggers.KeyName) PatTr
 
 
 let nextPat = null;
-function runPatInit(element) {
-		if (patListening.has(element) || element.className === 'patClassAnimation') {return}
-		patListening.add(element);
-		
+function runPatInit(element, inObjectTag) {
+	if (patListening.has(element) || element.className === 'patClassAnimation') {return}
+	patListening.add(element);
+	
 
-		
-		element.addEventListener('mousedown', (e) => { 
-		    if (e.button === 2) {
-				nextPat = element;
-				isMouseDownOnAnyElement = true;
-				if(PatTriggers.wasActive(e) && WorkAllowedOnThisSite) { runPat(element); e.preventDefault() }
-		    }
-		});
+	
+	element.addEventListener('mousedown', (e) => { 
+		if (e.button === 2) {
+			nextPat = element;
+			isMouseDownOnAnyElement = true;
+			if(PatTriggers.wasActive(e) && WorkAllowedOnThisSite) { runPat(element); e.preventDefault() }
+		}
+	});
+	
+	if (inObjectTag) {
+		runAdditionalListeners(element);
+	}
 	
 }
 
+function runAdditionalListeners(element) {
+	element.addEventListener('mouseup', (e) => { 
+		if (e.button === 2) {
+			nextPat = null;
+			isMouseDownOnAnyElement = false;
+		}
+	});
+	element.addEventListener('contextmenu', (e) => { 
+		if (e.button === 2 && WorkAllowedOnThisSite && (PatTriggers.wasActive(e) || true)) { // ( "|| true" to update last states )
+			isMouseDownOnAnyElement = false;
+			nextPat = null;
+		}
+		e.preventDefault();
+	});
+}
 
+function handleObject(el) {
+  const process = () => {
+    try {
+        const innerDoc = el.contentDocument;
+        if (!innerDoc) return;
+        innerDoc.querySelectorAll("img, svg").forEach(e => {runPatInit(e, true);});
+	    // im not using "targetSelectors" here bc it can be different domain name
+	  
+    } catch (e) {} // can be CORS errors, and potentially, if (el.contentDocument) is null
+  };
+
+  if (el.contentDocument) {
+    process();
+  } else {
+    el.addEventListener("load", process);
+  }
+}
 
 
 
@@ -70,8 +106,15 @@ function runPatInit(element) {
 
 
 function processNode(node) {
-    if (node.nodeType !== 1) return;
+    if (node.nodeType !== 1) {return}
 
+	log(node.tagName.toLowerCase() === "object", node)
+	if (node.tagName.toLowerCase() === "object" && !patListening.has(node)) { // some special work for included documents in DOM
+		handleObject(node);
+		log(node);
+		return;
+	}
+	
     if (node.matches(targetSelectors)) {
         if (!patListening.has(node)) {
             runPatInit(node);
@@ -92,7 +135,7 @@ function processNode(node) {
 function initialScan() {
     if (typeof WorkAllowedOnThisSite !== 'undefined' && !WorkAllowedOnThisSite) return;
     
-    const elements = document.querySelectorAll(targetSelectors);
+    const elements = document.querySelectorAll("object,"+targetSelectors);
     for (let i = 0; i < elements.length; i++) {
         processNode(elements[i]);
     }
