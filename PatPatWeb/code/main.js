@@ -584,11 +584,17 @@ BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) =
 	    await loadPackData();
     }
 	
+	
+	
 	if (msg.type === "PatPat.It.Item" && WorkAllowedOnThisSite && PossibleContextMenuPatPat) {
-		
 	    for (let i = 0; i < 3; i++) {
 			await runPat(PossibleContextMenuPatPat);
 		}
+		lastClickedElement = null;
+    }
+	
+	if (msg.type === "PatPat.It.Record" && WorkAllowedOnThisSite && PossibleContextMenuPatPat) {
+	    Recorder.go(PossibleContextMenuPatPat);
 		lastClickedElement = null;
     }
 });

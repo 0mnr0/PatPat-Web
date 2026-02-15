@@ -108,7 +108,6 @@ function handleObject(el) {
 function processNode(node) {
     if (node.nodeType !== 1) {return}
 
-	log(node.tagName.toLowerCase() === "object", node)
 	if (node.tagName.toLowerCase() === "object" && !patListening.has(node)) { // some special work for included documents in DOM
 		handleObject(node);
 		log(node);

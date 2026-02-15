@@ -1,6 +1,7 @@
 {
   "name": "PatPat",
   "description": "Pat Images on the websites!",
+  "minimum_chrome_version": "123",
   "version": "0.9.2",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
@@ -13,7 +14,17 @@
   "content_scripts": [
     {
 		"css": ["code/css/patStyles.css"],
-		"js": ["code/LightTools.js", "code/rules.js", "code/tools.js", "code/main.js", "code/page_init.js", "code/SuperFeatures.js", "code/stats.js"],
+		
+		"js": [
+			"code/LightTools.js",
+			"code/rules.js",
+			"code/tools.js",
+			"code/main.js",
+			"code/recorder.js", 
+			"code/page_init.js",
+			"code/SuperFeatures.js",
+			"code/stats.js"],
+		
         "matches": [
 			"<all_urls>",
 			"file:///*",
@@ -30,6 +41,7 @@
   "web_accessible_resources": [
 	  {
 		"resources": [
+			"code/recorder/sandbox.html",
 			"etc/packs.json",
 			
 			"/etc/PatPat.Classic/sequence/pat0.png",

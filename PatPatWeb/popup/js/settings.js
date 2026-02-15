@@ -326,8 +326,12 @@ const runPackAnimation = async (pack) => {
 			
 			<div class="SettingSection OtherTab">
 				<div class="SettingLine">
-					${GetSwitch('AllowContextMenu')} 
-					<p data-i18n="AllowContextMenu.Desc"></p>
+					${GetSwitch('AllowContextMenu.PatIt')} 
+					<p data-i18n="AllowContextMenu.PatIt.Desc"></p>
+				</div>
+				<div class="SettingLine">
+					${GetSwitch('AllowContextMenu.Record')} 
+					<p data-i18n="AllowContextMenu.Record.Desc"></p>
 				</div>
 				
 				<span class="madeWith"></span>

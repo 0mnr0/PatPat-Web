@@ -19,8 +19,10 @@
 		'MakeAnnouncements.Ext': 'Web Events',
 		'MakeAnnouncements.Ext.Desc': 'If the site supports this extension, it will be able to receive Pat events when interacting with the site and perform any actions',
 		'OtherTab': 'Other',
-		'AllowContextMenu': 'Context Menu',
-		'AllowContextMenu.Desc': 'Show "Pat IT!" in context menu',
+		'AllowContextMenu.PatIt': 'Context Menu - "Pat IT!"',
+		'AllowContextMenu.PatIt.Desc': 'Show "Pat IT!" in context menu',
+		'AllowContextMenu.Record': 'Context Menu - "Pat & Export!"',
+		'AllowContextMenu.Record.Desc': 'Show "Pat IT!" in context menu',
 		'SettingsWasReloaded': 'Settings was applied!',
 		
 		
@@ -68,8 +70,10 @@
 		'MakeAnnouncements.Ext': 'События на сайтах',
 		'MakeAnnouncements.Ext.Desc': 'Если сайт поддерживает это расширение, оно сможет получать Pat события при взаимодействии с сайтом и выполнять какие-либо действия',
 		'OtherTab': 'Другое',
-		'AllowContextMenu': 'Контексное меню',
-		'AllowContextMenu.Desc': 'Показывать "Pat IT!" в контекстном меню',
+		'AllowContextMenu.PatIt': 'Контексное меню - "Pat IT!"',
+		'AllowContextMenu.PatIt.Desc': 'Показывать "Pat IT!" в контекстном меню',
+		'AllowContextMenu.Record': 'Контексное меню - "Pat & Export!"',
+		'AllowContextMenu.Record.Desc': 'Показывать "Pat & Export!" в контекстном меню',
 		'SettingsWasReloaded': 'Параметры применены!',
 		
 		'EnableDithering': 'Адаптивная прозрачность',

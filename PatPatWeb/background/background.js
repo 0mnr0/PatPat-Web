@@ -60,7 +60,7 @@ async function loadPacks() {
 
 const DefaultValues = {
 	AllowSound: true,
-	AllowContextMenu: true,
+	"AllowContextMenu.Record": true,
 	ForceDithering: false,
 	EnableDithering: false,
 	EnableSuperFeatures: false,
@@ -101,11 +101,9 @@ BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) =
 	    const tabs = await BrowserContext.tabs.query({});
 	    await SetupDefault();
 	  
-	    if (await Settings.get('AllowContextMenu')) {
-	  	    setupContextMenu();
-	    } else {
-	        removeContextMenu();
-	    }
+	  
+	    if (await Settings.get('AllowContextMenu.PatIt')) { setupPatItContextMenu(); } else { removePatItContextMenu(); }
+	    if (await Settings.get('AllowContextMenu.Record')) { setupRecordContextMenu(); } else { removeRecordContextMenu(); }
 	  
 	  
 	    for (const tab of tabs) {
@@ -122,29 +120,54 @@ BrowserContext.runtime.onMessage.addListener(async (msg, sender, sendResponse) =
 
 
 
-let menuCreated = false;
-function removeContextMenu() {
+let PATIT_menuCreated = false;
+let RECORD_menuCreated = false;
+
+function removePatItContextMenu() {
 	try { BrowserContext.contextMenus.remove("PatPat.It.Item"); } catch(e) {} // Already Deleted
-	menuCreated = false;
+	PATIT_menuCreated = false;
+}
+function removeRecordContextMenu() {
+	try { BrowserContext.contextMenus.remove("PatPat.It.Record"); } catch(e) {} // Already Deleted
+	RECORD_menuCreated = false;
 }
 
-function setupContextMenu() {
-	if (!menuCreated) {
+function setupPatItContextMenu() {
+	if (!PATIT_menuCreated) {
 		BrowserContext.contextMenus.create({
 			id: "PatPat.It.Item",
 			title: "Pat It!",
 			contexts: ["image", "video"]
 		});
-		menuCreated = true;
+		PATIT_menuCreated = true;
+	}
+}
+function setupRecordContextMenu() {
+	if (!RECORD_menuCreated) {
+		BrowserContext.contextMenus.create({
+			id: "PatPat.It.Record",
+			title: "Pat && Export!",
+			contexts: ["image", "video"]
+		});
+		RECORD_menuCreated = true;
 	}
 }
 
 
-BrowserContext.runtime.onInstalled.addListener(setupContextMenu);
+BrowserContext.runtime.onInstalled.addListener(setupRecordContextMenu);
 BrowserContext.contextMenus.onClicked.addListener((info, tab) => {
+	
     if (info.menuItemId === "PatPat.It.Item") {
         BrowserContext.tabs.sendMessage(tab.id, {
             type: "PatPat.It.Item"
         });
     }
+	
+    if (info.menuItemId === "PatPat.It.Record") {
+        BrowserContext.tabs.sendMessage(tab.id, {
+            type: "PatPat.It.Record"
+        });
+    }
+	
+	
 });
