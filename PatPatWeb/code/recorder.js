@@ -20,11 +20,11 @@ const Recorder = {
 	
 	calculateCurrentImage: (imgArray, currentTime, totalTime) => {		
 		function pickByNumber(arr, num) {
-		    const index = Math.min(
+			  const index = Math.min(
 				arr.length - 1,
 				Math.floor(num * arr.length)
-		    );
-		    return arr[index];
+			  );
+			  return arr[index];
 		}
 		
 		let index = currentTime / totalTime;
@@ -59,105 +59,93 @@ const Recorder = {
 
 
 	go: async (element) => {
-		let loadedState = 0;
-		let calcedAnimLength = LoadedPack.animLength*getAnimationSpeed();
+		const FPS = 30;
+		let calcedAnimLength = LoadedPack.animLength * getAnimationSpeed();
+
 		const sourceImage = new Image();
 		sourceImage.crossOrigin = "anonymous";
 		sourceImage.src = element.src;
-		sourceImage.onload = () => {
-			loadedState = 1;
-			ctx.drawImage(sourceImage, 0, 0);
-			canvas.width = sourceImage.naturalWidth; 
-			canvas.height = sourceImage.naturalHeight;
-			
-			if (canvas.width === 0) {
-				canvas.width = 400; canvas.height = 400;
-			}
-		};
-		sourceImage.onerror = () => {
-			loadedState = -1;
-		}
-		
-		
+
+		await new Promise((resolve, reject) => {
+			sourceImage.onload = () => resolve();
+			sourceImage.onerror = () => reject(new Error('source image load error'));
+		}).catch(err => {
+			console.error(err);
+			return;
+		});
+
 		const canvas = document.createElement('canvas');
+		canvas.width = sourceImage.naturalWidth || 400;
+		canvas.height = sourceImage.naturalHeight || 400;
+
 		const ctx = canvas.getContext('2d', { alpha: true });
-		
-		let overlayData = {width: null, height: null};
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
+
 		const overlayImages = Recorder.getOverlayImages();
-		
-		
-		
-		
-		
-		
-		async function render(elapsed, calcedAnimLength) {
+
+		function render(elapsed, calcedAnimLength) {
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
-			let overlayImg = Recorder.calculateCurrentImage(overlayImages, elapsed, calcedAnimLength);
+
 			
 			let YScalePercentage = Recorder.calculateImageScale(elapsed, calcedAnimLength);
-		    ctx.drawImage(sourceImage,
-						0,
-						canvas.height - (canvas.height * YScalePercentage),
-						canvas.width,
-						canvas.height * YScalePercentage);
-			
-			
-			let calcedView = Recorder.calculateOverlayViews(canvas, {width: overlayImg.naturalWidth, height: overlayImg.naturalHeight});
 			ctx.drawImage(
+				sourceImage,
+				0,
+				canvas.height - (canvas.height * YScalePercentage),
+				canvas.width,
+				canvas.height * YScalePercentage
+			);
+
+			const overlayImg = Recorder.calculateCurrentImage(overlayImages, elapsed, calcedAnimLength);
+			if (overlayImg && overlayImg.naturalWidth) {
+				const calcedView = Recorder.calculateOverlayViews(canvas, { width: overlayImg.naturalWidth, height: overlayImg.naturalHeight });
+				ctx.drawImage(
 				overlayImg,
 				calcedView.offsetLeft,
 				0,
 				calcedView.overlayWidth,
-				calcedView.overlayHeight	
-			);
+				calcedView.overlayHeight
+				);
+			}
 		}
-		await render(0, calcedAnimLength);
-		await sleep(100);
 		
 		
-		const stream = canvas.captureStream(60); // FPS
+		render(0, calcedAnimLength);
+		await new Promise(r => setTimeout(r, 50));
+
+		const stream = canvas.captureStream(FPS);
 		const recorder = new MediaRecorder(stream, {
-		  mimeType: MediaRecorder.isTypeSupported("video/webm; codecs=vp9") 
-                  ? "video/webm; codecs=vp9" 
-                  : "video/webm"
+			mimeType: MediaRecorder.isTypeSupported("video/webm; codecs=vp9") ? "video/webm; codecs=vp9" : "video/webm"
 		});
 
 		const chunks = [];
-		recorder.ondataavailable = e => {
-			if (e.data.size > 0) chunks.push(e.data);
-		};
-
+		recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
 		recorder.onstop = () => {
-		  const blob = new Blob(chunks, { type: "video/webm" });
-		  const url = URL.createObjectURL(blob);
-
-		  const a = document.createElement("a");
-		  a.href = url;
-		  a.download = "animation.webm";
-		  a.click();
+			const blob = new Blob(chunks, { type: "video/webm" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "animation.webm";
+			a.click();
 		};
-		
-		while (sourceImage === 0) {
-			log("sourceImage:", sourceImage);
-			await sleep(100);
-		} if (sourceImage === -1) {return}
-		
+
 		recorder.start();
+
 		
 		
-		
-		const FPS = 30;
-		let animationFrameSleep = 1000 / FPS;
-		let elapsed = 0;
+		const frameDelay = 1000 / FPS;
 		const start = performance.now();
+		let elapsed = 0;
 		while (elapsed < calcedAnimLength) {
 			elapsed = performance.now() - start;
-			await render(elapsed, calcedAnimLength);
-			await sleep(animationFrameSleep);
+			render(elapsed, calcedAnimLength);
+			await new Promise(r => setTimeout(r, frameDelay));
 		}
-		recorder.stop();
 
+		recorder.stop();
 	}
+
 
 }
 
