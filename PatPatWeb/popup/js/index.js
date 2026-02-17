@@ -301,7 +301,7 @@ function startKeyPressDemo() {
 	
 
 	
-	KeyPressDemo.textContent = isFirefox ? "LCTRL" : "LSHIFT";
+	KeyPressDemo.textContent = isFirefox ? "CTRL" : "SHIFT";
 	document.addEventListener("keydown", e => {
 		if ((isFirefox && e.ctrlKey) || e.shiftKey) {KEYClasses.add("pressed"); isAllPressed(true);}
 	})
