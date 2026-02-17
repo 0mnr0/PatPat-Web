@@ -33,7 +33,13 @@ const loadPackData = async function() {
 	if (IsDataPack) { LoadedPack = await Settings.get('@DataPack', null) }
 	
 	if (LoadedPack === undefined) {
-		alert(`We couldn't load "${PackName}" datapack into PatPat :(. Please choose another one`);
+		let text = Translate('PatPat.Error.DataPackIsNotFound.Part1')+PackName+Translate('PatPat.Error.DataPackIsNotFound.Part2');
+		warn(text);
+		Toast.create(
+			text,
+			3500,
+			{closeText: Translate("FINE")}
+		)
 		return
 	}
 	patFiles = [];

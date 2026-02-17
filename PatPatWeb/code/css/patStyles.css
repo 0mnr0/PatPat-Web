@@ -1,20 +1,84 @@
-	.theExactPatPatHandAnimation.patClassAnimation {
-		position: absolute;
-		pointer-events: none;
-		z-index: 999999999999;
-		object-fit: contain;
-		border: none; 
-		outline: none;
-		background-position: center;
-	}
+.theExactPatPatHandAnimation.patClassAnimation {
+	position: absolute;
+	pointer-events: none;
+	z-index: 999999999999;
+	object-fit: contain;
+	border: none; 
+	outline: none;
+	background-position: center;
+}
 	
-	.theExactPatPatHandAnimation.patClassAnimation.dithering {
-	   --size: 4px;
+.theExactPatPatHandAnimation.patClassAnimation.dithering {
+	--size: 4px;
+    mask-image:
+	    linear-gradient(90deg, #000 50%, rgb(0 0 0 / 40%) 0),
+	    linear-gradient(#000 50%, rgb(0 0 0 / 40%) 0);
+  
+    mask-size: var(--size) var(--size);
+    mask-composite: intersect;
+}
 
-	   mask-image:
-		    linear-gradient(90deg, #000 50%, rgb(0 0 0 / 40%) 0),
-		    linear-gradient(#000 50%, rgb(0 0 0 / 40%) 0);
-	  
-	   mask-size: var(--size) var(--size);
-	   mask-composite: intersect;
-	 }
+
+
+div.PatPatExtensionToast {
+	transition: all .8s;
+	position: fixed;
+	padding: 6px;
+	background: #22222260;
+	backdrop-filter: blur(8px) brightness(1.4);
+	z-index: 10000000000000;
+	interpolate-size: allow-keywords;
+	opacity: 0;
+	border-radius: 22px;
+	right: 8px;
+	bottom: -60px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	max-width: 33%;
+	min-width: 140px;
+}
+
+
+div.PatPatExtensionToast button.close{
+    padding: 0px 12px;
+	background: #ff00007d;
+	width: 100%;
+	margin-top: 10px;
+}
+
+
+div.PatPatExtensionToast span.text {
+    margin: 0px 4px;
+    font-weight: 600;
+    font-size: medium;
+	color: white;
+	width: 100%;
+}
+
+div.PatPatExtensionToast.visible {
+	bottom: 8px;
+	opacity: 1;
+}
+
+div.PatPatExtensionToast span.PatPat_ProgressBar {
+    position: absolute;
+    height: 3px;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+}
+
+div.PatPatExtensionToast span.PatPat_ProgressBar span#progressValue {
+    display: block;
+	width: 0%;
+    max-width: 100%;
+    height: 100%;
+	transition: all .2s ease-out;
+}
+
+div.PatPatExtensionToast span.PatPat_ProgressBar.Determinate span#progressValue {
+	position: relative;
+    background: #ffffff;
+	left: 0px
+}

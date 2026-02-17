@@ -17,13 +17,15 @@
 		
 		"js": [
 			"code/LightTools.js",
+			"code/dict.js",
 			"code/rules.js",
 			"code/tools.js",
 			"code/main.js",
 			"code/recorder.js", 
 			"code/page_init.js",
 			"code/SuperFeatures.js",
-			"code/stats.js"],
+			"code/stats.js",
+			"code/toaster.js"],
 		
         "matches": [
 			"<all_urls>",

@@ -59,6 +59,21 @@ const Recorder = {
 
 
 	go: async (element) => {
+		let canceled = false; let ToastID;
+		function cancelRender() {
+			canceled = true;
+			Toast.close(ToastID);
+			Toast.create("Meme generation canceled!", 2500, { closeText: "OK" });
+		};
+		
+		ToastID = Toast.create(Translate("Recorder.MemeIsGenerating.Text"), -1, {
+			closeText: Translate("Recorder.MemeIsGenerating.Button"),
+			closeCallback: cancelRender,
+			progressBar: true,
+			progressIsDeterminate: true,
+		});
+		
+		
 		const FPS = 30;
 		let calcedAnimLength = LoadedPack.animLength * getAnimationSpeed();
 
@@ -85,6 +100,7 @@ const Recorder = {
 		const overlayImages = Recorder.getOverlayImages();
 
 		function render(elapsed, calcedAnimLength) {
+			if (canceled) {return}
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 			
@@ -120,14 +136,23 @@ const Recorder = {
 		});
 
 		const chunks = [];
-		recorder.ondataavailable = e => { if (e.data.size > 0) chunks.push(e.data); };
+		recorder.ondataavailable = e => { if (e.data.size > 0 && !canceled) chunks.push(e.data); };
 		recorder.onstop = () => {
+			if (canceled) {Toast.fadeOutAndRemove(ToastID); return}
+			Toast.setText(ToastID, Translate("Recorder.Downloading.Text"));
 			const blob = new Blob(chunks, { type: "video/webm" });
 			const url = URL.createObjectURL(blob);
 			const a = document.createElement("a");
 			a.href = url;
 			a.download = "animation.webm";
 			a.click();
+			Toast.setText(ToastID, Translate("Recorder.Done.Text"));
+			Toast.setCancelText(ToastID, Translate("OK"));
+			Toast.setIgnoreCallback(true);
+			
+			setTimeout(() => {
+				Toast.fadeOutAndRemove(ToastID);
+			}, 1500);
 		};
 
 		recorder.start();
@@ -138,8 +163,12 @@ const Recorder = {
 		const start = performance.now();
 		let elapsed = 0;
 		while (elapsed < calcedAnimLength) {
+			if (canceled) {
+				recorder.stop(); break;
+			}
 			elapsed = performance.now() - start;
 			render(elapsed, calcedAnimLength);
+			Toast.setProgress(ToastID, (elapsed/calcedAnimLength) * 100);
 			await new Promise(r => setTimeout(r, frameDelay));
 		}
 
