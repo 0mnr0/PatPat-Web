@@ -1,6 +1,8 @@
 const isFirefox = navigator.userAgent.toLowerCase().includes('firefox');
 const BrowserContext = (typeof chrome === 'object') ? chrome : browser;
 const SettingsPane = find('.settingsPane');
+const KeyPressDemo = find('div.controls span#KeyPressDemo');
+const MousePressDemo = find('div.controls img#MousePressDemo');
 let DataPackHTMLPosition = undefined;
 let UserSettings = {};
 let LoadedPack = null;
@@ -280,7 +282,45 @@ if (manifestData && manifestData.version) {
 	};
 }
 
+function startKeyPressDemo() {
+	const KEYClasses = KeyPressDemo.classList;
+	const MOUSEClasses = MousePressDemo.classList;
+	
+	let StateKeyBoard = false;
+	let StateMouse = false;
+	function isAllPressed(keyboard, mouse) {
+		if (keyboard !== undefined) {StateKeyBoard = keyboard}
+		if (mouse !== undefined) {StateMouse = mouse}
+		
+		if (StateMouse && StateKeyBoard) {
+			KEYClasses.add("done"); MOUSEClasses.add("done");
+		} else {
+			KEYClasses.remove("done"); MOUSEClasses.remove("done");
+		}
+	}
+	
 
+	
+	KeyPressDemo.textContent = isFirefox ? "LCTRL" : "LSHIFT";
+	document.addEventListener("keydown", e => {
+		if ((isFirefox && e.ctrlKey) || e.shiftKey) {KEYClasses.add("pressed"); isAllPressed(true);}
+	})
+	document.addEventListener("keyup", e => {
+		if ((isFirefox && !e.ctrlKey) || !e.shiftKey) {KEYClasses.remove("pressed"); isAllPressed(false);}
+	})
+		
+	document.addEventListener("mousedown", e => { if (e.button===2) {MOUSEClasses.add("pressed"); isAllPressed(undefined, true);} })
+	document.addEventListener("mouseup", e => { if (e.button===2) {MOUSEClasses.remove("pressed"); isAllPressed(undefined, false);} })
+
+	document.addEventListener("contextmenu", e => {
+		// invert keys to access menu
+		
+		if (isFirefox && !e.shiftKey) {e.preventDefault();}
+		else if (!e.ctrlKey) {e.preventDefault();}
+	})
+}
+
+startKeyPressDemo();
 
 
 function setGitListener() {
@@ -288,3 +328,4 @@ function setGitListener() {
 		window.open('https://github.com/0mnr0/PatPat-Web')
 	}
 }
+
