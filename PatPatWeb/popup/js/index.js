@@ -267,6 +267,7 @@ if (manifestData && manifestData.version) {
 	
 	versionDisplay.textContent = manifestData.version;
 	versionDisplay.onclick = () => {
+		return; // i dont want to show that afwul design
 		ClearAllSettingTypes();
 		
 		findAll('div.SettingSection').forEach(SettingDisplayingType => {

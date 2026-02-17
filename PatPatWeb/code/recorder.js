@@ -146,9 +146,9 @@ const Recorder = {
 			a.href = url;
 			a.download = "animation.webm";
 			a.click();
+			Toast.setCallback(ToastID, () => { Toast.fadeOutAndRemove(ToastID) } );
 			Toast.setText(ToastID, Translate("Recorder.Done.Text"));
 			Toast.setCancelText(ToastID, Translate("OK"));
-			Toast.setIgnoreCallback(true);
 			
 			setTimeout(() => {
 				Toast.fadeOutAndRemove(ToastID);

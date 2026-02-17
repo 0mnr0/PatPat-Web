@@ -23,7 +23,7 @@
 		'AllowContextMenu.PatIt': 'Context Menu - "Pat IT!"',
 		'AllowContextMenu.PatIt.Desc': 'Show "Pat IT!" in context menu',
 		'AllowContextMenu.Record': 'Context Menu - "Pat & Export!"',
-		'AllowContextMenu.Record.Desc': 'Show "Pat IT!" in context menu',
+		'AllowContextMenu.Record.Desc': 'Show "Pat & Export!" in context menu',
 		'SettingsWasReloaded': 'Settings was applied!',
 		
 		
