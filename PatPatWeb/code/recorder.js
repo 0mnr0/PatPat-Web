@@ -59,120 +59,133 @@ const Recorder = {
 
 
 	go: async (element) => {
-		let canceled = false; let ToastID;
-		function cancelRender() {
-			canceled = true;
-			Toast.close(ToastID);
-			Toast.create("Meme generation canceled!", 2500, { closeText: "OK" });
-		};
-		
-		ToastID = Toast.create(Translate("Recorder.MemeIsGenerating.Text"), -1, {
-			closeText: Translate("Recorder.MemeIsGenerating.Button"),
-			closeCallback: cancelRender,
-			progressBar: true,
-			progressIsDeterminate: true,
-		});
-		
-		
-		const FPS = 30;
-		let calcedAnimLength = LoadedPack.animLength * getAnimationSpeed();
+		let ToastID;
+		try { 
+			let canceled = false; 
+			function cancelRender() {
+				canceled = true;
+				Toast.close(ToastID);
+				Toast.create(Translate("Recorder.MemeIsGenerating.Canceled"), 2500, { closeText: "OK" });
+			};
+			
+			ToastID = Toast.create(Translate("Recorder.MemeIsGenerating.Text"), -1, {
+				closeText: Translate("Recorder.MemeIsGenerating.Button"),
+				closeCallback: cancelRender,
+				progressBar: true,
+				progressIsDeterminate: true,
+			});
+			
+			
+			const FPS = 30;
+			let calcedAnimLength = LoadedPack.animLength * getAnimationSpeed();
 
-		const sourceImage = new Image();
-		sourceImage.crossOrigin = "anonymous";
-		sourceImage.src = element.src;
+			const sourceImage = new Image();
+			sourceImage.crossOrigin = "anonymous";
+			sourceImage.src = element.src;
 
-		await new Promise((resolve, reject) => {
-			sourceImage.onload = () => resolve();
-			sourceImage.onerror = () => reject(new Error('source image load error'));
-		}).catch(err => {
-			console.error(err);
-			return;
-		});
+			await new Promise((resolve, reject) => {
+				sourceImage.onload = () => resolve();
+				sourceImage.onerror = () => reject(new Error('source image load error'));
+			}).catch(err => {
+				console.error(err);
+				return;
+			});
 
-		const canvas = document.createElement('canvas');
-		canvas.width = sourceImage.naturalWidth || 400;
-		canvas.height = sourceImage.naturalHeight || 400;
+			const canvas = document.createElement('canvas');
+			canvas.width = sourceImage.naturalWidth || 400;
+			canvas.height = sourceImage.naturalHeight || 400;
 
-		const ctx = canvas.getContext('2d', { alpha: true });
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
-
-		const overlayImages = Recorder.getOverlayImages();
-
-		function render(elapsed, calcedAnimLength) {
-			if (canceled) {return}
+			const ctx = canvas.getContext('2d', { alpha: true });
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
 
-			
-			let YScalePercentage = Recorder.calculateImageScale(elapsed, calcedAnimLength);
-			ctx.drawImage(
-				sourceImage,
-				0,
-				canvas.height - (canvas.height * YScalePercentage),
-				canvas.width,
-				canvas.height * YScalePercentage
-			);
+			const overlayImages = Recorder.getOverlayImages();
 
-			const overlayImg = Recorder.calculateCurrentImage(overlayImages, elapsed, calcedAnimLength);
-			if (overlayImg && overlayImg.naturalWidth) {
-				const calcedView = Recorder.calculateOverlayViews(canvas, { width: overlayImg.naturalWidth, height: overlayImg.naturalHeight });
+			function render(elapsed, calcedAnimLength) {
+				if (canceled) {return}
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+				
+				let YScalePercentage = Recorder.calculateImageScale(elapsed, calcedAnimLength);
 				ctx.drawImage(
-				overlayImg,
-				calcedView.offsetLeft,
-				0,
-				calcedView.overlayWidth,
-				calcedView.overlayHeight
+					sourceImage,
+					0,
+					canvas.height - (canvas.height * YScalePercentage),
+					canvas.width,
+					canvas.height * YScalePercentage
 				);
+
+				const overlayImg = Recorder.calculateCurrentImage(overlayImages, elapsed, calcedAnimLength);
+				if (overlayImg && overlayImg.naturalWidth) {
+					const calcedView = Recorder.calculateOverlayViews(canvas, { width: overlayImg.naturalWidth, height: overlayImg.naturalHeight });
+					ctx.drawImage(
+					overlayImg,
+					calcedView.offsetLeft,
+					0,
+					calcedView.overlayWidth,
+					calcedView.overlayHeight
+					);
+				}
 			}
-		}
-		
-		
-		render(0, calcedAnimLength);
-		await new Promise(r => setTimeout(r, 50));
-
-		const stream = canvas.captureStream(FPS);
-		const recorder = new MediaRecorder(stream, {
-			mimeType: MediaRecorder.isTypeSupported("video/webm; codecs=vp9") ? "video/webm; codecs=vp9" : "video/webm"
-		});
-
-		const chunks = [];
-		recorder.ondataavailable = e => { if (e.data.size > 0 && !canceled) chunks.push(e.data); };
-		recorder.onstop = () => {
-			if (canceled) {Toast.fadeOutAndRemove(ToastID); return}
-			Toast.setText(ToastID, Translate("Recorder.Downloading.Text"));
-			const blob = new Blob(chunks, { type: "video/webm" });
-			const url = URL.createObjectURL(blob);
-			const a = document.createElement("a");
-			a.href = url;
-			a.download = "animation.webm";
-			a.click();
-			Toast.setCallback(ToastID, () => { Toast.fadeOutAndRemove(ToastID) } );
-			Toast.setText(ToastID, Translate("Recorder.Done.Text"));
-			Toast.setCancelText(ToastID, Translate("OK"));
 			
-			setTimeout(() => {
-				Toast.fadeOutAndRemove(ToastID);
-			}, 1500);
-		};
+			
+			render(0, calcedAnimLength);
+			await new Promise(r => setTimeout(r, 50));
 
-		recorder.start();
+			const stream = canvas.captureStream(FPS);
+			const recorder = new MediaRecorder(stream, {
+				mimeType: MediaRecorder.isTypeSupported("video/webm; codecs=vp9") ? "video/webm; codecs=vp9" : "video/webm"
+			});
 
-		
-		
-		const frameDelay = 1000 / FPS;
-		const start = performance.now();
-		let elapsed = 0;
-		while (elapsed < calcedAnimLength) {
-			if (canceled) {
-				recorder.stop(); break;
+			const chunks = [];
+			recorder.ondataavailable = e => { if (e.data.size > 0 && !canceled) chunks.push(e.data); };
+			recorder.onstop = () => {
+				if (canceled) {Toast.fadeOutAndRemove(ToastID); return}
+				Toast.setText(ToastID, Translate("Recorder.Downloading.Text"));
+				const blob = new Blob(chunks, { type: "video/webm" });
+				const url = URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = "animation.webm";
+				a.click();
+				Toast.setCallback(ToastID, () => { Toast.fadeOutAndRemove(ToastID) } );
+				Toast.setText(ToastID, Translate("Recorder.Done.Text"));
+				Toast.setCancelText(ToastID, Translate("OK"));
+				
+				setTimeout(() => {
+					Toast.fadeOutAndRemove(ToastID);
+				}, 1500);
+			};
+
+			recorder.start();
+
+			
+			
+			const frameDelay = 1000 / FPS;
+			const start = performance.now();
+			let elapsed = 0;
+			while (elapsed < calcedAnimLength) {
+				if (canceled) {
+					recorder.stop(); break;
+				}
+				elapsed = performance.now() - start;
+				render(elapsed, calcedAnimLength);
+				Toast.setProgress(ToastID, (elapsed/calcedAnimLength) * 100);
+				await new Promise(r => setTimeout(r, frameDelay));
 			}
-			elapsed = performance.now() - start;
-			render(elapsed, calcedAnimLength);
-			Toast.setProgress(ToastID, (elapsed/calcedAnimLength) * 100);
-			await new Promise(r => setTimeout(r, frameDelay));
-		}
 
-		recorder.stop();
+			recorder.stop();
+		} catch(e) {
+			Toast.setCallback(ToastID, null);
+			Toast.fadeOutAndRemove(ToastID);
+			
+			console.warn("PatPat Export Error:", e);
+			Toast.create(
+				Translate("Recorder.Export.Error"),
+				2500,
+				{closeText:Translate("FINE")}
+			)
+		}
 	}
 
 

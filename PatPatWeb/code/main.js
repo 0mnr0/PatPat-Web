@@ -554,6 +554,7 @@ ContextMenuContainer.addEventListener('mousedown', (e) => {
 	
 	if (e.button === 2 && WorkAllowedOnThisSite && PatTriggers.wasActive(e)) {
 		if (Check.backgroundImage(e)) {
+			Log(e.target);
 			prePatRun(e.target);
 		} else {
 			let pointsPat = Check.elementsFromPoint(e);

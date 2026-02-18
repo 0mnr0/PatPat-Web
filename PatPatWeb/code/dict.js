@@ -4,6 +4,8 @@ const DICT = {
 		"FINE": "Fine",
 		"Recorder.MemeIsGenerating.Text": "Rendering a file",
 		"Recorder.MemeIsGenerating.Button": "Cancel",
+		"Recorder.MemeIsGenerating.Canceled": "Meme generation canceled!",
+		"Recorder.Export.Error": "We're sorry, there was an error during export!",
 		
 		
 		"Recorder.Downloading.Text": "Downloading",
@@ -17,6 +19,8 @@ const DICT = {
 		"FINE": "Понятно",
 		"Recorder.MemeIsGenerating.Text": "Создаём анимированную картинку",
 		"Recorder.MemeIsGenerating.Button": "Отмена",
+		"Recorder.MemeIsGenerating.Canceled": "Создание картинки было отменено!",
+		"Recorder.Export.Error": "Приносим извенения, при экспорте что то пошло не так :(",
 		
 		"Recorder.Downloading.Text": "Скачивание...",
 		"Recorder.Done.Text": "Готово!",
