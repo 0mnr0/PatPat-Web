@@ -664,7 +664,6 @@ span#KeyPressDemo, div.leftPane div.bottomOne > div.controls img, div.leftPane d
 
 div.leftPane div.bottomOne > div.controls span#KeyPressDemo.pressed, div.leftPane div.bottomOne > div.controls img#MousePressDemo.pressed {
 	border: none;
-	box-shadow: inset 0px 0px 2px 1px #ffffff73;
 }
 div.leftPane div.bottomOne > div.controls span#KeyPressDemo.done, div.leftPane div.bottomOne > div.controls img#MousePressDemo.done {
 	box-shadow: inset 0px 0px 2px 1px #75ff5cb0;

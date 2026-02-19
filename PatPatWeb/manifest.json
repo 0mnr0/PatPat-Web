@@ -2,7 +2,7 @@
   "name": "PatPat",
   "description": "Pat Images on the websites!",
   "minimum_chrome_version": "123",
-  "version": "0.9.9",
+  "version": "1.0.0",
   "author": "savelijln0@gmail.com",
   "manifest_version": 3,
   "permissions": ["storage", "tabs", "contextMenus", "menus"],
