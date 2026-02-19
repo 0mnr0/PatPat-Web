@@ -162,14 +162,17 @@ const Recorder = {
 			
 			
 			const frameDelay = 1000 / FPS;
-			const start = performance.now();
+			let start = performance.now();
 			let elapsed = 0;
 			while (elapsed < calcedAnimLength) {
 				if (canceled) {
 					recorder.stop(); break;
 				}
 				elapsed = performance.now() - start;
+				const drawStart = performance.now();
 				render(elapsed, calcedAnimLength);
+				const renderTime = performance.now() - drawStart;
+				calcedAnimLength = calcedAnimLength + renderTime;
 				Toast.setProgress(ToastID, (elapsed/calcedAnimLength) * 100);
 				await new Promise(r => setTimeout(r, frameDelay));
 			}
