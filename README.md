@@ -5,10 +5,10 @@
 
 <div align="center">
   <p align="center">
-	  <a href="https://chromewebstore.google.com/detail/ownify/aiipddepmffihjeoaailegfackjihajd">
+	  <a href="https://chromewebstore.google.com/detail/pnabkhaalajkofhoehbchodomicmheeg">
 	    <img src="https://raw.githubusercontent.com/0mnr0/PatPat-Web/45f951b0aff2eed088741ad6ba9019eb4bd95ce1/git/chrome.addonstore.svg" width="300"></img>
 	  </a><br>
-	  <a href="https://chromewebstore.google.com/detail/ownify/aiipddepmffihjeoaailegfackjihajd">
+	  <a href="https://addons.mozilla.org/ru/firefox/addon/patpat/">
 	    <img src="https://raw.githubusercontent.com/0mnr0/PatPat-Web/45f951b0aff2eed088741ad6ba9019eb4bd95ce1/git/firefox.addonstore.svg" width="300">
 	  </a>
 	</p>
