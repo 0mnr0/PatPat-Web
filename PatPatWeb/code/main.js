@@ -221,7 +221,7 @@ async function runPat(element, reRunData) {
 	
 	PatTools.runAdditionalFeatures(element, reRunData);
 	
-	if (nextPat) {
+	if (nextPat && nextPat === element) {
 		let newReRun = reRunData;
 		if (!reRunData) {
 			newReRun = {
@@ -571,6 +571,7 @@ ContextMenuContainer.addEventListener('mouseup', (e) => {
 		nextPat = null;
 	}
 }, true);
+
 
 
 
