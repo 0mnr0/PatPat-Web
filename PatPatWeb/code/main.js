@@ -508,20 +508,7 @@ const Check = {
 		// second: we are checking bloсked img and starting to animate it 
 		// 		  	(if its not overlapped by overlay and mousedown event was triggered, PattingRightNow condition will fix double animation)
 		// third: if 
-		
-		
-		let priorityData = {
-			tag: undefined,  // [str]: "<...> | <img>"
-			type: undefined, // [str]: "BGIMG | Native"
-			element: undefined, // <link>
-			priority: -1
-		};
-		
-		let priority = null;
-		
-		
-		
-		
+
 		for (el of elements) {
 			if (patListening.has(event)) {continue}
 			let tag = el.tagName.toLowerCase();
@@ -560,8 +547,6 @@ ContextMenuContainer.addEventListener('mousedown', (e) => {
 			if (pointsPat) { prePatRun(pointsPat); }
 		}
 	}
-	
-	
 }, true);
 
 ContextMenuContainer.addEventListener('mouseup', (e) => {
