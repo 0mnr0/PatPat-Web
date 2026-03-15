@@ -48,7 +48,10 @@ div.PatPatExtensionToast button.close {
 	margin-top: 10px;
 	border: none;
 	border-radius: 20px;
-    padding: 6px;
+    padding: 6px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 
