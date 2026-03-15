@@ -122,7 +122,7 @@ const Recorder = {
 			canvas.width = sourceImage.naturalWidth || 400;
 			canvas.height = sourceImage.naturalHeight || 400;
 
-			const ctx = canvas.getContext('2d', { alpha: true });
+			const ctx = canvas.getContext('2d', { alpha: true, willReadFrequently: true });
 			ctx.clearRect(0, 0, canvas.width, canvas.height);
 			ctx.drawImage(sourceImage, 0, 0, canvas.width, canvas.height);
 
