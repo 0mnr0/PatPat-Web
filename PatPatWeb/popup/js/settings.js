@@ -10,20 +10,22 @@ const Settings = {
 
 	  set(key, value) {
 		return new Promise(resolve => {
-		  notifySettingsChange();
 		  chrome.storage.local.set({ [key]: value }, resolve);
+		  notifySettingsChange();
 		});
 	  },
 
 	  delete(key) {
 		return new Promise(resolve => {
-		  chrome.storage.local.remove(key, resolve);
+		    chrome.storage.local.remove(key, resolve);
+		    notifySettingsChange();
 		});
 	  },
 
 	  clear() {
 		return new Promise(resolve => {
-		  chrome.storage.local.clear(resolve);
+		    chrome.storage.local.clear(resolve);
+			notifySettingsChange();
 		});
 	  },
 
@@ -207,49 +209,71 @@ const runPackAnimation = async (pack) => {
 		}
 		return `
 			<div class="SettingSection General Chosen">
-				<div class="SettingLine">
-					${GetSwitch('AllowSound')} 
-					<div class="inlineSetting">
-						<label for="volume" data-i18n="PatVolume"></label>
-						<input type="range" style="width: 100%" id="volume" min="0" max="100" value="${await Settings.get('PatVolume', 0)}" SettingName="PatVolume" updatetext="y">
-						<label for="volume" class="Percentage"> (${await Settings.get('PatVolume', 0)}%) </label>
+				<div class="TypeRoulette">
+					<option type=animation data-i18n="roulette.type.animation"></option> 
+					<option type=sounds data-i18n="roulette.type.sounds"></option> 
+					<option type=other data-i18n="roulette.type.other"></option> 
+				</div>
+						
+				
+				
+				<div type=sounds class="TypeSelector">
+					<div class="SettingLine">
+						${GetSwitch('AllowSound')} 
+						<div class="inlineSetting">
+							<label for="volume" data-i18n="PatVolume"></label>
+							<input type="range" style="width: 100%" id="volume" min="0" max="100" value="${await Settings.get('PatVolume', 0)}" SettingName="PatVolume" updatetext="y">
+							<label for="volume" class="Percentage"> (${await Settings.get('PatVolume', 0)}%) </label>
+						</div>
 					</div>
 				</div>
 				
-				<div class="SettingLine">
-					<h2 data-i18n="PatSpeed"></h2>
-					<div class="inlineSetting volumer">
-						<input type="range" id="PatSpeedValue" min="0.75" max="1.75" step="0.01" value="${await Settings.get('PatSpeed', 1)}" SettingName="PatSpeed" updatetext="y">
-						<label for="PatSpeedValue" class="Percentage"> ${Math.round(await Settings.get('PatSpeed', 1)*100)}% </label>
+				
+				<div type=animation class="TypeSelector">
+					<div class="SettingLine">
+						<h2 data-i18n="PatSpeed"></h2>
+						<div class="inlineSetting volumer">
+							<input type="range" id="PatSpeedValue" min="0.75" max="1.75" step="0.01" value="${await Settings.get('PatSpeed', 1)}" SettingName="PatSpeed" updatetext="y">
+							<label for="PatSpeedValue" class="Percentage"> ${Math.round(await Settings.get('PatSpeed', 1)*100)}% </label>
+						</div>
 					</div>
-				</div>
 				
-				
-				<div class="SettingLine">
-					${GetSwitch('EnableSuperFeatures')} 
-					<p data-i18n="EnableSuperFeatures.Desc"></p>
-				</div>
-				
-				
-				<div class="SettingLine">
-					${GetSwitch('EnableDithering')} 
-					<p data-i18n="EnableDithering.Desc"></p>
+					<div class="SettingLine">
+						${GetSwitch('EnableDithering')} 
+						<p data-i18n="EnableDithering.Desc"></p>
+						
+						
+						<div class="SettingLine inlineSetting">
+							${GetSwitch('ForceDithering')} 
+							<p data-i18n="ForceDithering.Desc"></p>
+						</div>
+					</div>
 					
-					
-					<div class="SettingLine inlineSetting">
-						${GetSwitch('ForceDithering')} 
-						<p data-i18n="ForceDithering.Desc"></p>
+					<div class="SettingLine">
+						${GetSwitch('ShowImages')} 
+						<p data-i18n="ShowImagesDescription"></p>
 					</div>
 				</div>
 				
-				<div class="SettingLine">
-					${GetSwitch('ShowImages')} 
-					<p data-i18n="ShowImagesDescription"></p>
-				</div>
 				
-				<div class="SettingLine">
-					${GetSwitch('MakeAnnouncements.Ext')} 
-					<p data-i18n="MakeAnnouncements.Ext.Desc"></p>
+				<div type=other class="TypeSelector">
+					<div class="SettingLine">
+						${GetSwitch('EnableSuperFeatures')} 
+						<p data-i18n="EnableSuperFeatures.Desc"></p>
+					</div>
+					
+					<div class="SettingLine">
+						${GetSwitch('MakeAnnouncements.Ext')} 
+						<p data-i18n="MakeAnnouncements.Ext.Desc"></p>
+					</div>
+					
+					<div class="SettingLine ExportAsSetting">
+						<span> ${TranslateAssistant.translate.get('ExportAsOption')} </span>
+						<div class="flex">
+							<div class="ExportAs" value=gif> GIF </div>
+							<div class="ExportAs" value=webm> WEBM </div>
+						</div>
+					</div>
 				</div>
 			</div>
 			
@@ -349,7 +373,6 @@ const runPackAnimation = async (pack) => {
 			
 		
 		`
-		
 	}
 	
 	document.runSettingBing();
@@ -406,6 +429,32 @@ const GetIgnoreSitesList = () => {
 	if (val === undefined || val === null) {
 		return [];
 	} else { return val }
+}
+
+const UpdateTypes = (newType) => {
+	findAll('div.SettingSection.General > div.TypeSelector').forEach(SettingLine => {
+		if (newType && SettingLine.getAttribute('type') !== newType) {
+			SettingLine.classList.add('typeIncompatible')
+		} else {
+			SettingLine.classList.remove('typeIncompatible')
+		}
+	})
+	findAll('div.SettingSection.General > div.TypeRoulette option').forEach(opt => {
+		opt.classList.remove('active')
+	})
+	
+	
+	if (newType) {
+		find(`div.SettingSection.General > div.TypeRoulette option[type="${newType}"]`).classList.add('active')
+	}
+}
+
+const TypesRegister = () => {
+	findAll('div.TypeRoulette option').forEach(option => {
+		option.addEventListener('click', () => {
+			UpdateTypes(option.getAttribute('type'));
+		})
+	})
 }
 
 const RegisterBlockListProcessor = () => {
@@ -480,12 +529,23 @@ const AddIntoIgnoreList = (main, domainName) => {
 	}
 }
 
+const onSettingsChanged = async () => {
+	let AllowContextMenu_Record = await Settings.get('AllowContextMenu.Record');
+	RemoveStyle('AllowContextMenu_Record')
+	if (!AllowContextMenu_Record) {
+		CreateStyle('AllowContextMenu_Record', `
+			.SettingLine.ExportAsSetting {display: none}
+		`)
+	}
+}
+onSettingsChanged();
+
 
 const MadeWithController = {
 	runNextTimeout: 3500,
 	display: undefined,
 	varinats: [
-		"for fun", "for people", "for pating cats", "for pating anything", "with the soul", "with love", "with love, by humans"
+		"for fun", "for people", "for pating cats", "for pating anything", "for memes", "with the soul", "with love", "with love, by humans"
 	],
 	current: -1,
 	
@@ -578,4 +638,6 @@ const runDataPackGeneration = function() { //data-i18n
 						</div>
 						`	
 }
+
+
 

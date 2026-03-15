@@ -25,7 +25,7 @@ div.PatPatExtensionToast {
 	position: fixed;
 	padding: 6px;
 	background: #22222260;
-	backdrop-filter: blur(8px) brightness(1.4);
+	backdrop-filter: blur(8px) brightness(1.45);
 	z-index: 10000000000000;
 	interpolate-size: allow-keywords;
 	opacity: 0;
@@ -41,16 +41,18 @@ div.PatPatExtensionToast {
 
 
 div.PatPatExtensionToast button.close {
-    padding: 0px 12px;
+	color: white;
+	cursor: pointer;
 	background: #ff00007d;
 	width: 100%;
 	margin-top: 10px;
 	border: none;
 	border-radius: 20px;
-	padding: 5px;
+    padding: 6px;
 }
 
 
+div.PatPatExtensionToast * {font-family: system-ui;}
 div.PatPatExtensionToast span.text {
     margin: 0px 4px;
     font-weight: 600;
@@ -62,6 +64,7 @@ div.PatPatExtensionToast span.text {
 div.PatPatExtensionToast.visible {
 	bottom: 8px;
 	opacity: 1;
+	min-width: 160px;
 }
 
 div.PatPatExtensionToast span.PatPat_ProgressBar {
@@ -70,6 +73,7 @@ div.PatPatExtensionToast span.PatPat_ProgressBar {
     bottom: 0px;
     left: 0px;
     width: 100%;
+	transition: all .5s
 }
 
 div.PatPatExtensionToast span.PatPat_ProgressBar span#progressValue {
@@ -84,4 +88,27 @@ div.PatPatExtensionToast span.PatPat_ProgressBar.Determinate span#progressValue 
 	position: relative;
     background: #ffffff;
 	left: 0px
+}
+div.PatPatExtensionToast span.PatPat_ProgressBar.InDeterminate span#progressValue {
+	position: relative;
+    background: #ffffff;
+	left: 0px;
+	animation: indetermanatePatPatExportProgressBarCorner 2.4s infinite ease-out;
+	border-radius: 3px
+}
+
+@keyframes indetermanatePatPatExportProgressBarCorner {
+	0% {
+		width: 10%;
+		left: -20%;
+	}
+	
+	50% {
+		width: 60%;
+	}
+	
+	100% {
+		width: 20%;
+		left: 120%;
+	}
 }

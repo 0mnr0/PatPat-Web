@@ -1,3 +1,17 @@
+async function createGifWorker() {
+    const workerUrl = BrowserContext.runtime.getURL("code/libs/gif.worker.js");
+
+    const res = await fetch(workerUrl);
+    const text = await res.text();
+
+    const blob = new Blob([text], {type: "application/javascript"});
+    return URL.createObjectURL(blob);
+}
+
+
+
+
+
 const Recorder = {
 	getOverlayImages: () => {
 		let imgArray = [];
@@ -60,8 +74,21 @@ const Recorder = {
 
 	go: async (element) => {
 		let ToastID;
+		let gif;
+		let exportAsGif = UserSettings.exportAsGif;
 		try { 
 			let canceled = false; 
+			
+			const workerScript = await createGifWorker();
+			if (exportAsGif) {
+					gif = new GIF({
+					workers: 5,
+					quality: 10,
+					workerScript: workerScript
+				})
+			}
+			
+			
 			function cancelRender() {
 				canceled = true;
 				Toast.close(ToastID);
@@ -132,33 +159,52 @@ const Recorder = {
 			render(0, calcedAnimLength);
 			await new Promise(r => setTimeout(r, 50));
 
-			const stream = canvas.captureStream(FPS);
-			const recorder = new MediaRecorder(stream, {
-				mimeType: MediaRecorder.isTypeSupported("video/webm; codecs=vp9") ? "video/webm; codecs=vp9" : "video/webm"
-			});
-
-			const chunks = [];
-			recorder.ondataavailable = e => { if (e.data.size > 0 && !canceled) chunks.push(e.data); };
-			recorder.onstop = () => {
-				if (canceled) {Toast.fadeOutAndRemove(ToastID); return}
-				Toast.setText(ToastID, Translate("Recorder.Downloading.Text"));
-				const blob = new Blob(chunks, { type: "video/webm" });
-				const url = URL.createObjectURL(blob);
-				const a = document.createElement("a");
-				a.href = url;
-				a.download = "animation.webm";
-				a.click();
-				Toast.setCallback(ToastID, () => { Toast.fadeOutAndRemove(ToastID) } );
-				Toast.setText(ToastID, Translate("Recorder.Done.Text"));
-				Toast.setCancelText(ToastID, Translate("OK"));
+			
+			let recorder;
+			if (!exportAsGif) {
+				const stream = canvas.captureStream(FPS);
+				recorder = new MediaRecorder(stream, {
+					mimeType: MediaRecorder.isTypeSupported("video/webm; codecs=vp9") ? "video/webm; codecs=vp9" : "video/webm"
+				});
+				const chunks = [];
+				recorder.ondataavailable = e => { if (e.data.size > 0 && !canceled) chunks.push(e.data); };
+				recorder.onstop = () => {
+					if (canceled) {Toast.fadeOutAndRemove(ToastID); return}
+					Toast.setText(ToastID, Translate("Recorder.Downloading.Text"));
+					const blob = new Blob(chunks, { type: "video/webm" });
+					const url = URL.createObjectURL(blob);
+					log(url);
+					const a = document.createElement("a");
+					a.href = url;
+					a.download = "animation.webm";
+					a.click();
+					Toast.setCallback(ToastID, () => { Toast.fadeOutAndRemove(ToastID) } );
+					Toast.setText(ToastID, Translate("Recorder.Done.Text"));
+					Toast.setCancelText(ToastID, Translate("OK"));
+					
+					setTimeout(() => {
+						Toast.fadeOutAndRemove(ToastID);
+					}, 2000);
+				};
 				
-				setTimeout(() => {
-					Toast.fadeOutAndRemove(ToastID);
-				}, 1500);
-			};
-
-			recorder.start();
-
+				recorder.start();
+			
+			} else {
+				gif.on('finished', function(blob) {
+				    const a = document.createElement("a");
+				    a.href = URL.createObjectURL(blob);
+				    a.download = "animation.gif";
+				    a.click();
+					
+					Toast.setCallback(ToastID, () => { Toast.fadeOutAndRemove(ToastID) } );
+					Toast.setText(ToastID, Translate("Recorder.Done.Text"));
+					Toast.setCancelText(ToastID, Translate("OK"));
+					Toast.setProgressBarVisbility(ToastID, false);
+					setTimeout(() => {
+						Toast.fadeOutAndRemove(ToastID);
+					}, 2000);
+				});
+			}
 			
 			
 			const frameDelay = 1000 / FPS;
@@ -166,18 +212,30 @@ const Recorder = {
 			let elapsed = 0;
 			while (elapsed < calcedAnimLength) {
 				if (canceled) {
-					recorder.stop(); break;
+					if (!exportAsGif) { recorder.stop() }
+					else {gif = null;}
+					break;
 				}
 				elapsed = performance.now() - start;
 				const drawStart = performance.now();
 				render(elapsed, calcedAnimLength);
+				if (exportAsGif) {
+					gif.addFrame(canvas, {copy: true, delay: frameDelay});
+				}
 				const renderTime = performance.now() - drawStart;
 				calcedAnimLength = calcedAnimLength + renderTime;
 				Toast.setProgress(ToastID, (elapsed/calcedAnimLength) * 100);
 				await new Promise(r => setTimeout(r, frameDelay));
 			}
-
-			recorder.stop();
+			if (exportAsGif) {
+				if (!gif) {return} // if user canceled
+				gif.render();
+				Toast.setProgressDeterminate(ToastID, false);
+				Toast.setText(ToastID, Translate("Recorder.Downloading.GIFRender"));
+			} else {
+				recorder.stop();
+			}
+			
 		} catch(e) {
 			Toast.setCallback(ToastID, null);
 			Toast.fadeOutAndRemove(ToastID);

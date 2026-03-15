@@ -80,6 +80,20 @@ const Toast = {
 		let someToast = Toast.get(id);
 		someToast.querySelector("span#progressValue").style.width = percentage+"%";
 	},
+	setProgressDeterminate: (id, isDeterminate) => {
+		let someToast = Toast.get(id);
+		someToast = someToast.querySelector('span.PatPat_ProgressBar')
+		if (isDeterminate) {
+			someToast.classList.add('Determinate'); someToast.classList.remove('InDeterminate'); 
+		} else {
+			someToast.classList.add('InDeterminate'); someToast.classList.remove('Determinate'); 
+		}
+	},
+	setProgressBarVisbility: (id, state) => {
+		let someToast = Toast.get(id);
+		someToast = someToast.querySelector('span.PatPat_ProgressBar')
+		someToast.style.bottom = '-10px' ? state : '0px'
+	},
 	setText: (id, text) => {
 		let someToast = Toast.get(id);
 		someToast.querySelector("span.text").textContent = text;

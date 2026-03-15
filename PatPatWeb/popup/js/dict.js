@@ -42,6 +42,11 @@
 		'delete': `Delete`,
 		'ProjectOnGitHub': `Show Project On GitHub`,
 		
+		'roulette.type.sounds': 'Sounds',
+		'roulette.type.animation': 'Animations',
+		'roulette.type.other': 'Other',
+		'ExportAsOption': 'Export in:',
+		
 		'howmanysounds': `Sounds: `,
 		'howmanyimages': `Images: `,
 		'howlong': `Length: `,
@@ -92,6 +97,11 @@
 		'unpacker.status.ok': `Пакет данных установлен! :)`,
 		'delete': `Удалить`,
 		'ProjectOnGitHub': `Проект на GitHub`,
+		
+		'roulette.type.sounds': 'Звук',
+		'roulette.type.animation': 'Анимация',
+		'roulette.type.other': 'Другое',
+		'ExportAsOption': 'Экспортировать в формате:',
 		
 		'howmanysounds': `Звуков: `,
 		'howmanyimages': `Изображений: `,

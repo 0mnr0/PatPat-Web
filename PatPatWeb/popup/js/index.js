@@ -52,6 +52,7 @@ function getVolume() {
 
 function notifySettingsChange(){
 	chrome.runtime.sendMessage({type: "PatPat.events.SettingsChange"}, () => {});
+	onSettingsChanged();
 }
 function ClearAllSettingTypes() {
 	findAll('div.SettingsDiv div.leftPane > div > div' ).forEach(settingType => { settingType.classList.remove('active'); })
@@ -72,10 +73,8 @@ function ClearAllSettingTypes() {
 	
 	document.runSettingBing = async () => {
 		await loadPackData();
-		log(DataPackHTMLPosition)
 		SettingsPane.innerHTML = await GenerateSettingsCode();
 		TranslateAssistant.translate.all();
-		
 		
 		
 		SettingsPane.findAll('div.SettingLine h2').forEach(el => {
@@ -196,10 +195,11 @@ function ClearAllSettingTypes() {
 		RegisterBlockListProcessor();
 		setGitListener();
 		MadeWithController.init();
-		
+		TypesRegister();
+		UpdateTypes('animation')
+		RegisterExportType();
+		CreateStyle('EnableTransitions', '* {transition: all .3s}')
 	}
-	
-	
 })();
 
 const RegisterDataPackRemove = () => {
@@ -228,6 +228,39 @@ const RegisterDataPackOnClick = (pack) => {
 	}
 }
 
+const RegisterExportType = async () => {
+	async function saveExportAs(type) {
+		let asGif = type.toLowerCase() === 'gif'
+		UserSettings.exportAsGif = asGif;
+		await Settings.set('exportAsGif', asGif)
+		updateActual();
+	}
+	function updateActual() {
+		if (UserSettings.exportAsGif) {
+			findAll('.SettingLine.ExportAsSetting div.ExportAs').forEach(exportAs => {
+				if (exportAs.getAttribute('value') === 'gif') {exportAs.classList.add('active')}
+				else {exportAs.classList.remove('active')}
+			})
+		} else {
+			findAll('.SettingLine.ExportAsSetting div.ExportAs').forEach(exportAs => {
+				if (exportAs.getAttribute('value') === 'gif') {exportAs.classList.remove('active')}
+				else {exportAs.classList.add('active')}
+			})
+		}
+		
+		
+	}
+	
+	
+	findAll('.SettingLine.ExportAsSetting div.ExportAs').forEach(exportAs => {
+		exportAs.addEventListener('click', () => {
+			saveExportAs(exportAs.getAttribute('value'))
+		})
+	})
+	updateActual();
+	
+}
+
 const SetActiveCurrentPack = function() {
 	let currentPack = UserSettings.SelectedPack;
 	log(currentPack);
@@ -238,11 +271,7 @@ const SetActiveCurrentPack = function() {
 	});
 	
 	let NowLoaded = find(`div.AvailableDataPack[packname="${currentPack}"]`);
-	log(NowLoaded);
-	if (NowLoaded) {
-		NowLoaded.classList.add("Active");
-	}
-	log(NowLoaded);
+	if (NowLoaded) { NowLoaded.classList.add("Active"); }
 }
 
 const getCleanDomain = function(url) {

@@ -69,6 +69,7 @@ const DefaultValues = {
 	PatVolume: 50,
 	SelectedPack: "PatPat Classic",
 	ShowImages: true,
+	exportAsGif: true,
 	"MakeAnnouncements.Ext": true
 };
 

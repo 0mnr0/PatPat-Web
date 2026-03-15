@@ -1,4 +1,4 @@
-* {font-family: "Comfortaa", sans-serif; color: white; position: relative; transition: all .3s}
+* {font-family: "Comfortaa", sans-serif; color: white; position: relative;}
 * {
   -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -173,6 +173,112 @@ div.settingsPane {
     overflow-y: auto;
 }
 
+div.settingsPane {
+  scrollbar-color: #cdbeb1 transparent;
+  scrollbar-width: none;
+}
+
+div.TypeRoulette {
+    position: relative;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 4px;
+    padding: 0px 6px;
+    margin-top: 6px;
+    border-bottom: solid 1px #8080806e;
+    padding-bottom: 6px;
+    width: -webkit-fill-available;
+    z-index: 3;
+}
+
+
+div.TypeRoulette option {
+    background: #3f3329;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: small;
+    cursor: pointer;
+	gap: 4px;
+	text-align: center;
+    interpolate-size: allow-keywords;
+	width: auto;
+	display: flex;
+	justify-content: center;
+}
+
+div.TypeRoulette option::before {
+    content: "";
+    height: 17.5px;
+    aspect-ratio: 1/1;
+    position: relative;
+    display: block;
+    background-size: contain;
+    background-position: center;
+	background-repeat: no-repeat;
+}
+
+div.TypeRoulette option[type="sounds"]::before {background-image: url('../icons/sound.svg')}
+div.TypeRoulette option[type="animation"]::before {background-image: url('../../etc/icon.animated.png'); filter: sepia(0.5) brightness(0.8) grayscale(0.4)}
+div.TypeRoulette option[type="other"]::before {background-image: url('../icons/more.svg')}
+
+div.TypeRoulette option.active {
+    width: 30%;
+    background: #795131;
+	gap: 8px;
+}
+
+div.TypeSelector {
+    max-height: fit-content;
+    interpolate-size: allow-keywords;
+}
+
+div.TypeSelector.typeIncompatible {
+    opacity: 0;
+    height: fit-content;
+    max-height: 0px;
+    overflow: hidden;
+}
+
+.TypeSelector.typeIncompatible .SettingLine {
+    margin-bottom: 50px;
+}
+.TypeSelector.typeIncompatible .SettingLine.inlineSetting {
+    margin-top: 50px;
+}
+.SettingLine.ExportAsSetting {
+    display: flex;
+    flex-direction: column;
+}
+.SettingLine.ExportAsSetting span {
+	font-weight: bold;
+}
+
+.SettingLine.ExportAsSetting > div {
+	gap: 2%; width: 100%;
+	justify-content: space-evenly
+}
+.SettingLine.ExportAsSetting div.ExportAs:active {
+	border: solid 0px gray;
+	box-shadow: 0px 3px 3px 0px black !important
+}
+.SettingLine.ExportAsSetting div.ExportAs:hover {
+	box-shadow: 0px 3px 3px 0px #494949;
+}
+.SettingLine.ExportAsSetting div.ExportAs {
+    margin-top: 10px;
+    display: flex;
+    width: 100%;
+    padding: 12px;
+    justify-content: center;
+    background: #2a2a2a;
+	cursor: pointer;
+    border-radius: 10px;
+    border-bottom: solid 2px gray;
+	transition: all .3s, box-shadow .1s, border .03s
+}
+.SettingLine.ExportAsSetting div.ExportAs.active {
+	border-color: lime
+}
 
 
 
@@ -190,7 +296,7 @@ div.SettingLine p {margin-bottom: 0px; opacity: 0.66; font-weight: 300; margin-t
 	gap: 0px 6px;
 	border-bottom: solid 1px #333333b8;
 }
-div.inlineSetting {display: flex; gap: 10px; white-space: nowrap; width: 100%; margin-top: 4px}
+div.inlineSetting {display: flex; gap: 10px; white-space: nowrap; width: 100%; margin-top: 6px}
 div.inlineSetting.single {margin-bottom: 8px; align-items: center; font-size: larger; font-weight: 800}
 div.inlineSetting label {font-size: smaller;}
 div.inlineSetting label.Percentage {min-width: 35px; text-align: center}
@@ -231,6 +337,10 @@ input#zipUploader {
 }
 
 div.settingsPane div.PatPatPacks div.UploadPack {}
+div.settingsPane::-webkit-scrollbar {
+    display: none;
+	scrollbar-width: none;
+}
 
 div.settingsPane div.PatPatPacks div.UploadPack.DataPack {
     cursor: default;
@@ -411,8 +521,8 @@ div.removeSavedDataPack span {
     background: #333;
     border-radius: 20px;
     padding: 10px;
-    margin-top: 10px;
-    margin-bottom: 5px;
+    margin: 0px;
+    margin-top: 4px;
 }
 
 .SettingSection.BlockList {

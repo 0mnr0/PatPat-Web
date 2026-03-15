@@ -25,7 +25,9 @@
 			"code/page_init.js",
 			"code/SuperFeatures.js",
 			"code/stats.js",
-			"code/toaster.js"],
+			"code/toaster.js",
+			"code/libs/gif.js"
+			],
 		
         "matches": [
 			"<all_urls>",
@@ -68,7 +70,12 @@
 			"/etc/PatPat.Piston/sequence/piston2.png",
 			"/etc/PatPat.Piston/sequence/piston3.png",
 			"/etc/PatPat.Piston/sequence/piston4.png",
-			"/etc/PatPat.Piston/sounds/piston_sound.ogg"
+			"/etc/PatPat.Piston/sounds/piston_sound.ogg",
+			
+			
+			
+			"code/libs/gif.js",
+			"code/libs/gif.worker.js"
 		],
 		"matches": [
 			"<all_urls>",

@@ -8,6 +8,7 @@ const DICT = {
 		"Recorder.Export.Error": "We're sorry, there was an error during export!",
 		
 		
+		"Recorder.Downloading.GIFRender": "Rendering GIF...",
 		"Recorder.Downloading.Text": "Downloading",
 		"Recorder.Done.Text": "Done!",
 		
@@ -22,6 +23,7 @@ const DICT = {
 		"Recorder.MemeIsGenerating.Canceled": "Создание картинки было отменено!",
 		"Recorder.Export.Error": "Приносим извенения, при экспорте что то пошло не так :(",
 		
+		"Recorder.Downloading.GIFRender": "Идёт рендер GIF...",
 		"Recorder.Downloading.Text": "Скачивание...",
 		"Recorder.Done.Text": "Готово!",
 		
