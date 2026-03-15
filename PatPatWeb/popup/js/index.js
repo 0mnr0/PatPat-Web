@@ -198,7 +198,8 @@ function ClearAllSettingTypes() {
 		TypesRegister();
 		UpdateTypes('animation')
 		RegisterExportType();
-		CreateStyle('EnableTransitions', '* {transition: all .3s}')
+		CreateStyle('EnableTransitions', '* {transition: all .3s}');
+		SetupPatDevAnimation();
 	}
 })();
 
@@ -216,6 +217,44 @@ const RegisterDataPackRemove = () => {
 		}
 	}
 }
+
+const SetupPatDevAnimation = async () => {
+	let packName = await Settings.get('SelectedPack');
+	let PackData = packName;
+	let PackIsLoaded = false;
+	if (packName === '@DataPack') {PackData = GetDatapackData(); PackIsLoaded=true;} else {
+		PackData = BuiltinPacks[packName]
+	}
+		
+		
+	let filesSeq = [];
+	for (let file of LoadedPack.sequence) {
+		filesSeq.push(BrowserContext.runtime.getURL(`etc/${PackData.PackPlace}/${file}`))
+	}
+	
+	PatPatCore.UserSettings.PatSpeed = 1.6;
+	PatPatCore.patFiles = filesSeq
+	runPatDevAnimation(findAll('.SettingSection.AuthorsTab .AuthorList img'));
+}
+
+let isRunPackInited = false;
+let patDevAnimList = null;
+const runPatDevAnimation = async(actualList) => {
+	patDevAnimList = actualList
+	if (isRunPackInited) {return}
+	isRunPackInited = true;
+	
+	
+	while (true) {
+		await sleep(random(800, 1200));
+		if (find('div.leftPane .AuthorsTab.active') == null) {continue}
+		
+		await PatPatCore.runPat(
+			PatPatCore.randChoose(actualList)
+		)		
+	}
+}
+
 
 const RegisterDataPackOnClick = (pack) => {
 	pack.onclick = async () => {
