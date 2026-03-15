@@ -547,6 +547,13 @@ ContextMenuContainer.addEventListener('mousedown', (e) => {
 			if (pointsPat) { prePatRun(pointsPat); }
 		}
 	}
+	
+	
+	const wasRightPressed = (e.buttons & 2) !== 0;
+	if (!wasRightPressed) {
+		nextPat = null;
+		isMouseDownOnAnyElement = null;
+	}
 }, true);
 
 ContextMenuContainer.addEventListener('mouseup', (e) => {
